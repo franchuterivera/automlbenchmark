@@ -51,6 +51,10 @@ autosklearn2:
   params:
     _askl2: true
 
+autoPyTorch:
+  version: '0.0.2'
+  project: https://github.com/automl/Auto-PyTorch/
+
 AutoWEKA:
   version: 'stable'
   description: |
