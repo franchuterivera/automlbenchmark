@@ -13,7 +13,7 @@ from autoPyTorch import AutoNetClassification, AutoNetRegression
 
 from amlb.benchmark import TaskConfig
 from amlb.data import Dataset
-from amlb.datautils import Encoder, impute
+from amlb.datautils import Encoder
 from amlb.results import save_predictions_to_file
 from amlb.utils import Timer, system_memory_mb, touch
 
@@ -43,9 +43,9 @@ def run(dataset: Dataset, config: TaskConfig):
         acc='accuracy',
         auc='auc_metric',
         f1='auc_metric',
-        logloss='auc_metric',
-        mae='balanced_accuracy',
-        mse='accuracy',
+        logloss='cross_entropy',
+        mae='mean_distance',
+        mse='mean_distance',
         r2='auc_metric'
     )
     perf_metric = metrics_mapping[config.metric] if config.metric in metrics_mapping else None
@@ -58,8 +58,6 @@ def run(dataset: Dataset, config: TaskConfig):
     log.info("Environment: %s", os.environ)
 
     # Data Processing
-    # TODO ask about imputation of data
-    #X_train, X_test = impute(dataset.train.X_enc, dataset.test.X_enc)
     X_train = dataset.train.X_enc
     y_train = dataset.train.y_enc
     X_test= dataset.test.X_enc
@@ -70,6 +68,7 @@ def run(dataset: Dataset, config: TaskConfig):
     n_jobs = config.framework_params.get('_n_jobs', config.cores)
     ml_memory_limit = config.framework_params.get('_ml_memory_limit', 'auto')
 
+    # Use for now same auto memory setting from autosklearn
     # when memory is large enough, we should have:
     # (cores - 1) * ml_memory_limit_mb + ensemble_memory_limit_mb = config.max_mem_size_mb
     total_memory_mb = system_memory_mb().total
@@ -80,12 +79,12 @@ def run(dataset: Dataset, config: TaskConfig):
 
 
     # Find the model that best fit the data
-    # TODO need to fix seed provided by framework? seed=config.seed
+    # TODO add seed support when implemented on the framework
     is_classification = config.type == 'classification'
     autonet = AutoNetClassification if is_classification else AutoNetRegression
     auto_pytorch = autonet(
         budget_type="time",
-        min_budget=1,
+        min_budget=config.max_runtime_seconds//(2*3**2), # if eta=3, this should lead to 3 budgets
         max_budget=config.max_runtime_seconds//2,
         max_runtime=config.max_runtime_seconds,
         log_level='info',
