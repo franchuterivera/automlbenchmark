@@ -225,7 +225,7 @@ def create_run_dir_area(run_dir: typing.Optional[str], args: typing.Any
     # TODO: make sure constraint given matches the constraint in which the run area was ran
 
     # No run dir provided, create one!
-    version = f"{args.framework}_es{args.ensemble_size}_B{args.bbc_cv_n_bootstrap}_N{args.bbc_cv_sample_size}"
+    version = f"{args.framework}_{args.seed}_es{args.ensemble_size}_B{args.bbc_cv_n_bootstrap}_N{args.bbc_cv_sample_size}"
     timestamp = time.strftime("%Y.%m.%d-%H.%M.%S")
     base_framework = "ENSEMBLE_ISOLATED"
     run_dir = os.path.join(
@@ -267,8 +267,8 @@ def generate_run_file(
         str: the path to the bash file to run
     """
 
-    run_file = f"{run_dir}/scripts/{framework}_{benchmark}_{constraint}_{task}_{fold}.sh"
-    cmd = f"python test_strategies.py --strategy {framework} --task {task} --fold {fold} --output '{run_dir}/{framework}_{benchmark}_{constraint}_{task}_{fold}' --input_dir '{args.input_dir}' --ensemble_size {args.ensemble_size} --bbc_cv_sample_size {args.bbc_cv_sample_size} --bbc_cv_n_bootstrap {args.bbc_cv_n_bootstrap}"
+    run_file = f"{run_dir}/scripts/{framework}_{args.seed}_{args.bbc_cv_n_bootstrap}_{args.bbc_cv_sample_size}_{benchmark}_{constraint}_{task}_{fold}.sh"
+    cmd = f"python test_strategies.py --strategy {framework} --task {task} --fold {fold} --output '{run_dir}/{framework}_{benchmark}_{constraint}_{task}_{fold}' --input_dir '{args.input_dir}' --ensemble_size {args.ensemble_size} --bbc_cv_sample_size {args.bbc_cv_sample_size} --bbc_cv_n_bootstrap {args.bbc_cv_n_bootstrap} --seed {args.seed}"
 
     command = f"""#!/bin/bash
 #Setup the run
@@ -709,7 +709,7 @@ def launch_run(
             else:
                 logger.warn(f"Skip {task} as there are no more free resources... try again later!")
             # Wait 2 sec to update running job
-            time.sleep(2)
+            #time.sleep(2)
     elif args.run_mode == 'interactive':
         timestamp = time.strftime("%Y.%m.%d-%H.%M.%S")
         while len(run_files) > 0:
@@ -843,6 +843,8 @@ def get_job_status(
                     run_dir=run_dir,
                     args=args,
                 )
+                if args.fast:
+                    continue
 
                 # Check if there are results already
                 jobs[framework][benchmark][task][fold]['results'] = get_results(
@@ -915,6 +917,9 @@ def launch(
             for task, task_dict in benchmark_dict.items():
                 for fold, data in task_dict.items():
                     run_file = jobs[framework][benchmark][task][fold]['run_file']
+                    if args.fast:
+                        run_files.append(jobs[framework][benchmark][task][fold]['run_file'])
+                        continue
                     results = jobs[framework][benchmark][task][fold]['results']
                     valid_result = is_number(results)
 
@@ -1017,6 +1022,7 @@ def collect_overfit3(
                                 'val':  val,
                                 'test':  test,
                                 'overfit':  overfit,
+                                'seed': args.seed,
                             })
     return pd.DataFrame(dataframe)
 
@@ -1313,6 +1319,21 @@ if __name__ == "__main__":
         required=False,
         default=50,
     )
+    parser.add_argument(
+        '--seed',
+        help='patter of wher the debug file originally is',
+        required=False,
+        default=392,
+    )
+    parser.add_argument(
+        '--fast',
+        help='patter of wher the debug file originally is',
+        required=False,
+        default=True,
+        type=str2bool,
+        nargs='?',
+        const=True,
+    )
 
     args = parser.parse_args()
     if args.verbose:
@@ -1332,9 +1353,14 @@ if __name__ == "__main__":
     if not args.run_dir:
         if args.framework not in [
             'autosklearnBBCScoreEnsemble',
+            'autosklearnBBCScoreEnsembleMAX',
+            'autosklearnBBCScoreEnsembleMAXWinner',
+            'autosklearnBBCScoreEnsembleAVGMDEV',
             'autosklearnBBCEnsembleSelection',
+            'autosklearnBBCEnsembleSelectionFULL',
             'autosklearnBBCEnsembleSelectionNoPreSelect',
             'autosklearnBBCEnsembleSelectionPreSelectInES',
+            'autosklearnBBCEnsembleSelectionPreSelectInESRegularizedEnd',
             'bagging',
             'None',
         ]:
@@ -1404,7 +1430,7 @@ if __name__ == "__main__":
             args=args,
             run_dir=run_dir
         )
-        filename = f"{args.framework}_{args.ensemble_size}_{args.bbc_cv_n_bootstrap}_{args.bbc_cv_sample_size}_overfit.csv"
+        filename = f"{args.framework}_{args.seed}_{args.ensemble_size}_{args.bbc_cv_n_bootstrap}_{args.bbc_cv_sample_size}_overfit.csv"
         logger.info(f"Please check {filename}")
         overfit.to_csv(filename)
 
@@ -1414,7 +1440,7 @@ if __name__ == "__main__":
             args=args,
             run_dir=run_dir
         )
-        filename = f"{args.framework}_{args.ensemble_size}_{args.bbc_cv_n_bootstrap}_{args.bbc_cv_sample_size}_ensemble_history.csv"
+        filename = f"{args.framework}_{args.seed}_{args.ensemble_size}_{args.bbc_cv_n_bootstrap}_{args.bbc_cv_sample_size}_ensemble_history.csv"
         logger.info(f"Please check {filename}")
         overfit.to_csv(filename)
 
@@ -1424,7 +1450,7 @@ if __name__ == "__main__":
             args=args,
             run_dir=run_dir
         )
-        filename = f"{args.framework}_{args.ensemble_size}_{args.bbc_cv_n_bootstrap}_{args.bbc_cv_sample_size}_overhead.csv"
+        filename = f"{args.framework}_{args.seed}_{args.ensemble_size}_{args.bbc_cv_n_bootstrap}_{args.bbc_cv_sample_size}_overhead.csv"
         logger.info(f"Please check {filename}")
         overhead.to_csv(filename)
 

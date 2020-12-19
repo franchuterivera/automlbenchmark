@@ -21,12 +21,17 @@ logger = logging.getLogger()
 # ====================================================================
 MAPPING = {
     "None": 'autosklearn',
-    "autosklearnBBCEnsembleSelection": 'Alg. 6',
-    "autosklearnBBCEnsembleSelectionNoPreSelect": 'Alg. 6\n(no Line 12.)',
+    "autosklearnBBCEnsembleSelection": 'Alg. 5',
+    "autosklearnBBCEnsembleSelectionNoPreSelect": 'Alg. 5\n(no Line 12.)',
     "autosklearnBBCEnsembleSelectionPreSelectInES": 'Alg. 7',
-    "autosklearnBBCSMBOAndEnsembleSelectionBISMAC": 'Alg. 10',
-    "autosklearnBBCSMBOAndEnsembleSelection": 'Alg. 12',
+    "autosklearnBBCEnsembleSelectionPreSelectInESFULL": 'Alg. 6',
+    "autosklearnBBCSMBOAndEnsembleSelectionBISMAC": 'Alg. 11',
+    "autosklearnBBCSMBOAndEnsembleSelection": 'Alg. 13',
     "autosklearnBBCScoreEnsemble": 'Alg. 9',
+    "autosklearnBBCScoreEnsembleMAX": 'Alg. 10',
+    "autosklearnBBCScoreEnsembleMAXWinner": 'Alg. 11',
+    "autosklearnBBCEnsembleSelectionPreSelectInESRegularizedEnd": 'Alg. 12',
+    "autosklearnBBCScoreEnsembleAVGMDEV": 'Alg. 13',
     "autosklearnBagging": 'bagging',
     "autosklearnStacking": 'Alg. 14',
     "autosklearnThresholdout": 'Alg. 17',
@@ -302,13 +307,11 @@ def beautify_node_name(name: str, separator=' ') -> str:
     if 'None_' in name: return 'autosklearn'
     if 'bagging_' in name: return 'bagging'
     # Mapping hold translations to make plotting better
-    print(f"recieved name={name}")
     for key in sorted(MAPPING.keys(), key=len, reverse=True):
         if key in name:
             name = name.replace(key, MAPPING[key])
             break
     name = name.replace("_", separator)
-    print(f"returning name={name}")
     return name
 
 
@@ -618,8 +621,10 @@ def generate_ranking_per_seed_per_dataset(dfs: typing.List[pd.DataFrame], metric
             result[f"{seed}_{task}"] = this_frame[f"{seed}_{task}"]
 
     result['Avg. Ranking'] = result.mean(axis=1)
+    result = result.reset_index()
+    result['index'] = result['index'].apply(lambda x: beautify_node_name(x))
+    result.set_index('index')
     return result
-
 
 def generate_ranking_per_dataset(dfs: typing.List[pd.DataFrame], metric: str = 'test') -> pd.DataFrame:
     """
@@ -645,6 +650,7 @@ def generate_ranking_per_dataset(dfs: typing.List[pd.DataFrame], metric: str = '
 
     # Create a ranking for seed and dataset
     result = pd.DataFrame(index=df['tool'].unique())
+    score = pd.DataFrame(index=df['tool'].unique())
     for task in df['task'].unique():
         this_frame = df.loc[(df['task']==task)].set_index('tool')
         this_frame[f"{task}"] = this_frame[metric + '_mean'].rank(
@@ -654,9 +660,66 @@ def generate_ranking_per_dataset(dfs: typing.List[pd.DataFrame], metric: str = '
         )
         print(f"task={task} this_frame={this_frame}")
         result[f"{task}"] = this_frame[f"{task}"]
+        score[f"{task}"] = this_frame[metric + '_mean']
 
     result['Avg. Ranking'] = result.mean(axis=1)
-    return result
+    result = result.reset_index()
+    result['index'] = result['index'].apply(lambda x: beautify_node_name(x))
+    result.set_index('index')
+
+    score = score.reset_index()
+    score['index'] = score['index'].apply(lambda x: beautify_node_name(x))
+    score.set_index('index')
+    return result, score
+
+
+def generate_ranking_per_dataset2(dfs: typing.List[pd.DataFrame], metric: str = 'test') -> pd.DataFrame:
+    """
+    Generates a ranking dataframe when seeds and dataset are of paired population.
+    That is, seed and dataset is same for a group of configurations to try
+
+    Args:
+        dfs (List[pdDataFrame]): A list of dataframes each representing a seed
+
+    Returns:
+        pd.DataFrame: with the ranking
+    """
+    # Tag each frame with a seed
+    df = dfs[0]
+
+    # Collapse the seed
+    df = df.groupby(['tool', 'model', 'task', 'fold']
+                      ).mean().add_suffix('_seedmean').reset_index()
+
+    # Collapse the fold
+    df = df.groupby(['tool', 'model', 'task']
+                      ).mean().add_suffix('_foldmean').reset_index()
+
+    df.to_csv('raw_data.csv')
+
+    # Create a ranking for seed and dataset
+    result = pd.DataFrame(index=df['tool'].unique())
+    score = pd.DataFrame(index=df['tool'].unique())
+    for task in df['task'].unique():
+        this_frame = df.loc[(df['task']==task)].set_index('tool')
+        this_frame[f"{task}"] = this_frame[metric + '_seedmean_foldmean'].rank(
+            na_option='bottom',
+            ascending=False,
+            method='average',
+            #method='dense',
+        )
+        result[f"{task}"] = this_frame[f"{task}"]
+        score[f"{task}"] = this_frame[metric + '_seedmean_foldmean']
+
+    result['Avg. Ranking'] = result.mean(axis=1)
+    result = result.reset_index()
+    result['index'] = result['index'].apply(lambda x: beautify_node_name(x))
+    result.set_index('index')
+
+    score = score.reset_index()
+    score['index'] = score['index'].apply(lambda x: beautify_node_name(x))
+    score.set_index('index')
+    return result, score
 
 
 if __name__ == "__main__":
@@ -694,11 +757,16 @@ if __name__ == "__main__":
         dfs.append(df)
         pairwise_comparisson_matrix = generate_pairwise_comparisson_matrix(
             df, metric='test', tools=df['tool'].unique(),
-        )
-        pairwise_comparisson_matrix.to_csv("pairwise_{i}.csv")
-    ranking = generate_ranking_per_seed_per_dataset(dfs)
+        ).reset_index()
+        pairwise_comparisson_matrix['index'] = pairwise_comparisson_matrix['index'].apply(lambda x: beautify_node_name(x))
+        pairwise_comparisson_matrix.set_index('index')
+        pairwise_comparisson_matrix.columns = [beautify_node_name(c) for c in pairwise_comparisson_matrix.columns]
+        pairwise_comparisson_matrix.to_csv(f"pairwise_{i}.csv")
+    ranking, raw = generate_ranking_per_dataset2(dfs)
+    #ranking = generate_ranking_per_seed_per_dataset(dfs)
     #ranking = generate_ranking_per_dataset(dfs)
     ranking.to_csv('ranking_seed_dataset.csv')
+    raw.to_csv('ranking_seed_dataset_raw.csv')
 
     # get overall winner with ranked pairs
     #plot_ranked_pairs_winner(metric='test', df=df, tools=[t for t in df['tool'].unique()])
