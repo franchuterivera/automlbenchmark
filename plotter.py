@@ -243,7 +243,7 @@ def generate_pairwise_comparisson_matrix(df: pd.DataFrame,
     # That is, collapse the folds
     df = df.groupby(['tool', 'model', 'task']).mean().add_suffix('_mean').reset_index()
 
-    df.to_csv('raw_data.csv')
+    #df.to_csv('raw_data.csv')
 
     # Just care about the provided tools
     if len(tools) < 1:
@@ -609,6 +609,7 @@ def generate_ranking_per_seed_per_dataset(dfs: typing.List[pd.DataFrame], metric
 
     # Create a ranking for seed and dataset
     result = pd.DataFrame(index=df['tool'].unique())
+    score = pd.DataFrame(index=df['tool'].unique())
     for seed in df['seed'].unique():
         for task in df['task'].unique():
             this_frame = df.loc[(df['seed']==seed) & (df['task']==task)].set_index('tool')
@@ -619,12 +620,17 @@ def generate_ranking_per_seed_per_dataset(dfs: typing.List[pd.DataFrame], metric
             )
             #print(f"seed={seed} task={task} this_frame={this_frame}")
             result[f"{seed}_{task}"] = this_frame[f"{seed}_{task}"]
+            score[f"{seed}_{task}"] = this_frame[metric + '_mean']
 
     result['Avg. Ranking'] = result.mean(axis=1)
     result = result.reset_index()
     result['index'] = result['index'].apply(lambda x: beautify_node_name(x))
     result.set_index('index')
-    return result
+    score = score.reset_index()
+    score['index'] = score['index'].apply(lambda x: beautify_node_name(x))
+    score.set_index('index')
+    return result, score
+
 
 def generate_ranking_per_dataset(dfs: typing.List[pd.DataFrame], metric: str = 'test') -> pd.DataFrame:
     """
@@ -721,6 +727,15 @@ def generate_ranking_per_dataset2(dfs: typing.List[pd.DataFrame], metric: str = 
     score.set_index('index')
     return result, score
 
+def collapse_seed(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Collapses a dataframe that has multiple runs per seed
+    """
+    # Collapse the seed
+    return df.groupby(
+        ['tool', 'model', 'task', 'fold']
+    ).mean().reset_index()
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Utility to plot CSV results')
@@ -754,7 +769,12 @@ if __name__ == "__main__":
     for i, csv_location in enumerate(args.csv_location):
         logger.info(f"Working in {csv_location}")
         df = parse_data(csv_location)
+
+        # In the case the run has multiple seeds, we collapse them assuming
+        # they are meant to remove the noise among runs
+        df = collapse_seed(df)
         dfs.append(df)
+
         pairwise_comparisson_matrix = generate_pairwise_comparisson_matrix(
             df, metric='test', tools=df['tool'].unique(),
         ).reset_index()
@@ -762,11 +782,11 @@ if __name__ == "__main__":
         pairwise_comparisson_matrix.set_index('index')
         pairwise_comparisson_matrix.columns = [beautify_node_name(c) for c in pairwise_comparisson_matrix.columns]
         pairwise_comparisson_matrix.to_csv(f"pairwise_{i}.csv")
-    ranking, raw = generate_ranking_per_dataset2(dfs)
-    #ranking = generate_ranking_per_seed_per_dataset(dfs)
+    #ranking, raw = generate_ranking_per_dataset2(dfs)
+    ranking, rawscores = generate_ranking_per_seed_per_dataset(dfs)
     #ranking = generate_ranking_per_dataset(dfs)
     ranking.to_csv('ranking_seed_dataset.csv')
-    raw.to_csv('ranking_seed_dataset_raw.csv')
+    rawscores.to_csv('ranking_seed_dataset_rawscores.csv')
 
     # get overall winner with ranked pairs
     #plot_ranked_pairs_winner(metric='test', df=df, tools=[t for t in df['tool'].unique()])

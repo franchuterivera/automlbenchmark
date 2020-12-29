@@ -745,3 +745,108 @@ autosklearnStackingLatest_f65:
   params:
     _save_artifacts: ['models', 'overfit', 'debug']
     fraction_time_for_this_smbo: 0.65
+
+autosklearnThresholdout_scale001_ensemble0:
+  version: 'scale001_ensemble0'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    ensemble_builder_thresholdout: 0
+    thresholdout_scale: 0.01
+
+autosklearnThresholdout_scale001_ensemble1:
+  version: 'scale001_ensemble0'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    ensemble_builder_thresholdout: 1
+    thresholdout_scale: 0.01
+
+autosklearnThresholdout_scale05_ensemble0:
+  version: 'scale001_ensemble0'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    ensemble_builder_thresholdout: 0
+    thresholdout_scale: 0.5
+
+autosklearnThresholdout_scale05_ensemble1:
+  version: 'scale001_ensemble0'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    ensemble_builder_thresholdout: 1
+    thresholdout_scale: 0.5
+
+#######################################################################################
+#                                     01/12/2020
+#######################################################################################
+
+autosklearnCOPYALL:
+  version: 'dev'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+
+autosklearnRepeats_3:
+  version: '3'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    repeats: 3
+
+autosklearnRepeats_5:
+  version: '5'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    repeats: 5
+
+autosklearnRepeats_10:
+  version: '10'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    repeats: 10
+
+autosklearnVALREDUCTION_train10:
+  version: '10'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    train_size: 0.1
+
+autosklearnVALREDUCTION_train30:
+  version: '30'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    train_size: 0.3
+
+autosklearnVALREDUCTION_train50:
+  version: '50'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    train_size: 0.5
+
+autosklearnVALREDUCTION_train80:
+  version: '80'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    train_size: 0.8
+
+autosklearnVALREDUCTION_train90:
+  version: '90'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    train_size: 0.9
+
+autosklearnVALREDUCTION_train100:
+  version: '100'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    train_size: 1.0

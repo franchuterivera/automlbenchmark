@@ -1,0 +1,11 @@
+,tool,task,model,fold,train,val,test,overfit,seed
+0,None_es90_B100_N0.5,vehicle,best_individual_model,0,0.0,0.0,0.0,0.0,117
+1,None_es90_B100_N0.5,vehicle,best_ensemble_model,0,0.8780635109685703,inf,0.8716991341991343,0.0,117
+2,None_es90_B100_N0.5,vehicle,best_individual_model,1,0.0,0.0,0.0,0.0,117
+3,None_es90_B100_N0.5,vehicle,best_ensemble_model,1,0.8844731086601905,inf,0.8138528138528138,0.0,117
+4,None_es90_B100_N0.5,vehicle,best_individual_model,2,0.0,0.0,0.0,0.0,117
+5,None_es90_B100_N0.5,vehicle,best_ensemble_model,2,0.8648926405711691,inf,0.7673160173160173,0.0,117
+6,None_es90_B100_N0.5,vehicle,best_individual_model,3,0.0,0.0,0.0,0.0,117
+7,None_es90_B100_N0.5,vehicle,best_ensemble_model,3,0.871443710477934,inf,0.8955627705627706,0.0,117
+8,None_es90_B100_N0.5,vehicle,best_individual_model,4,0.0,0.0,0.0,0.0,117
+9,None_es90_B100_N0.5,vehicle,best_ensemble_model,4,0.8777858426009668,inf,0.8961038961038961,0.0,117

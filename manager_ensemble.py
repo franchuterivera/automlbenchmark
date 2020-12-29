@@ -1356,6 +1356,7 @@ if __name__ == "__main__":
             'autosklearnBBCScoreEnsembleMAX',
             'autosklearnBBCScoreEnsembleMAXWinner',
             'autosklearnBBCScoreEnsembleAVGMDEV',
+            'autosklearnBBCScoreEnsemblePercentile',
             'autosklearnBBCEnsembleSelection',
             'autosklearnBBCEnsembleSelectionFULL',
             'autosklearnBBCEnsembleSelectionNoPreSelect',

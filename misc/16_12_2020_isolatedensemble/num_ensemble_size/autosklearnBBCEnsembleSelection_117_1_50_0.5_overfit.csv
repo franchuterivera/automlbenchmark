@@ -1,0 +1,11 @@
+,tool,task,model,fold,train,val,test,overfit,seed
+0,autosklearnBBCEnsembleSelection_es1_B50_N0.5,vehicle,best_individual_model,0,0.0,0.0,0.0,0.0,117
+1,autosklearnBBCEnsembleSelection_es1_B50_N0.5,vehicle,best_ensemble_model,0,0.8599733470157019,inf,0.8597943722943724,0.0,117
+2,autosklearnBBCEnsembleSelection_es1_B50_N0.5,vehicle,best_individual_model,1,0.0,0.0,0.0,0.0,117
+3,autosklearnBBCEnsembleSelection_es1_B50_N0.5,vehicle,best_ensemble_model,1,0.8610792183258578,inf,0.8138528138528138,0.0,117
+4,autosklearnBBCEnsembleSelection_es1_B50_N0.5,vehicle,best_individual_model,2,0.0,0.0,0.0,0.0,117
+5,autosklearnBBCEnsembleSelection_es1_B50_N0.5,vehicle,best_ensemble_model,2,0.839974423273563,inf,0.8127705627705628,0.0,117
+6,autosklearnBBCEnsembleSelection_es1_B50_N0.5,vehicle,best_individual_model,3,0.0,0.0,0.0,0.0,117
+7,autosklearnBBCEnsembleSelection_es1_B50_N0.5,vehicle,best_ensemble_model,3,0.8570451460001356,inf,0.9074675324675324,0.0,117
+8,autosklearnBBCEnsembleSelection_es1_B50_N0.5,vehicle,best_individual_model,4,0.0,0.0,0.0,0.0,117
+9,autosklearnBBCEnsembleSelection_es1_B50_N0.5,vehicle,best_ensemble_model,4,0.8542773555039928,inf,0.9074675324675324,0.0,117
