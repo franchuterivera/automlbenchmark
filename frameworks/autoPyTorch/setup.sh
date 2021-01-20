@@ -1,9 +1,35 @@
 #!/usr/bin/env bash
 HERE=$(dirname "$0")
-. $HERE/../shared/setup.sh
-TARGET_DIR="$HERE/lib/Auto-PyTorch"
-if [[ ! -e "$TARGET_DIR" ]]; then
-    git clone https://github.com/automl/Auto-PyTorch $TARGET_DIR
+AMLB_DIR="$1"
+VERSION=${2:-"stable"}
+REPO=${3:-"https://github.com/franchuterivera/Auto-PyTorch.git"}
+PKG=${4:-"Auto-PyTorch"}
+if [[ "$VERSION" == "latest" ]]; then
+    VERSION="master"
 fi
-PIP install --no-cache-dir -r $TARGET_DIR/requirements.txt
+# Use a version that fixes reproducibility issues
+VERSION='reproducibility'
+
+# creating local venv
+. ${HERE}/../shared/setup.sh ${HERE}
+
+
+
+# creating local venv
+. $HERE/../shared/setup.sh $HERE
+
+TARGET_DIR="$HERE/lib/Auto-PyTorch"
+
+git clone https://github.com/franchuterivera/Auto-PyTorch.git $TARGET_DIR
+cd $TARGET_DIR
+echo before
+git checkout reproducibility
+echo checkout
+cd $HERE
+
+PIP install -r $HERE/requirements.txt
+#PIP uninstall autopytorch
+echo requirements
 PIP install --no-cache-dir -e $TARGET_DIR
+echo FINISHED
+PIP freeze
