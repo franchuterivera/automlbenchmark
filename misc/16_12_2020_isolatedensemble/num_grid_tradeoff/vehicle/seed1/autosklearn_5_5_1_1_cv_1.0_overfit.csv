@@ -1,0 +1,11 @@
+,tool,max_number_models,max_number_folds,max_num_repetitions,stacking_levels,cv_type,allowed_folds_to_use,task,model,fold,train,val,test,overfit,seed
+0,autosklearn,5,5,1,1,cv,1.0,54,best_individual_model,0,1.0,0.7509613383218834,0.7598696381403236,0.02905836359448588,42
+1,autosklearn,5,5,1,1,cv,1.0,54,best_ensemble_model,0,0.774934012066365,inf,0.7911887058517963,0.0,42
+2,autosklearn,5,5,1,1,cv,1.0,54,best_individual_model,1,1.0,0.7509613383218834,0.7598696381403236,0.02905836359448588,42
+3,autosklearn,5,5,1,1,cv,1.0,54,best_ensemble_model,1,0.774934012066365,inf,0.7911887058517963,0.0031645569620252223,42
+4,autosklearn,5,5,1,1,cv,1.0,54,best_individual_model,2,1.0,0.7509613383218834,0.7598696381403236,0.02905836359448588,42
+5,autosklearn,5,5,1,1,cv,1.0,54,best_ensemble_model,2,0.774934012066365,inf,0.7911887058517963,0.0,42
+6,autosklearn,5,5,1,1,cv,1.0,54,best_individual_model,3,1.0,0.7509613383218834,0.7598696381403236,0.02905836359448588,42
+7,autosklearn,5,5,1,1,cv,1.0,54,best_ensemble_model,3,0.7781124991802741,inf,0.7943532628138216,0.0,42
+8,autosklearn,5,5,1,1,cv,1.0,54,best_individual_model,4,1.0,0.7509613383218834,0.7598696381403236,0.02905836359448588,42
+9,autosklearn,5,5,1,1,cv,1.0,54,best_ensemble_model,4,0.7781124991802741,inf,0.7943532628138216,0.0,42

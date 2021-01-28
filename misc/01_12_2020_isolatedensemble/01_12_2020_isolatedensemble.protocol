@@ -1,12 +1,4 @@
 ################################### Autosklearn runs with different seeds
-# Holdout
-python manager.py -f autosklearnCOPYALL -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnCOPYALL/dev/2020.12.01-21.26.54
-python manager.py -f autosklearnCOPYALL -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnCOPYALL/dev/2020.12.04-12.13.31
-python manager.py -f autosklearnCOPYALL -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnCOPYALL/dev/2020.12.04-22.30.24
-python manager.py -f autosklearnCOPYALL -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnCOPYALL/dev/2020.12.04-23.32.43
-python manager.py -f autosklearnCOPYALL -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600 
-Creating run directory: /home/riverav/AUTOML_BENCHMARK/autosklearnCOPYALL/dev/2020.12.05-00.24.10
-
 # CV
 python manager.py -f autosklearnCOPYALL -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnCOPYALL/dev/2020.12.05-20.45.58
 python manager.py -f autosklearnCOPYALL -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnCOPYALL/dev/2020.12.05-21.16.40

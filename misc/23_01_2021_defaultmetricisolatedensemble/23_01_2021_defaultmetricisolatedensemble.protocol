@@ -1,0 +1,13 @@
+# Data input for rerun of all algorithms
+# seed 1
+python manager.py -f autosklearnCOPYALL -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600 --binary_metric "['auc', 'logloss', 'acc']" --multiclass_metric "['logloss', 'acc']"   --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnCOPYALL/dev/2021.01.23-19.54.23
+# seed 2
+python manager.py -f autosklearnCOPYALL -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600 --binary_metric "['auc', 'logloss', 'acc']" --multiclass_metric "['logloss', 'acc']"   --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnCOPYALL/dev/2021.01.23-21.15.38
+# seed 3
+python manager.py -f autosklearnCOPYALL -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600 --binary_metric "['auc', 'logloss', 'acc']" --multiclass_metric "['logloss', 'acc']"   --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnCOPYALL/dev/2021.01.23-23.46.46
+
+
+
+
+
+python manager.py -f autosklearnCOPYALL -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600 --binary_metric "['balacc', 'auc', 'acc']" --multiclass_metric "['balacc', 'logloss', 'acc']"

@@ -1,0 +1,68 @@
+# Baseline
+# SEED 1
+python manager.py -f autosklearn -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.01.11-19.04.50
+# SEED 2
+python manager.py -f autosklearn -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.01.12-11.52.49
+# SEED 3
+python manager.py -f autosklearn -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.01.12-13.20.23
+# SEED 4
+python manager.py -f autosklearn -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.01.12-17.40.05
+# SEED 5
+python manager.py -f autosklearn -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.01.14-10.36.49
+
+# # Stacking
+# SEED 1
+python manager.py -f autosklearnHStacking_f50 -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHStacking/f50/2021.01.16-16.23.29 
+# seed 2
+python manager.py -f autosklearnHStacking_f50 -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHStacking/f50/2021.01.16-18.08.15
+# seed 3
+python manager.py -f autosklearnHStacking_f50 -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHStacking/f50/2021.01.16-20.09.30
+# seed 4
+python manager.py -f autosklearnHStacking_f50 -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHStacking/f50/2021.01.16-21.19.15
+# seed 5
+python manager.py -f autosklearnHStacking_f50 -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHStacking/f50/2021.01.16-23.33.04
+
+#repeats 1 cv 5 eta 2
+# Seed 1
+python manager.py -f autosklearnHyperBandFolds_eta2 -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHyperBandFolds/cv10_repeat10/2021.01.01-17.00.01
+# Seed 2
+python manager.py -f autosklearnHyperBandFolds_eta2 -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHyperBandFolds/cv10_repeat10/2021.01.02-16.37.29
+# seed 3
+python manager.py -f autosklearnHyperBandFolds_eta2_cv5_repeats1 -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHyperBandFolds/eta2_cv5_repeats1/2021.01.09-13.03.07
+# seed 4
+python manager.py -f autosklearnHyperBandFolds_eta2_cv5_repeats1 -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHyperBandFolds/eta2_cv5_repeats1/2021.01.09-17.21.13
+# seed 5
+python manager.py -f autosklearnHyperBandFolds_eta2_cv5_repeats1 -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHyperBandFolds/eta2_cv5_repeats1/2021.01.14-10.51.14
+
+
+#repeats 3 cv 5 eta 2
+python manager.py -f autosklearnHyperBandFolds_eta2_cv5_repeats3 -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHyperBandFolds/eta2_cv5_repeats3/2021.01.07-17.31.32
+#seed 2
+python manager.py -f autosklearnHyperBandFolds_eta2_cv5_repeats3 -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHyperBandFolds/eta2_cv5_repeats3/2021.01.08-12.29.50
+# seed 3
+python manager.py -f autosklearnHyperBandFolds_eta2_cv5_repeats3 -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHyperBandFolds/eta2_cv5_repeats3/2021.01.08-21.55.04
+#seed 4
+python manager.py -f autosklearnHyperBandFolds_eta2_cv5_repeats3 -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHyperBandFolds/eta2_cv5_repeats3/2021.01.09-02.07.00
+# seed 5
+python manager.py -f autosklearnHyperBandFolds_eta2_cv5_repeats3 -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHyperBandFolds/eta2_cv5_repeats3/2021.01.14-10.56.24
+
+
+#repeats 10 cv 5 eta 2
+# seed 1
+python manager.py -f autosklearnHyperBandFolds_eta2_cv5_repeats10 -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHyperBandFolds/eta2_cv5_repeats10/2021.01.07-17.23.06
+# seed 2
+python manager.py -f autosklearnHyperBandFolds_eta2_cv5_repeats10 -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHyperBandFolds/eta2_cv5_repeats10/2021.01.08-12.37.57
+# seed 3
+python manager.py -f autosklearnHyperBandFolds_eta2_cv5_repeats10 -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHyperBandFolds/eta2_cv5_repeats10/2021.01.08-23.53.40
+# seed 4
+python manager.py -f autosklearnHyperBandFolds_eta2_cv5_repeats10 -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHyperBandFolds/eta2_cv5_repeats10/2021.01.09-02.31.57
+# seed 5
+python manager.py -f autosklearnHyperBandFolds_eta2_cv5_repeats10 -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHyperBandFolds/eta2_cv5_repeats10/2021.01.14-11.03.04
+
+
+#repeats 1 cv 5 eta 3
+python manager.py -f autosklearnHyperBandFolds_eta3_cv5_repeats1 -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHyperBandFolds/eta3_cv5_repeats1/2021.01.02-23.51.22
+#seed 2
+python manager.py -f autosklearnHyperBandFolds_eta3_cv5_repeats1 -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHyperBandFolds/eta3_cv5_repeats1/2021.01.03-01.51.44
+#seed 3
+python manager.py -f autosklearnHyperBandFolds_eta3_cv5_repeats1 -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHyperBandFolds/eta3_cv5_repeats1/2021.01.04-18.38.10

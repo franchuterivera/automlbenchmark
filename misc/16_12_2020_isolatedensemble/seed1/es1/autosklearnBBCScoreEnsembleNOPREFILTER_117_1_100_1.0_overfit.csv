@@ -1,0 +1,7 @@
+,tool,task,model,fold,train,val,test,overfit,seed
+0,autosklearnBBCScoreEnsembleNOPREFILTER_es1_B100_N1.0,Albert,best_individual_model,2,0.0,0.0,0.0,0.0,117
+1,autosklearnBBCScoreEnsembleNOPREFILTER_es1_B100_N1.0,Albert,best_ensemble_model,2,0.6518933099217175,inf,0.6565468911673409,0.0,117
+2,autosklearnBBCScoreEnsembleNOPREFILTER_es1_B100_N1.0,Albert,best_individual_model,3,0.0,0.0,0.0,0.0,117
+3,autosklearnBBCScoreEnsembleNOPREFILTER_es1_B100_N1.0,Albert,best_ensemble_model,3,0.6524054390200567,inf,0.6513733421126893,0.0,117
+4,autosklearnBBCScoreEnsembleNOPREFILTER_es1_B100_N1.0,Albert,best_individual_model,4,0.0,0.0,0.0,0.0,117
+5,autosklearnBBCScoreEnsembleNOPREFILTER_es1_B100_N1.0,Albert,best_ensemble_model,4,0.6525700519445228,inf,0.6536779230552159,0.0,117

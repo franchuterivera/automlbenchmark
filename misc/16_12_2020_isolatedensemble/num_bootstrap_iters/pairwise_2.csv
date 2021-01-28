@@ -1,0 +1,6 @@
+,index,autosklearn,autosklearnHyperBandFolds eta2 cv5 repeats1,autosklearnHyperBandFolds eta2 cv5 repeats10,autosklearnHyperBandFolds eta2 cv5 repeats3,autosklearnHyperBandFolds eta3 cv5 repeats1
+0,autosklearn,0.0,2.0,3.0,3.0,2.0
+1,autosklearnHyperBandFolds eta2 cv5 repeats1,8.0,0.0,6.0,5.0,5.0
+2,autosklearnHyperBandFolds eta2 cv5 repeats10,7.0,4.0,0.0,5.0,4.0
+3,autosklearnHyperBandFolds eta2 cv5 repeats3,7.0,4.0,5.0,0.0,5.0
+4,autosklearnHyperBandFolds eta3 cv5 repeats1,8.0,2.0,6.0,5.0,0.0
