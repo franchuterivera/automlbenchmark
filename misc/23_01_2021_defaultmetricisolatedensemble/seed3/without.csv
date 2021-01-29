@@ -1,0 +1,101 @@
+Running on HOSTNAME=kisexe28 with name None_392_100_0.5_master_thesis_3600s1c8G_higgs_0
+TMPDIR=/tmp/None_master_thesis_3600s1c8G_higgs_0_1494397
+XDG_CACHE_HOME=/tmp/None_master_thesis_3600s1c8G_higgs_0_1494397
+Running python test_strategies.py --strategy None --task higgs --fold 0 --output '/home/riverav/AUTOML_BENCHMARK/ENSEMBLE_ISOLATED/None_392_es50_B100_N0.5/2020.12.18-12.07.06/None_master_thesis_3600s1c8G_higgs_0' --input_dir '/home/riverav/AUTOML_BENCHMARK/autosklearnCOPYALL/dev/2020.12.05-20.45.58/*/*/debug/' --ensemble_size 50 --bbc_cv_sample_size 0.5 --bbc_cv_n_bootstrap 100 --seed 392
+/home/riverav/AUTOML_BENCHMARK/automlbenchmark_fork/auto-sklearn/autosklearn/util/backend.py:428: UserWarning: Directory /tmp/None_master_thesis_3600s1c8G_higgs_0_1494397/autosklearn_tmp_32396ff2-4121-11eb-96bf-59562c0bdb86/.auto-sklearn/ensembles does not exist
+  warnings.warn('Directory %s does not exist' % ensemble_dir)
+No ensemble yet exists for args.ensemble_size=50
+Starting to fit the ensemble args.ensemble_size=50
+ENSEMBLE_BUILDER: main start 4.76837158203125e-07
+ENSEMBLE_BUILDER: score ensemble 0.9909415245056152
+ENSEMBLE_BUILDER: get_n_best 0.992919921875
+ENSEMBLE_BUILDER: pre-fit ensmeble 0.9946362972259521
+ENSEMBLE_BUILDER: fit_ensemble start 1.1920928955078125e-06
+fit start 0.0004451274871826172
+_fast start 0.0004744529724121094
+_fast ensemble iter 0.7418980598449707
+_fast ensemble iter 1.47615647315979
+_fast ensemble iter 2.218695878982544
+_fast ensemble iter 2.9579696655273438
+_fast ensemble iter 3.703066825866699
+_fast ensemble iter 4.444020986557007
+_fast ensemble iter 5.191990375518799
+_fast ensemble iter 5.935566425323486
+_fast ensemble iter 6.676637887954712
+_fast ensemble iter 7.411146879196167
+_fast ensemble iter 8.152083158493042
+_fast ensemble iter 8.889467716217041
+_fast ensemble iter 9.62975549697876
+_fast ensemble iter 10.373939037322998
+_fast ensemble iter 11.118215799331665
+_fast ensemble iter 11.859754085540771
+_fast ensemble iter 12.606492042541504
+_fast ensemble iter 13.346019983291626
+_fast ensemble iter 14.086486577987671
+_fast ensemble iter 14.828065395355225
+_fast ensemble iter 15.57601261138916
+_fast ensemble iter 16.31560182571411
+_fast ensemble iter 17.05902075767517
+_fast ensemble iter 17.80021619796753
+_fast ensemble iter 18.54418969154358
+_fast ensemble iter 19.287490844726562
+_fast ensemble iter 20.030314207077026
+_fast ensemble iter 20.772712469100952
+_fast ensemble iter 21.520816802978516
+_fast ensemble iter 22.265341758728027
+_fast ensemble iter 23.008710622787476
+_fast ensemble iter 23.746507167816162
+_fast ensemble iter 24.48980736732483
+_fast ensemble iter 25.23137664794922
+_fast ensemble iter 25.978533029556274
+_fast ensemble iter 26.718799114227295
+_fast ensemble iter 27.464572429656982
+_fast ensemble iter 28.21195888519287
+_fast ensemble iter 28.956465482711792
+_fast ensemble iter 29.69796085357666
+_fast ensemble iter 30.440486907958984
+_fast ensemble iter 31.184746265411377
+_fast ensemble iter 31.928627014160156
+_fast ensemble iter 32.67630934715271
+_fast ensemble iter 33.43164896965027
+_fast ensemble iter 34.17146635055542
+_fast ensemble iter 34.91421413421631
+_fast ensemble iter 35.663941621780396
+_fast ensemble iter 36.40577578544617
+_fast ensemble iter 37.15380001068115
+_fast end 37.15381956100464
+calculate weights start 37.153990507125854
+calculate weights end 37.154247760772705
+fit end 37.154252767562866
+ENSEMBLE_BUILDER: fit_ensemble end 37.15653347969055
+ENSEMBLE_BUILDER: post-fit ensmeble 38.151193141937256
+ENSEMBLE_BUILDER: pre delete 38.15204572677612
+ENSEMBLE_BUILDER: pre  predict 38.15214228630066
+predict start 37.1566207408905
+predict end 37.1581814289093
+predict start 37.158605337142944
+predict end 37.158793687820435
+ENSEMBLE_BUILDER: end of main 38.41229605674744
+ENSEMBLE_BUILDER: main start 4.76837158203125e-07
+ENSEMBLE_BUILDER: score ensemble 0.0018267631530761719
+ENSEMBLE_BUILDER: get_n_best 0.001981019973754883
+ENSEMBLE_BUILDER: pre-fit ensmeble 0.00335693359375
+ENSEMBLE_BUILDER: fit_ensemble start 2.384185791015625e-07
+ENSEMBLE_BUILDER: post-fit ensmeble 0.004917621612548828
+ENSEMBLE_BUILDER: pre delete 0.004923105239868164
+ENSEMBLE_BUILDER: pre  predict 0.005103111267089844
+ENSEMBLE_BUILDER: end of main 0.008434057235717773
+Fitted the ensemble: Ensemble Selection:
+	Trajectory: 0: 0.270903 1: 0.270903 2: 0.270844 3: 0.270498 4: 0.270293 5: 0.270449 6: 0.270573 7: 0.270498 8: 0.270511 9: 0.270293 10: 0.270419 11: 0.270449 12: 0.270513 13: 0.270463 14: 0.270293 15: 0.270415 16: 0.270483 17: 0.270449 18: 0.270328 19: 0.270293 20: 0.270393 21: 0.270419 22: 0.270509 23: 0.270313 24: 0.270293 25: 0.270381 26: 0.270416 27: 0.270446 28: 0.270335 29: 0.270293 30: 0.270440 31: 0.270415 32: 0.270418 33: 0.270292 34: 0.270293 35: 0.270405 36: 0.270393 37: 0.270328 38: 0.270328 39: 0.270293 40: 0.270393 41: 0.270393 42: 0.270315 43: 0.270329 44: 0.270293 45: 0.270404 46: 0.270415 47: 0.270313 48: 0.270320 49: 0.270293
+	Members: [1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1]
+	Weights: [0.2 0.8 0. ]
+	Identifiers: (392, 10, 0.0) (392, 3, 0.0)
+predict start 42.76386642456055
+predict end 42.76404905319214
+None Score=0.7337226074083127
+predict start 44.82505249977112
+predict end 44.82524108886719
+predict start 61.956480979919434
+predict end 61.95767426490784
+Deleting temporal folder /tmp/None_master_thesis_3600s1c8G_higgs_0_1494397
+Finished the run

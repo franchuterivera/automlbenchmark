@@ -905,6 +905,10 @@ def launch_run(
         for task in run_files:
             if are_resource_available_to_run(partition=args.partition, min_cpu_free = 10) or True:
                 name, ext = os.path.splitext(os.path.basename(task))
+                # try WA for autopytorch 1h1c 8G
+                memory = args.memory
+                if '8G' in memory and 'orch' in name:
+                    memory = '12G'
                 this_extra = extra + f" -p {args.partition} -t 0{max_hours}:00:00 --mem {args.memory} -c {args.cores} --job-name {name} -o {os.path.join(run_dir, 'logs', name + '_'+ timestamp + '.out')}"
                 _launch_sbatch_run(this_extra, task)
             else:
@@ -1338,7 +1342,6 @@ def collect_overfit3(
     Returns:
 
     """
-
     # Collect a dataframe that will contain columns
     # tool Experiment metric train val test
     constraint = f"{args.runtime}s{args.cores}c{args.memory}"
@@ -1348,6 +1351,21 @@ def collect_overfit3(
         for benchmark, benchmark_dict in framework_dict.items():
             for task, task_dict in benchmark_dict.items():
                 for fold, data in task_dict.items():
+
+                    if 'autosklearn' not in framework.lower():
+                        result = jobs[framework][benchmark][task][fold]['results']
+                        dataframe.append({
+                            'tool': framework,
+                            'task': task,
+                            'model': 'best_ensemble_model',
+                            'fold': fold,
+                            'train':  np.nan,
+                            'val':  np.nan,
+                            'test':  result,
+                            'overfit':  np.nan,
+                        })
+                        continue
+
                     for overfit_file in remote_glob(os.path.join(
                         run_dir,
                         f"{framework}_{benchmark}_{constraint}_{task}_{fold}",
@@ -1363,7 +1381,7 @@ def collect_overfit3(
                             row_dict = row.to_dict()
 
                             # We care about the best individual model and ensemble
-                            if row_dict['model'] not in ['best_individual_model', 'best_ensemble_model']:
+                            if row_dict['model'] not in ['best_individual_model', 'best_ensemble_model'] and 'best_ensemble_model' not in row_dict['model']:
                                 continue
                             model = row_dict['model']
 
@@ -1372,6 +1390,8 @@ def collect_overfit3(
                             test = row_dict['test']
                             if row_dict['model'] == 'best_individual_model':
                                 key = 'best_ever_test_score_individual_model'
+                            elif 'best_ensemble_model' in row_dict['model']:
+                                key = row_dict['model']
                             elif row_dict['model'] == 'best_ensemble_model':
                                 key = 'best_ever_test_score_ensemble_model'
                             else:
@@ -1434,6 +1454,166 @@ def collect_ensemble_history(
                         # Convert to relative time
                         dataframe.append(frame)
     return pd.concat(dataframe).reset_index(drop=True)
+
+
+def collect_performance_history(
+    jobs: typing.Dict,
+    args: typing.Any,
+    run_dir: str
+) -> pd.DataFrame:
+    """
+    Collects the overfit files, integrating them per fold into a single framework file
+
+    Args:
+        jobs (typing.Dict): A handy dictionary with frameworks/benchmarck/task/fold info
+        args (typing.Any): Namespace with the input argument of this script
+        run_dir (str): Are on where to launch the jobs
+
+    Returns:
+
+    """
+
+    # Collect a dataframe that will contain columns
+    # tool Experiment metric train val test
+    constraint = f"{args.runtime}s{args.cores}c{args.memory}"
+    dataframe = []
+    for framework, framework_dict in jobs.items():
+        for benchmark, benchmark_dict in framework_dict.items():
+            for task, task_dict in benchmark_dict.items():
+                for fold, data in task_dict.items():
+                    rh_dataframe = []
+                    for run_history_file in remote_glob(os.path.join(
+                        run_dir,
+                        f"{framework}_{benchmark}_{constraint}_{task}_{fold}",
+                        '*',  # The directory name the benchmark created
+                        'debug',
+                        task,
+                        str(fold),
+                        'smac3-output',
+                        '*', #_run_SEED
+                        'runhistory.json'
+                    )):
+                        run_history_file = remote_get(run_history_file)
+                        with open(run_history_file) as f:
+                            runhistory = json.load(f)
+
+                        for run in runhistory['data']:
+                            if 'SUCCESS' not in str(run[1][2]):
+                                continue
+
+                            # Alternatively, it is possible to also obtain the start time with ``run_value.starttime``
+                            endtime = pd.Timestamp(time.strftime('%Y-%m-%d %H:%M:%S',
+                                                                 time.localtime(run[1][4])))
+                            val_score = 1.0 - run[1][0]
+                            test_score = 1.0 - run[1][5]['test_loss']
+                            train_score = 1.0 - run[1][5]['train_loss']
+                            rh_dataframe.append({
+                                'Timestamp': endtime,
+                                'single_best_optimization_score': val_score,
+                                'single_best_test_score': test_score,
+                                'single_best_train_score': train_score,
+                                'task': task,
+                                'fold': fold,
+                                'framework': framework,
+                            })
+                    rh_dataframe = pd.DataFrame(rh_dataframe)
+                    ensemble_dataframe = []
+                    for ensemble in remote_glob(os.path.join(
+                        run_dir,
+                        f"{framework}_{benchmark}_{constraint}_{task}_{fold}",
+                        '*',  # The directory name the benchmark created
+                        'debug',
+                        task,
+                        str(fold),
+                        '.auto-sklearn',
+                        'ensemble_history.json',
+                    )):
+                        ensemble_file = remote_get(ensemble)
+                        with open(ensemble_file) as f:
+                            ensemble = json.load(f)
+
+                        timestamps = [t for t in ensemble['Timestamp'].values()]
+                        ensemble_optimization_scores = [t for t in ensemble['ensemble_optimization_score'].values()]
+                        ensemble_test_score = [t for t in ensemble['ensemble_test_score'].values()]
+                        for t, opt, test in zip(timestamps, ensemble_optimization_scores, ensemble_test_score):
+                            ensemble_dataframe.append({
+                                'Timestamp': pd.Timestamp(t, unit='ms'),
+                                'ensemble_optimization_score': opt,
+                                'ensemble_test_score': test,
+                                'task': task,
+                                'fold': fold,
+                                'framework': framework,
+                            })
+                    ensemble_dataframe = pd.DataFrame(ensemble_dataframe)
+                    dataframe.append(
+                        pd.merge(
+                            rh_dataframe,
+                            ensemble_dataframe,
+                            on="Timestamp", how='outer'
+                        ).sort_values('Timestamp').fillna(method='ffill')
+                    )
+
+    return pd.concat(dataframe).reset_index(drop=True)
+
+
+def collect_stats(
+    jobs: typing.Dict,
+    args: typing.Any,
+    run_dir: str
+) -> pd.DataFrame:
+    """
+    Collects the overfit files, integrating them per fold into a single framework file
+
+    Args:
+        jobs (typing.Dict): A handy dictionary with frameworks/benchmarck/task/fold info
+        args (typing.Any): Namespace with the input argument of this script
+        run_dir (str): Are on where to launch the jobs
+
+    Returns:
+
+    """
+
+    # Collect a dataframe that will contain columns
+    # tool Experiment metric train val test
+    constraint = f"{args.runtime}s{args.cores}c{args.memory}"
+    dataframe = []
+    for framework, framework_dict in jobs.items():
+        for benchmark, benchmark_dict in framework_dict.items():
+            for task, task_dict in benchmark_dict.items():
+                for fold, data in task_dict.items():
+                    rh_dataframe = []
+                    for stats_file in remote_glob(os.path.join(
+                        run_dir,
+                        f"{framework}_{benchmark}_{constraint}_{task}_{fold}",
+                        '*',  # The directory name the benchmark created
+                        'debug',
+                        task,
+                        str(fold),
+                        'smac3-output',
+                        '*', #_run_SEED
+                        'stats.json'
+                    )):
+                        stats_file = remote_get(stats_file)
+                        with open(stats_file) as f:
+                            stats = json.load(f)
+
+                        dataframe.append({
+                            'framework': framework,
+                            'task': task,
+                            'fold': fold,
+                            "submitted_ta_runs": stats['submitted_ta_runs'],
+                            "finished_ta_runs": stats['finished_ta_runs'],
+                            "n_configs": stats['n_configs'],
+                            "wallclock_time_used": stats['wallclock_time_used'],
+                            "ta_time_used": stats['ta_time_used'],
+                            "inc_changed": stats['inc_changed'],
+                            "_n_configs_per_intensify": stats['_n_configs_per_intensify'],
+                            "_n_calls_of_intensify": stats['_n_calls_of_intensify'],
+                            "_ema_n_configs_per_intensifiy": stats['_ema_n_configs_per_intensifiy'],
+                            "_EMA_ALPHA": stats['_EMA_ALPHA'],
+                        })
+
+    return pd.DataFrame(dataframe)
 
 
 def get_normalized_score(
@@ -1880,7 +2060,15 @@ if __name__ == "__main__":
         help='generates a overhead'
     )
     parser.add_argument(
-        '--collect_ensemble_history',
+        '--collect_history',
+        type=str2bool,
+        nargs='?',
+        const=True,
+        default=False,
+        help='generates a problems dataframe'
+    )
+    parser.add_argument(
+        '--collect_stats',
         type=str2bool,
         nargs='?',
         const=True,
@@ -1986,15 +2174,25 @@ if __name__ == "__main__":
         logger.info(f"Please check {filename}")
         overfit.to_csv(filename)
 
-    if args.collect_ensemble_history:
-        overfit = collect_ensemble_history(
+    if args.collect_history:
+        overfit = collect_performance_history(
             jobs=jobs,
             args=args,
             run_dir=run_dir
         )
-        filename = f"{args.framework}_ensemble_history.csv"
+        filename = f"{args.framework}_history.csv"
         logger.info(f"Please check {filename}")
         overfit.to_csv(filename)
+
+    if args.collect_stats:
+        stats = collect_stats(
+            jobs=jobs,
+            args=args,
+            run_dir=run_dir
+        )
+        filename = f"{args.framework}_stats.csv"
+        logger.info(f"Please check {filename}")
+        stats.to_csv(filename)
 
     if args.collect_overhead:
         overhead = collect_overhead(

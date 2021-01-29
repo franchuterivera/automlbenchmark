@@ -18,6 +18,8 @@ results
 *.iml
 **/*.swp
 **/*.ipynb
+**/*.sif
+*.sif
 
 # tmp files
 **/*.log

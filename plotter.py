@@ -1,3 +1,5 @@
+from scipy.stats import rankdata
+import tqdm
 import argparse
 import glob
 import logging
@@ -12,6 +14,8 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 
+from scipy.stats import wilcoxon
+
 import seaborn as sns
 
 logger = logging.getLogger()
@@ -22,7 +26,7 @@ logger = logging.getLogger()
 MAPPING = {
     "None": 'autosklearn',
     "autosklearnBBCEnsembleSelection": 'Alg. 5',
-    "autosklearnBBCEnsembleSelectionNoPreSelect": 'Alg. 5\n(no Line 12.)',
+    "autosklearnBBCEnsembleSelectionNoPreSelect": 'Alg. 5 (no Line 12.)',
     "autosklearnBBCEnsembleSelectionPreSelectInES": 'Alg. 7',
     "autosklearnBBCEnsembleSelectionPreSelectInESFULL": 'Alg. 6',
     "autosklearnBBCSMBOAndEnsembleSelectionBISMAC": 'Alg. 11',
@@ -54,7 +58,7 @@ def parse_data(csv_location: str) -> pd.DataFrame:
         )
 
     if len(data) == 0:
-        print(f"ERROR: No overfit data to parse on {csv_location}")
+        logger.error(f"No overfit data to parse on {csv_location}")
         return
 
     data = pd.concat(data).reindex()
@@ -118,7 +122,7 @@ def parse_overhead(csv_location, tools=None, keys=['MaxRSS',
         )
 
     if len(df) == 0:
-        print(f"ERROR: No overhead data to parse on {csv_location}")
+        logger.error(f"No overhead data to parse on {csv_location}")
         return
 
     df = pd.concat(df).reset_index(drop=True)
@@ -450,7 +454,6 @@ def plot_ranked_pairs_winner(df: pd.DataFrame,
         all_nodes.add(target)
         all_nodes.add(source)
     root = all_nodes - targets
-    print(f"root={root} len")
     color_map = ['#FFFFFF' if node not in root else '#1f77b4' for node in G]
 
     # https://stackoverflow.com/questions/55859493/how-to-place-nodes-in-a-specific-position-networkx
@@ -500,7 +503,7 @@ def plot_testsubtrain_history(csv_location: str, tools: typing.List[str],
         )
 
     if len(dfh) == 0:
-        print(f"ERROR: No ensemble history data to parse on {csv_location}")
+        logger.error(f"No ensemble history data to parse on {csv_location}")
         return
 
     dfh = pd.concat(dfh).reindex()
@@ -618,7 +621,6 @@ def generate_ranking_per_seed_per_dataset(dfs: typing.List[pd.DataFrame], metric
                 ascending=False,
                 method='min',
             )
-            #print(f"seed={seed} task={task} this_frame={this_frame}")
             result[f"{seed}_{task}"] = this_frame[f"{seed}_{task}"]
             score[f"{seed}_{task}"] = this_frame[metric + '_mean']
 
@@ -630,6 +632,25 @@ def generate_ranking_per_seed_per_dataset(dfs: typing.List[pd.DataFrame], metric
     score['index'] = score['index'].apply(lambda x: beautify_node_name(x))
     score.set_index('index')
     return result, score
+
+
+def generate_ranking_per_fold_per_dataset(df: typing.List[pd.DataFrame], metric: str = 'test') -> pd.DataFrame:
+    """
+    also rank per fold because even folds can be statistically different
+
+    Args:
+        dfs (List[pdDataFrame]): A list of dataframes each representing a seed
+
+    Returns:
+        pd.DataFrame: with the ranking
+    """
+    # Create a ranking for seed and dataset
+    scores = pd.pivot_table(df, values='test', index=['task', 'tool'], columns=['fold'])
+    result = scores.groupby(level=0).rank(ascending=False, method='average', na_option='bottom').mean(axis='columns').reset_index()
+
+    # Change the format -- test name is changed to 0
+    result = pd.pivot_table(result, values=0, index=['tool'], columns=['task'])
+    return result, scores
 
 
 def generate_ranking_per_dataset(dfs: typing.List[pd.DataFrame], metric: str = 'test') -> pd.DataFrame:
@@ -664,7 +685,7 @@ def generate_ranking_per_dataset(dfs: typing.List[pd.DataFrame], metric: str = '
             ascending=False,
             method='min',
         )
-        print(f"task={task} this_frame={this_frame}")
+        logger.debug(f"generate_ranking_per_dataset: task={task} this_frame={this_frame}")
         result[f"{task}"] = this_frame[f"{task}"]
         score[f"{task}"] = this_frame[metric + '_mean']
 
@@ -677,6 +698,108 @@ def generate_ranking_per_dataset(dfs: typing.List[pd.DataFrame], metric: str = '
     score['index'] = score['index'].apply(lambda x: beautify_node_name(x))
     score.set_index('index')
     return result, score
+
+
+def bootstrap_wins(list_of_blocks_challenger: typing.List, list_of_blocks_reference: typing.List, bootstrap: int = 300) -> pd.DataFrame:
+    """
+
+    """
+    wins = 0
+    assert len(list_of_blocks_challenger) == len(list_of_blocks_reference,)
+    for i in range(bootstrap):
+        # First select a block
+        block_idx = np.random.choice(list(range(len(list_of_blocks_challenger))))
+
+        # Fault tolerance
+        if len(list_of_blocks_challenger[block_idx]) == 0:
+            # This run failed
+            continue
+        challenger = np.random.choice(list_of_blocks_challenger[block_idx])
+
+        # Fault tolerance
+        if len(list_of_blocks_reference[block_idx]) == 0:
+            # The challenger did not failed but reference did. It is a win!
+            wins += 1
+            continue
+        reference = np.random.choice(list_of_blocks_reference[block_idx])
+        if challenger > reference:
+            wins += 1
+    return wins
+
+
+def generate_ranking_per_Aseed_fold_per_dataset(df: pd.DataFrame, bootstrap: int = 200
+                                                ) -> pd.DataFrame:
+    """
+    Performs the rank calculation per bootstrap block where a block is a Aseed-fold-dataset pair
+
+    Args:
+        dfs (List[pdDataFrame]): A list of dataframes each representing a seed
+
+    Returns:
+        pd.DataFrame: with the ranking
+    """
+
+    # fix different seeds issue
+    # Just to make sure seed are same FOR PANDAS INDEXING
+    for seed in df['seed'].unique():
+        if seed > 200:
+            df.loc[df['seed'] == seed, 'seed'] = seed - 100
+
+    # Form the desired array with raw scores, an average of everything
+    result = pd.pivot_table(df, values='test', index=['tool'], columns=['task'], aggfunc=np.mean)
+    df['wins'] = 0  # we rank based on wins
+    ranking = pd.pivot_table(df, values='wins', index=['tool'], columns=['task'], aggfunc=np.mean)
+
+    # fix the metric -- greater is better in certain cases. This can be done per task
+
+    # Sort values for proper compare -- yet I don;t think it matters
+    df.sort_values(by=['tool', 'task', 'fold', 'Aseed', 'seed'], inplace=True)
+
+    test_score_per_task_fold_aseed_tool = pd.pivot_table(df, values='test', index=['task', 'fold', 'Aseed', 'tool'], columns='seed')
+
+    folds = df['fold'].unique()
+    aseeds = df['Aseed'].unique()
+
+    for task in tqdm.tqdm(ranking.columns):
+
+        # We divide by 2 because bootstrap is used in 2 placed
+        # we have blocks and within each block we have repetitions.
+        # we sample with replacemented bootstrap//2 times from a block
+        # which in this context is task/fold/autosklearnseed. Within this block
+        # are 10 repetitions and we take  bootstrap//2 comparissons
+        for boot in range(bootstrap // 2):
+            # Pick a random fold, seed
+            fold = np.random.choice(folds)
+            aseed = np.random.choice(aseeds)
+            index = (task, fold, aseed)  # would yield a table with tool as row and repetitions as col
+
+            # Get the values per tool(rows) and columns(10 seed repetitions)
+            data = test_score_per_task_fold_aseed_tool.loc[index].to_numpy()
+            data[np.isnan(data)] = 0
+            # Do sampling with replacement to get tool as rows again, but different
+            # permutations of the 10 seeds
+            resample_index = np.random.randint(data.shape[1], size=(data.shape[0], bootstrap//2))
+            data = np.take_along_axis(data, resample_index, 1)
+            wins = pd.Series(
+                (rankdata(data, axis=1, method='min')-1).sum(axis=1),
+                index=test_score_per_task_fold_aseed_tool.loc[index].index
+            )
+            # Pretty cool using index: So the index are the tool we are evaluation.
+            # if a whole tool failed, it won't even be there and this tool for this
+            # task won't be incremented. We add the number of times that for this
+            # bootstrap block of fold/seed/task, an experiment was better than other
+            ranking[task] = ranking[task] + wins
+
+    result = result.reset_index()
+    result['tool'] = result['tool'].apply(lambda x: beautify_node_name(x))
+    result.set_index('tool')
+
+    ranking = ranking.rank(axis=0, method='average', ascending=False)
+    ranking = ranking.reset_index()
+    ranking['tool'] = ranking['tool'].apply(lambda x: beautify_node_name(x))
+    ranking.set_index('tool')
+    print(ranking)
+    return ranking, result
 
 
 def generate_ranking_per_dataset2(dfs: typing.List[pd.DataFrame], metric: str = 'test') -> pd.DataFrame:
@@ -737,6 +860,192 @@ def collapse_seed(df: pd.DataFrame) -> pd.DataFrame:
     ).mean().reset_index()
 
 
+def get_best_tool_for_task(df_task: pd.DataFrame) -> typing.List[str]:
+    """
+    Simply gets which is the best tool for a given task by doing a bunch of
+    wilcoxon test for greatness
+    """
+    tools = df_task['tool'].unique().tolist()
+    df_task = df_task.sort_values(['seed', 'fold'])
+    best = tools.pop()
+    problematic = []
+    while len(tools) > 0:
+        challenger = tools.pop()
+        try:
+            data = pd.merge(
+                df_task[(df_task['tool'] == challenger)],
+                df_task[(df_task['tool'] == best)],
+                suffixes=['_challenger', '_best'],
+                how="inner", on=['seed', 'fold'])
+            logger.debug(data[['seed', 'fold', 'tool_challenger', 'test_challenger', 'tool_best', 'test_best']])
+            # wilcoxon([6, 7, 8, 9, 10], [1, 2, 3, 4, 5], alternative='greater')
+            # WilcoxonResult(statistic=15.0, pvalue=0.03125)
+            w_g, p_g = wilcoxon(
+                # challenger,
+                data['test_challenger'],
+                # best,
+                data['test_best'],
+                alternative='greater'
+            )
+            w_l, p_l = wilcoxon(
+                # challenger,
+                data['test_challenger'],
+                # best,
+                data['test_best'],
+                alternative='less'
+            )
+            w_e, p_e = wilcoxon(
+                # challenger,
+                data['test_challenger'],
+                # best,
+                data['test_best'],
+                alternative='two-sided'
+            )
+            if p_g < 0.05:
+                logger.debug(f"YES challenger={challenger}({np.mean(df_task[(df_task['tool'] == challenger)]['test'])}) better than {best}({np.mean(df_task[(df_task['tool'] == best)]['test'])}) as p_g={p_g}/p_l={p_l}/p_e={p_e} total={data.shape[0]}")
+                best = challenger
+                # If there is a new challenger
+                # We reset the list of problematic
+                # So a problematic tool would be one
+                # such that the challenger is so similar to best
+                # that we cannot decide which one is best
+                problematic = []
+            elif p_l < 0.05:
+                logger.debug(f"NOT challenger={challenger}({np.mean(df_task[(df_task['tool'] == challenger)]['test'])}) better than {best}({np.mean(df_task[(df_task['tool'] == best)]['test'])}) as p_g={p_g}/p_l={p_l}/p_e={p_e} total={data.shape[0]}")
+                # Best is still best
+                pass
+            else:
+                logger.debug(f"PROBLEM challenger={challenger}({np.mean(df_task[(df_task['tool'] == challenger)]['test'])}) better than {best}({np.mean(df_task[(df_task['tool'] == best)]['test'])}) as p_g={p_g}/p_l={p_l}/p_e={p_e} -> {((data['test_challenger'] - data['test_best']) > 0).value_counts()} total={data.shape[0]}")
+                # Any other case is problematic
+                problematic.append(challenger)
+        except ValueError as e:
+            # ValueError: zero_method 'wilcox' and 'pratt' do not work if x - y is zero for all elements.
+            # Fundamentally X == Y
+            logger.debug(f"PROBLEM challenger={challenger}({np.mean(df_task[(df_task['tool'] == challenger)]['test'])}) better than {best}({np.mean(df_task[(df_task['tool'] == best)]['test'])}) as p={e}")
+            problematic.append(challenger)
+
+    if len(problematic) > 0:
+        problematic.append(best)
+        performances = [np.mean(df_task[df_task['tool']==tool]['test']) for tool in problematic]
+        problematic = [x for _, x in sorted(zip(performances, problematic))]
+        return problematic
+    else:
+        return [best]
+
+
+def wilcoxon_averaging(df: pd.DataFrame, contains: typing.Optional[str] = None,
+                       base_tool_name: str = 'None_es50_B100_N1.0') -> pd.DataFrame:
+    """
+    Collapses all seeds/folds to a single test performance result
+    per dataset. It adds also 2 columns, which are p-values againts
+    autosklearn for a greater-than-wilcoxon test and p-values for
+    lesser than the best performing model.
+
+    To determine the best performing model, and ALLvsALL approach is followed,
+    in which a paired computation is exhaustively done to find a best model. In
+    case of tie, WHAT TO DO??
+    """
+    # Just care right now for 100 bootstrap data
+    if contains is not None:
+        df = df[df["tool"].str.contains(contains)]
+
+    # Collapse fold
+    #df = df.groupby(
+    #    ['tool', 'model', 'task', 'seed']
+    #).mean().reset_index()
+
+    dataframe = []
+    for task in df['task'].unique():
+        logger.debug(f"\n\n\n{task}")
+        #if task != 'vehicle':
+        #    continue
+        best_tool_for_task = get_best_tool_for_task(df[df['task']==task])
+        logger.debug(f"For task={task} best_tool_for_task={best_tool_for_task}")
+        best = df.query(f"tool == '{best_tool_for_task[-1]}' & task == '{task}'").sort_values(['seed', 'fold'])
+        for tool in df['tool'].unique():
+            challenger = df.query(f"tool == '{tool}' & task == '{task}'").sort_values(['seed', 'fold'])
+            data = pd.merge(best, challenger, how="inner", on=['seed', 'fold'])
+
+            try:
+                w, p = wilcoxon(data['test_y'], data['test_x'], alternative='two-sided'),
+                if p < 0.05:
+                    statistically_eq = False
+                else:
+                    # We do not have enough information to reject the null hypothesis
+                    # But we are interested to highlight the equivalent ones
+                    statistically_eq = True
+            except ValueError:
+                # X == Y
+                statistically_eq = True
+
+            dataframe.append({
+                'task': task,
+                'tool': tool,
+                'statistically_eq': statistically_eq,
+                'test_avg': data['test_y'].mean(),
+                'test_std': data['test_y'].std(),
+                'is_best': tool in best_tool_for_task,
+            })
+    df = pd.DataFrame(dataframe)
+    df['tool'] = df['tool'].apply(lambda x: beautify_node_name(x))
+    df['task_best'] = False
+    for task in df['task']:
+        maximum = df[df['task']==task]['test_avg'].max()
+        df.loc[(df['task']==task) & (df['test_avg']==maximum), 'task_best'] = True
+    df.to_csv('wilcoxon.csv')
+
+    #rearrenge the format
+    df_test = pd.DataFrame(index=df['tool'].unique(), columns=df['task'].unique())
+    df_best = pd.DataFrame(index=df['tool'].unique(), columns=df['task'].unique())
+    df_EQ = pd.DataFrame(index=df['tool'].unique(), columns=df['task'].unique())
+    for tool in df['tool'].unique():
+        for task in df['task'].unique():
+            df_test.at[tool, task] = df[(df['tool']==tool) & (df['task']==task)]['test_avg'].values.item(0)
+            print(f"df_test={df_test} with tool={tool} and task={task} and {df[(df['tool']==tool) & (df['task']==task)]}")
+            df_EQ.at[tool, task] = df[(df['tool']==tool) & (df['task']==task)]['is_best'].values.item(0)
+            df_best.at[tool, task] = df[(df['tool']==tool) & (df['task']==task)]['task_best'].values.item(0)
+            print(f"df_best={df_best} ")
+    df_test.to_csv('wilcoxon_test.csv')
+    df_best.to_csv('wilcoxon_best.csv')
+    df_EQ.to_csv('wilcoxon_EQ.csv')
+
+    return df
+
+
+def Nemenyi_posthoc(df: pd.DataFrame, contains: typing.Optional[str] = None,
+                       base_tool_name: str = 'None_es50_B100_N1.0') -> pd.DataFrame:
+    """
+    First this procedure computes the friedmanchisquare test to make sure that the tools
+    are different -- that is, the test performance actually yields a difference that is
+    meassurable.
+
+    The Friedman test is the nonparametric version of the repeated measures analysis of
+    variance test, or repeated measures ANOVA.
+    The test can be thought of as a generalization of the Kruskal-Wallis H Test to more
+    than two samples.
+
+    The default assumption, or null hypothesis, is that the multiple paired samples have
+    the same distribution.
+    A rejection of the null hypothesis indicates that one or more of the paired samples
+    has a different distribution.
+
+    Fail to Reject H0: Paired sample distributions are equal.
+    Reject H0: Paired sample distributions are not equal.
+
+
+    """
+    # Just care right now for 100 bootstrap data
+    if contains is not None:
+        df = df[df["tool"].str.contains(contains)]
+
+    measurements = pd.pivot_table(
+        df, values='test', index=['task', 'fold', 'seed'], columns=['tool'])
+
+    for tool in df['tool'].unique():
+        challenger = df.query(f"tool == '{tool}' & task == '{task}'").sort_values(['seed', 'fold'])
+
+#pd.pivot_table(df, values='test', index=['task', 'tool'], columns=['fold']).groupby(level=0).rank(ascending=False, method='average', na_option='bottom').mean(axis='columns')
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Utility to plot CSV results')
     parser.add_argument(
@@ -754,50 +1063,46 @@ if __name__ == "__main__":
         required=False,
     )
     parser.add_argument(
-        '--experiment',
-        action='append',
+        '--rank',
         help='Generates results/plots just for this experiment',
-        default=None,
+        required=True,
         type=str,
-        required=False,
+        # Aseed means here parent autosklearn seed
+        choices=['fold_dataset', 'block_Aseed_fold_dataset']
     )
     args = parser.parse_args()
 
     # First get the data
     dfs = []
-    print(f"args={args.csv_location}")
     for i, csv_location in enumerate(args.csv_location):
-        logger.info(f"Working in {csv_location}")
+        logger.info(f"Working on {i}: {csv_location}")
         df = parse_data(csv_location)
 
-        # In the case the run has multiple seeds, we collapse them assuming
-        # they are meant to remove the noise among runs
-        df = collapse_seed(df)
+        if 'seed' not in df.columns:
+            df['seed'] = i
+        elif 'block_Aseed_fold_dataset' in args.rank:
+            # We are comparing a run that is somewhat paired.
+            # From autosklearn we created 3 seeds from which we then
+            # run 10 times each
+            # Aseed is the Autosklearn father seed
+            df['Aseed'] = i
+
         dfs.append(df)
 
-        pairwise_comparisson_matrix = generate_pairwise_comparisson_matrix(
-            df, metric='test', tools=df['tool'].unique(),
-        ).reset_index()
-        pairwise_comparisson_matrix['index'] = pairwise_comparisson_matrix['index'].apply(lambda x: beautify_node_name(x))
-        pairwise_comparisson_matrix.set_index('index')
-        pairwise_comparisson_matrix.columns = [beautify_node_name(c) for c in pairwise_comparisson_matrix.columns]
-        pairwise_comparisson_matrix.to_csv(f"pairwise_{i}.csv")
-    #ranking, raw = generate_ranking_per_dataset2(dfs)
-    ranking, rawscores = generate_ranking_per_seed_per_dataset(dfs)
-    #ranking = generate_ranking_per_dataset(dfs)
-    ranking.to_csv('ranking_seed_dataset.csv')
-    rawscores.to_csv('ranking_seed_dataset_rawscores.csv')
+    df = pd.concat(dfs).reset_index()
+    df.to_csv('debug.csv')
 
-    # get overall winner with ranked pairs
-    #plot_ranked_pairs_winner(metric='test', df=df, tools=[t for t in df['tool'].unique()])
-    #plot_ranked_pairs_winner(metric='test', df=df, tools=['autosklearn'] + [t for t in df['tool'].unique() if 'Stacking' in t])
-    #plot_ranked_pairs_winner(metric='test', df=df, tools=['autosklearn'] + [t for t in df['tool'].unique() if 'Thres' in t])
+    # Average the folds across seed to remove noise
+    if 'block_Aseed_fold_dataset' in args.rank:
+        ranking, rawscores = generate_ranking_per_Aseed_fold_per_dataset(df)
+    elif 'fold_dataset' in args.rank:
+        df = collapse_seed(df)
+        ranking, rawscores = generate_ranking_per_fold_per_dataset(df)
+    else:
+        raise NotImplementedError(args.rank)
 
-    # get the overhead table
-    #filename = 'overhead.csv'
-    #assert not os.path.exists(filename)
-    #overhead = parse_overhead(args.csv_location, tools=[t for t in df['tool'].unique()])
-    #overhead = parse_overhead(args.csv_location, tools=['autosklearnStackingLatest_f50'])
-    #overhead = parse_overhead(args.csv_location, tools=['autosklearnBBCEnsembleSelectionLatest_B_50_Nb_50'])
-    #overhead.to_csv(filename)
-
+    # Save to disk
+    filename = f"ranking_{args.rank}"
+    ranking.to_csv(f"{filename}.csv")
+    rawscores.to_csv(f"{filename}_rawscores.csv")
+    print(f"Check {filename}.csv")
