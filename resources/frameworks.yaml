@@ -51,14 +51,13 @@ AutoGluon:
   #project: https://autogluon.mxnet.io
   project: https://github.com/franchuterivera/autogluon.git
   params:
-    _save_artifacts: ['leaderboard', 'overfit']
+    presets: best_quality
 
 AutoGluon_best:
   extends: AutoGluon
   description: "provides the most accurate overall predictor"
   params:
     presets: best_quality
-    _save_artifacts: ['leaderboard', 'overfit']
 
 #autosklearn:
 #  version: '0.10.0'
@@ -574,6 +573,7 @@ autosklearn:
   project: https://automl.github.io/auto-sklearn/
   params:
     _save_artifacts: ['models', 'overfit', 'debug']
+    resampling_strategy: 'cv'
 
 autosklearnBBCScoreEnsembleLatest_B_10_Nb_100:
   version: 'B_10_Nb_100'
@@ -850,3 +850,312 @@ autosklearnVALREDUCTION_train100:
   params:
     _save_artifacts: ['models', 'overfit', 'debug']
     train_size: 1.0
+
+autosklearnRepeat_cv3_repeat1:
+  version: 'cv3_repeat1'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    folds: 3
+    repeats: 1
+
+autosklearnRepeat_cv3_repeat3:
+  version: 'cv3_repeat3'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    folds: 3
+    repeats: 3
+
+autosklearnRepeat_cv3_repeat5:
+  version: 'cv3_repeat5'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    folds: 3
+    repeats: 5
+
+autosklearnRepeat_cv3_repeat10:
+  version: 'cv3_repeat10'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    folds: 3
+    repeats: 10
+
+autosklearnRepeat_cv5_repeat1:
+  version: 'cv5_repeat1'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    folds: 5
+    repeats: 1
+
+autosklearnRepeat_cv5_repeat3:
+  version: 'cv5_repeat3'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    folds: 5
+    repeats: 3
+
+autosklearnRepeat_cv5_repeat5:
+  version: 'cv5_repeat5'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    folds: 5
+    repeats: 5
+
+autosklearnRepeat_cv5_repeat10:
+  version: 'cv5_repeat10'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    folds: 5
+    repeats: 10
+
+autosklearnRepeat_cv10_repeat1:
+  version: 'cv10_repeat1'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    folds: 10
+    repeats: 1
+
+autosklearnRepeat_cv10_repeat3:
+  version: 'cv10_repeat3'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    folds: 10
+    repeats: 3
+
+autosklearnRepeat_cv10_repeat5:
+  version: 'cv10_repeat5'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    folds: 10
+    repeats: 5
+
+autosklearnRepeat_cv10_repeat10:
+  version: 'cv10_repeat10'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    folds: 10
+    repeats: 10
+
+autosklearnHyperBandFolds_eta2_cv5_repeats1:
+  version: 'eta2_cv5_repeats1'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    k_folds: 5
+    folds_to_use: 'highest_fold_available'
+    eta: 2
+    repeats: 1
+
+autosklearnHyperBandFolds_eta2:
+  version: 'cv10_repeat10'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    k_folds: 5
+    folds_to_use: 'highest_fold_available'
+    eta: 2
+    repeats: 1
+
+autosklearnHyperBandFolds_eta3_cv5_repeats1:
+  version: 'eta3_cv5_repeats1'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    k_folds: 5
+    folds_to_use: 'highest_fold_available'
+    eta: 3
+    repeats: 1
+
+autosklearnHyperBandFolds_eta2_cv5_repeats3:
+  version: 'eta2_cv5_repeats3'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    k_folds: 5
+    folds_to_use: 'highest_fold_available'
+    eta: 2
+    repeats: 3
+
+autosklearnHyperBandFolds_eta2_cv5_repeats10:
+  version: 'eta2_cv5_repeats10'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    k_folds: 5
+    folds_to_use: 'highest_fold_available'
+    eta: 2
+    repeats: 10
+
+autosklearnHStacking_f50:
+  version: 'f50'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    fraction_time_for_this_smbo: 0.50
+
+autosklearnHStacking_f30:
+  version: 'f30'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    fraction_time_for_this_smbo: 0.30
+
+autosklearnHStacking_f80:
+  version: 'f80'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    fraction_time_for_this_smbo: 0.80
+
+autosklearnHyperBandRepeats_eta3_cv5_repeats5:
+  version: 'repeats5'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    repeats: 5
+
+autosklearnHyperBandRepeats_eta3_cv5_repeats10:
+  version: 'repeats10'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    repeats: 10
+
+autoPyTorch:
+  version: 'reproduce'
+  project: https://automl.github.io/auto-sklearn/
+
+autosklearnHyperBandAVGRepeats_eta3_cv5_repeats5_avgFalse:
+  version: 'repeats5'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    repeats: 5
+    avg_previous_repeats: False
+
+autosklearnHyperBandAVGRepeats_eta3_cv5_repeats10_avgFalse:
+  version: 'repeats10'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    repeats: 10
+    avg_previous_repeats: False
+
+autosklearnHyperBandAVGRepeats_eta3_cv5_repeats5_avgTrue:
+  version: 'repeats5True'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    repeats: 5
+    avg_previous_repeats: True
+
+autosklearnHyperBandAVGRepeats_eta3_cv5_repeats10_avgTrue:
+  version: 'repeats10True'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    repeats: 10
+    avg_previous_repeats: True
+
+autosklearnHyperBandAVGRepeats_eta3_cv5_repeats5_avgTrue_Stack2_halftime:
+  version: 'repeats5TrueLevel2'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    repeats: 5
+    avg_previous_repeats: True
+
+autosklearnHyperBandAVGRepeats_eta3_cv5_repeats10_avgTrue_Stack2_halftime:
+  version: 'repeats5TrueLevel2'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    repeats: 10
+    avg_previous_repeats: True
+
+autosklearnHyperBandAVGRepeatsRobustEnsemble_cv5_repeats10_avgTrue_ensemble_overall_max:
+  version: 'TrueOverall10'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    repeats: 10
+    avg_previous_repeats: True
+    ensemble_folds: 'highest_repeat'
+
+autosklearnHyperBandAVGRepeatsRobustEnsemble_cv5_repeats20_avgTrue_ensemble_overall_max:
+  version: 'TrueOverall20'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    repeats: 20
+    avg_previous_repeats: True
+    ensemble_folds: 'highest_repeat'
+
+autosklearnHyperBandAVGRepeatsRobustEnsemble_cv5_repeats10_avgTrue_ensemble_perrun_max:
+  version: 'TruePerRun10'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    repeats: 10
+    avg_previous_repeats: True
+    ensemble_folds: 'highest_repeat_per_run'
+
+autosklearnHyperBandAVGRepeatsRobustEnsemble_cv5_repeats20_avgTrue_ensemble_perrun_max:
+  version: 'TruePerRun20'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    repeats: 20
+    avg_previous_repeats: True
+    ensemble_folds: 'highest_repeat_per_run'
+
+autosklearnHyperBandAVGRepeatsRobustEnsemble_cv5_repeats10_avgTrue_ensemble_overall_max_stackinstance:
+  version: 'TrueOverall10StackingInstance'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    repeats: 10
+    avg_previous_repeats: True
+    ensemble_folds: 'highest_repeat'
+    stacking_strategy: 'instances'
+
+autosklearnHyperBandAVGRepeatsRobustEnsemble_cv5_repeats20_avgTrue_ensemble_overall_max_stackinstance:
+  version: 'TrueOverall20Stack'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    repeats: 20
+    avg_previous_repeats: True
+    ensemble_folds: 'highest_repeat'
+    stacking_strategy: 'instances'
+
+autosklearnHyperBandAVGRepeatsRobustEnsemble_cv5_repeats10_avgTrue_ensemble_perrun_max_stackinstance:
+  version: 'TruePerRun10Stack'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    repeats: 10
+    avg_previous_repeats: True
+    ensemble_folds: 'highest_repeat_per_run'
+    stacking_strategy: 'instances'
+
+autosklearnHyperBandAVGRepeatsRobustEnsemble_cv5_repeats20_avgTrue_ensemble_perrun_max_stackinstance:
+  version: 'TruePerRun20Stack'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    repeats: 20
+    avg_previous_repeats: True
+    ensemble_folds: 'highest_repeat_per_run'
+    stacking_strategy: 'instances'
