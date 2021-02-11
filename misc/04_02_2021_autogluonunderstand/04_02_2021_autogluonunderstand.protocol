@@ -1,0 +1,29 @@
+# Baseline autosklearn cv5
+python manager.py -f autosklearn -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.01.26-19.52.36
+python manager.py -f autosklearn -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.01.26-22.30.29
+python manager.py -f autosklearn -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.01.26-23.51.59
+python manager.py -f autosklearn -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.02.01-00.33.40
+# 1c 8h 4G
+python manager.py -f autosklearn -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 28800 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.02.04-23.50.08
+python manager.py -f autosklearn -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 28800 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.02.07-02.51.54
+python manager.py -f autosklearn -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 28800 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.02.07-17.04.42
+# 1c 1h 32G
+python manager.py -f autosklearn -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 32G --runtime 3600 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.02.05-12.09.16
+python manager.py -f autosklearn -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 32G --runtime 3600 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.02.05-19.56.56
+python manager.py -f autosklearn -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 32G --runtime 3600 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.02.05-22.05.27
+
+
+# Baseline Autogluon
+# 1h 4G
+python manager.py -f AutoGluon -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.01.27-01.56.02
+python manager.py -f AutoGluon -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.01.28-11.11.50
+python manager.py -f AutoGluon -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.01.28-13.43.22
+python manager.py -f AutoGluon  -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.02.01-00.43.34
+# 8h 4G
+python manager.py -f AutoGluon -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 28800  --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.02.04-00.18.36
+python manager.py -f AutoGluon -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 28800  --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.02.05-13.44.42
+python manager.py -f AutoGluon -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 28800  --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.02.06-21.32.47
+# 1c 1h 32G
+python manager.py -f AutoGluon -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 32G --runtime 3600 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.02.05-12.12.49
+python manager.py -f AutoGluon -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 32G --runtime 3600 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.02.05-19.27.38
+python manager.py -f AutoGluon -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 32G --runtime 3600 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.02.05-22.45.29
