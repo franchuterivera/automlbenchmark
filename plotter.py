@@ -646,6 +646,7 @@ def generate_ranking_per_fold_per_dataset(df: typing.List[pd.DataFrame], metric:
     """
     # Create a ranking for seed and dataset
     scores = pd.pivot_table(df, values='test', index=['task', 'tool'], columns=['fold'])
+    scores.to_csv('debug_score_rank.csv')
     result = scores.groupby(level=0).rank(ascending=False, method='average', na_option='bottom').mean(axis='columns').reset_index()
 
     # Change the format -- test name is changed to 0
@@ -781,7 +782,7 @@ def generate_ranking_per_Aseed_fold_per_dataset(df: pd.DataFrame, bootstrap: int
             resample_index = np.random.randint(data.shape[1], size=(data.shape[0], bootstrap//2))
             data = np.take_along_axis(data, resample_index, 1)
             wins = pd.Series(
-                (rankdata(data, axis=1, method='min')-1).sum(axis=1),
+                (rankdata(data, axis=0, method='min')-1).sum(axis=1),
                 index=test_score_per_task_fold_aseed_tool.loc[index].index
             )
             # Pretty cool using index: So the index are the tool we are evaluation.
@@ -1070,6 +1071,13 @@ if __name__ == "__main__":
         # Aseed means here parent autosklearn seed
         choices=['fold_dataset', 'block_Aseed_fold_dataset']
     )
+    parser.add_argument(
+        '--tools',
+        help='Limit the comparison to a set of tools',
+        type=str,
+        action='extend',
+        nargs='+',
+    )
     args = parser.parse_args()
 
     # First get the data
@@ -1090,6 +1098,9 @@ if __name__ == "__main__":
         dfs.append(df)
 
     df = pd.concat(dfs).reset_index()
+    if args.tools is not None and len(args.tools) > 0:
+        # Only keep the desired tools
+        df = df[df['tool'].isin(args.tools)]
     df.to_csv('debug.csv')
 
     # Average the folds across seed to remove noise
