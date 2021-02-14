@@ -723,7 +723,7 @@ def check_if_running(run_file: str, tag: typing.Optional[str] = None) -> bool:
         name = name + tag
 
     # First check if there is a job with this name
-    cmd = f"squeue --format=\"%.150j\" --noheader -u {USER}"
+    cmd = f"squeue --format=\"%.190j\" --noheader -u {USER}"
     #result = subprocess.run([
     #    'squeue',
     #    f"--format=\"%.50j\" --noheader -u {os.environ['USER']}"
@@ -731,6 +731,7 @@ def check_if_running(run_file: str, tag: typing.Optional[str] = None) -> bool:
     for i, line in enumerate(remote_run(cmd)):
         if name in line:
             return True
+    return False
 
     # The check in the user job arrays
     cmd = f"squeue --format=\"%.150i\" --noheader -u {USER}"
@@ -1007,6 +1008,7 @@ def get_job_status(
     folds: typing.List[int],
     constraint: str,
     run_dir: str,
+    args,
 ) -> typing.Dict[str, typing.Any]:
     """
     Buils a dictionary of dictionaries with the status
@@ -1082,7 +1084,7 @@ def get_job_status(
                 valid_result = is_number(jobs[framework][benchmark][task][fold]['results'])
                 if valid_result:
                     status = 'Completed'
-                elif check_if_running(jobs[framework][benchmark][task][fold]['run_file']):
+                elif check_if_running(jobs[framework][benchmark][task][fold]['run_file'], tag=args.tag):
                     status = 'Running'
                 else:
                     status = 'N/A'
@@ -1133,7 +1135,7 @@ def launch(
 
                     # Launch the run if it was not yet launched
                     if results is None:
-                        if check_if_running(run_file):
+                        if check_if_running(run_file, args.tag):
                             status = 'Running'
                         else:
                             run_files.append(run_file)
@@ -1141,7 +1143,7 @@ def launch(
                     else:
                         # If the run failed, then ask the user to relaunch
                         if not valid_result:
-                            if check_if_running(jobs[framework][benchmark][task][fold]['run_file']):
+                            if check_if_running(jobs[framework][benchmark][task][fold]['run_file'], args.tag):
                                 status = 'Running'
                             else:
                                 status = 'Failed'
@@ -2186,7 +2188,8 @@ if __name__ == "__main__":
         tasks=tasks,
         folds=args.folds,
         constraint=constraint,
-        run_dir=run_dir
+        run_dir=run_dir,
+        args=args,
     )
 
     # Can only run on array or normal mode

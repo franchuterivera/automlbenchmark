@@ -19,8 +19,13 @@ from sklearn import preprocessing
 import sys
 import numpy
 from xgboost_model import XGBoostModel
+from rf_model import RFModel, XTModel
 from abstract_model import balanced_accuracy
 from pandas.api.types import is_numeric_dtype
+from tabular_nn_model import TabularNeuralNetModel
+from lr_model import LinearModel
+from lgb_model import LGBModel
+from catboost_model import CatBoostModel
 
 numpy.set_printoptions(threshold=sys.maxsize)
 
@@ -46,7 +51,7 @@ def fit_and_return_avg_predictions(
         with tempfile.TemporaryDirectory() as tmpdirname:
             model[i] = model_func[model_name](
                 name=model_name,
-                path=tmpdirname,
+                path=f"{tmpdirname}/",
                 problem_type=problem_type,
                 metric=balanced_accuracy,
                 eval_metric=balanced_accuracy,
@@ -138,6 +143,8 @@ X = X.convert_dtypes()
 for x in X.columns:
     if not is_numeric_dtype(X[x]):
         X[x] = X[x].astype('category')
+    elif 'Int' in str(X[x].dtype):
+        X[x] = X[x].astype(np.int)
 print(f"Working on task {task} with data X({np.shape(X)})={X.dtypes}")
 #imp_mean = SimpleImputer(missing_values=np.nan, strategy='mean')
 #X = imp_mean.fit_transform(X)
@@ -151,6 +158,12 @@ print(f"Loaded {args.openml_id} with {X_train.shape} train datapoints and {X_tes
 
 model_func = {
     'XGBoostModel': XGBoostModel,
+    'XTModel': XTModel,
+    'RFModel': RFModel,
+    'TabularNeuralNetModel': TabularNeuralNetModel,
+    'LinearModel': LinearModel,
+    'LGBModel': LGBModel,
+    'CatBoostModel': CatBoostModel,
 }
 
 df = []
@@ -159,12 +172,10 @@ test_history_counter = {}
 oof_predictions_avg_repeat, test_predictions_avg_repeat = {}, {}
 
 for use_train_data in [True, False]:
-    #for repeat in [1, 5, 10, 20]:
-    for repeat in [2]:
+    for repeat in [5, 10, 20]:
         for single_model in [True, False]:
             test_history_counter = {}
-            #for level in range(0, 10):
-            for level in range(0, 2):
+            for level in range(0, 6):
                 for model_name in model_func.keys():
                     # Save memory
                     if level > 2:
@@ -192,6 +203,9 @@ for use_train_data in [True, False]:
                                 #features_train = np.concatenate([
                                 #    features_train,  past_oof_prediction_aux], axis=1)
                                 for model_name_aux in oof_predictions_avg_repeat.keys():
+                                    if level-1 not in oof_predictions_avg_repeat[model_name_aux]:
+                                        print(f"Error {level - 1} oof_predictions_avg_repeat missing for {model_name_aux}")
+                                        continue
                                     features_train[f"level_{level}_{model_name_aux}"] = oof_predictions_avg_repeat[model_name_aux][level-1]
 
                                 #past_test_prediction_aux = np.concatenate([
@@ -199,7 +213,10 @@ for use_train_data in [True, False]:
                                 #    for model_name_aux in test_predictions_avg_repeat.keys()], axis=1)
                                 #features_test = np.concatenate([
                                 #    features_test,  past_test_prediction_aux], axis=1)
-                                for model_name_aux in oof_predictions_avg_repeat.keys():
+                                for model_name_aux in test_predictions_avg_repeat.keys():
+                                    if level-1 not in test_predictions_avg_repeat[model_name_aux]:
+                                        print(f"Error {level - 1} test_predictions_avg_repeat for {model_name_aux}")
+                                        continue
                                     features_test[f"level_{level}_{model_name_aux}"] = test_predictions_avg_repeat[model_name_aux][level-1]
 
                             else:
