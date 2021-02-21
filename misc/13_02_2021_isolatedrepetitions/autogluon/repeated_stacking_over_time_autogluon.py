@@ -91,7 +91,7 @@ def fit_and_return_avg_predictions(
     final_model = VotingClassifier(estimators=None, voting='soft', )
     final_model.estimators_ = model
 
-    return np.round(oof_predictions.mean(axis=1), decimals=0).reshape(-1, 1), np.round(test_predictions.mean(axis=1), decimals=0).reshape(-1, 1), final_model, this_test_history
+    return oof_predictions.mean(axis=1).reshape(-1, 1), np.round(test_predictions.mean(axis=1), decimals=0).reshape(-1, 1), final_model, this_test_history
 
 def save_frame(args, repeated_frame, history_frame):
     # Integrate that through progression
