@@ -74,8 +74,8 @@ def get_updates_for_regularitzation_cocktails():
     # )
     updates.append(node_name="network_backbone",
                    hyperparameter="ShapedResNetBackbone:max_units",
-                   value_range=[64, 65],
-                   default_value=64)
+                   value_range=[511, 512],
+                   default_value=512)
     # search_space_updates.append(
     #     node_name="NetworkSelector",
     #     hyperparameter="shapedresnet:resnet_shape",
@@ -93,7 +93,7 @@ def get_updates_for_regularitzation_cocktails():
     # )
     updates.append(node_name="network_backbone",
                    hyperparameter="ShapedResNetBackbone:num_groups",
-                   value_range=[2, 3],
+                   value_range=[1, 2],
                    default_value=2)
     # search_space_updates.append(
     #     node_name="NetworkSelector",
@@ -103,7 +103,7 @@ def get_updates_for_regularitzation_cocktails():
     # )
     updates.append(node_name="network_backbone",
                    hyperparameter="ShapedResNetBackbone:blocks_per_group",
-                   value_range=[2, 3],
+                   value_range=[1, 2],
                    default_value=2)
     # search_space_updates.append(
     #     node_name="CreateDataLoader",
