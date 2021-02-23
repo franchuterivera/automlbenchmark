@@ -159,11 +159,11 @@ def get_updates_for_regularitzation_cocktails():
     # lr_scheduler=[cosine_annealing]
     updates.append(node_name="lr_scheduler",
                    hyperparameter="CosineAnnealingWarmRestarts:T_0",
-                   value_range=[12, 13],
+                   value_range=[11, 12],
                    default_value=12)
     updates.append(node_name="lr_scheduler",
                    hyperparameter="CosineAnnealingWarmRestarts:T_mult",
-                   value_range=[2.0, 2.0001],
+                   value_range=[1.9999, 2.0],
                    default_value=2.0)
 
     # No early stopping
