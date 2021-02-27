@@ -13,6 +13,8 @@ import networkx as nx
 import numpy as np
 
 import matplotlib.pyplot as plt
+from matplotlib.font_manager import FontProperties
+import matplotlib.gridspec as gridspec
 
 from scipy.stats import wilcoxon
 
@@ -25,20 +27,25 @@ logger = logging.getLogger()
 # ====================================================================
 MAPPING = {
     "None": 'autosklearn',
-    "autosklearnBBCEnsembleSelection": 'Alg. 5',
-    "autosklearnBBCEnsembleSelectionNoPreSelect": 'Alg. 5 (no Line 12.)',
-    "autosklearnBBCEnsembleSelectionPreSelectInES": 'Alg. 7',
-    "autosklearnBBCEnsembleSelectionPreSelectInESFULL": 'Alg. 6',
-    "autosklearnBBCSMBOAndEnsembleSelectionBISMAC": 'Alg. 11',
-    "autosklearnBBCSMBOAndEnsembleSelection": 'Alg. 13',
-    "autosklearnBBCScoreEnsemble": 'Alg. 9',
-    "autosklearnBBCScoreEnsembleMAX": 'Alg. 10',
-    "autosklearnBBCScoreEnsembleMAXWinner": 'Alg. 11',
-    "autosklearnBBCEnsembleSelectionPreSelectInESRegularizedEnd": 'Alg. 12',
-    "autosklearnBBCScoreEnsembleAVGMDEV": 'Alg. 13',
-    "autosklearnBagging": 'bagging',
-    "autosklearnStacking": 'Alg. 14',
-    "autosklearnThresholdout": 'Alg. 17',
+
+    'autosklearnBBCScoreEnsembleALLIB': 'A: BBC Prefilter with InBag ES with InBag Avg statistic',
+    "autosklearnBBCScoreEnsemble": 'A: BBC Prefilter with OOB ES with InBag Avg statistic',
+    "autosklearnBBCScoreEnsembleAVGMDEV": 'A: BBC Prefilter with OOB ES with InBag Minimum statistic',
+    "autosklearnBBCScoreEnsemblePercentile": 'A: BBC Prefilter with OOB ES with InBag 25 percentile',
+
+    "autosklearnBBCEnsembleSelection": 'B: Avg of B-times-ES with InBag / best model preselect',
+    "autosklearnBBCEnsembleSelection_ES": 'B: Avg of B-times-ES with InBag / best model preselect / Early Stop',
+    "autosklearnBBCEnsembleSelectionNoPreSelect": 'B: Avg of B-times-ES with InBag',
+    "autosklearnBBCEnsembleSelectionNoPreSelect_ES": 'B: Avg of B-times-ES with InBag / Early Stop',
+    "autosklearnBBCEnsembleSelectionPreSelectInESRegularizedEnd": 'B: Avg of B-times-ES with InBag / Regularized',
+    "autosklearnBBCEnsembleSelectionPreSelectInESRegularizedEnd_ES": 'B: Avg of B-times-ES with InBag / Regularized /Early Stop',
+
+    "autosklearnBBCScoreEnsembleMAX": 'C: Ensemble B winners of B bootstraps',
+    "autosklearnBBCScoreEnsembleMAX_ES": 'C: Ensemble B winners of B bootstraps / Early Stop',
+    "autosklearnBBCScoreEnsembleMAXWinner": 'C: Ensemble Selection with Max-Bag-Winner addition',
+    "autosklearnBBCScoreEnsembleMAXWinner_ES": 'C: Ensemble Selection with Max-Bag-Winner addition / Early Stop',
+    "autosklearnBagging": 'Caruana(2004)  Bagging',
+    "bagging": 'Caruana(2004)  Bagging',
 }
 
 
@@ -142,6 +149,300 @@ def parse_overhead(csv_location, tools=None, keys=['MaxRSS',
             df[['tool', 'task', 'fold', key]].groupby(['task', 'tool']).mean().unstack().drop('fold', 1)
         )
     return pd.concat(data, axis='columns')
+
+
+def plot_slope(
+    data,
+    kind='interval',
+    marker=' %0.f',
+    color=None,
+    title='',
+    font_family='STIXGeneral',
+    font_size=12,
+    width=12,
+    height=8,
+    ax=None,
+    savename=None,
+    dpi=150,
+    wspace=None,
+):
+    """
+    Plot a slope plot.
+    Taken from https://github.com/pascal-schetelat/Slope/blob/master/plotSlope.py
+    """
+
+    font = FontProperties(font_family)
+    font.set_size(font_size)
+    bx = None
+
+    df = data.copy()
+
+    cols = df.columns
+    df['__label__'] = df.index
+    df['__order__'] = range(len(df.index))
+
+    if kind == 'stack':
+        f, axarr = plt.subplots(len(df), len(cols) - 1,
+                                facecolor="w",
+                                squeeze=False,
+                                sharex=True)  #,sharey=True)
+    else:
+        f = plt.figure(figsize=(width, height), dpi=30, facecolor="w")
+        gs = gridspec.GridSpec(
+            nrows=20,
+            ncols=len(cols) - 1
+        )  # the 20 rows are just there to provide enought space for the title
+        axarr = []
+        axarr_X = []
+
+        for i in range(len(cols) - 1):
+            axarr.append(plt.subplot(gs[:19, i]))
+            axarr_X.append(plt.subplot(gs[19, i]))
+
+    axarr = np.array(axarr)
+    axarr_X = np.array(axarr_X)
+    renderer = f.canvas.get_renderer()
+    data_range = [data.min().min(), data.max().max()]
+    fh = f.get_figheight()
+    fw = f.get_figwidth()
+    fdpi = f.get_dpi()
+
+    nt = int(fh // (font.get_size() / 72) / 2)
+    res = np.diff(data_range)[0] / nt * 2
+
+    if not hasattr(axarr, 'transpose'):
+        axarr = [axarr]
+
+    for i in range((len(cols) - 1)):
+        ax = axarr[i]
+
+        axarr_X[i].yaxis.set_tick_params(width=0)
+        axarr_X[i].xaxis.set_tick_params(width=0)
+        """
+        from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, HPacker
+        # orange label
+        obox1 = TextArea("orange - ", textprops=dict(color="k", size=15))
+        obox2 = TextArea("5 ", textprops=dict(color="b", size=15))
+        obox3 = TextArea(": ", textprops=dict(color="k", size=15))
+        obox4 = TextArea("10 ", textprops=dict(color="r", size=15))
+
+        orangebox = HPacker(children=[obox1, obox2, obox3, obox4],
+                            align="center", pad=0, sep=5)
+                    """
+
+        if kind == 'interval':
+            print(f"nt={nt} df[cols[i]]={df[cols[i]]}")
+            labelsL = df.groupby(pd.cut(df[cols[i]], nt))['__label__'].agg(
+                ', '.join).dropna()
+            labelsR = df.groupby(pd.cut(df[cols[i + 1]], nt))['__label__'].agg(
+                ', '.join).dropna()
+
+            yPos_L = df.groupby(pd.cut(df[cols[i]],
+                                       nt))[cols[i]].mean().dropna()
+            yPos_R = df.groupby(pd.cut(df[cols[i + 1]],
+                                       nt))[cols[i + 1]].mean().dropna()
+
+            yMark_L = df.groupby(pd.cut(df[cols[i]],
+                                        nt))[cols[i]].mean().dropna()
+            yMark_R = df.groupby(pd.cut(df[cols[i + 1]],
+                                        nt))[cols[i + 1]].mean().dropna()
+
+            yPos_ = df[[cols[i], cols[i + 1]]]
+
+        if kind == 'ordinal':
+
+            yPos_L = df[[cols[i]]].rank(ascending=False).applymap(
+                lambda el: round(el + 0.1))
+            yPos_R = df[[cols[i + 1]]].rank(ascending=False).applymap(
+                lambda el: round(el + 0.1))
+            yMark_L = df.groupby(cols[i])[cols[i]].mean().dropna()
+            yMark_R = df.groupby(cols[i + 1])[cols[i + 1]].mean().dropna()
+            #yMark_L.sort(ascending=False)
+            #yMark_R.sort(ascending=False)
+            yMark_L.sort_values(ascending=False)
+            yMark_R.sort_values(ascending=False)
+            #print yMark_L
+
+            labelsL = df.groupby(yPos_L[cols[i]].values)['__label__'].agg(
+                ', '.join)
+            labelsR = df.groupby(yPos_R[cols[i + 1]].values)['__label__'].agg(
+                ', '.join)
+            #yPos_L.sort(cols[i], inplace=True)
+            #yPos_R.sort(cols[i + 1], inplace=True)
+            yPos_L.sort_values(cols[i], inplace=True)
+            yPos_R.sort_values(cols[i + 1], inplace=True)
+
+            yPos_ = yPos_L.join(yPos_R)  #.sort(cols[i],inplace=True)
+#        if i == 1:
+#            #print yPos_.T
+#            print labelsL
+#            #yPos_   =  df[[cols[i],cols[i+1]]]
+#
+
+#        if kind=='stack' :
+#
+#            yPos_L = df[cols[i]].rank()
+#            yPos_R = df[cols[i+1]].rank()
+#
+#            labelsL = df.groupby(yPos_L)['__label__'].agg(', '.join)
+#            labelsR = df.groupby(yPos_R)['__label__'].agg(', '.join)
+#
+#            yPos_ = yPos_L.join(yPos_R)
+#
+#            yPos_L  =  labelsL.index.values
+#            yPos_R  =  labelsR.index.values
+
+        if kind == "stack":
+            ax.plot([0, 1], [0, 1], color='k', alpha=0.4)
+        else:
+            #print yPos_
+            lines = ax.plot(yPos_.T, color='k', alpha=0.4)
+            ax.spines['bottom'].set_visible(False)
+            ax.xaxis.set_ticks_position('bottom')
+
+            if kind == "ordinal":
+                ax.set_ybound(lower=1, upper=len(yPos_))
+            if kind == "interval":
+                ax.set_ybound(lower=data.min().min(), upper=data.max().max())
+
+                #ax.set_xbound(lower=0,upper=1)
+
+            ax.set_xticklabels([])
+            #print cols[i]
+            axarr_X[i].set_yticks([1])
+            axarr_X[i].set_xticklabels([])
+            axarr_X[i].set_yticklabels([str(cols[i])], fontproperties=font)
+
+
+            if marker:
+                labelsL_str = [item[1] + (marker % item[0]).rjust(6)
+                               for item in zip(yMark_L.values, labelsL.values)]
+                labelsR_str = [(marker % item[0]).ljust(6) + item[1]
+                               for item in zip(yMark_R.values, labelsR.values)]
+                ylabelsL_str = map(lambda el: marker % el, yMark_L.values)
+                ylabelsR_str = map(lambda el: marker % el, yMark_R.values)
+            else:
+                labelsL_str = labelsL.values
+                labelsR_str = labelsR.values
+                ylabelsL_str = map(lambda el: u'', yPos_L.values)
+                ylabelsR_str = map(lambda el: u'', yPos_R.values)
+
+            if i == 0:
+                ax.set_yticks(yPos_L.values)
+                print(f"labelsL_str={labelsL_str} {type(labelsL_str)} font={font} {type(font)}")
+                ax.set_yticklabels(labelsL_str, fontproperties=font)
+            elif marker:
+                ax.set_yticks(yPos_L.values)
+                ax.set_yticklabels([el for el in  ylabelsL_str],
+                                   fontproperties=font,
+                                   ha='right'
+                                   )  #ha='center')#,backgroundcolor='w')
+            else:
+                plt.setp(ax.get_yticklabels(), visible=False)
+                wspace = 0
+
+            if i == len(cols) - 2:
+                bx = ax.twinx()
+
+                bx.set_ybound(ax.get_ybound())
+                bx.set_yticks(yPos_R.values)
+                bx.set_yticklabels(labelsR_str, fontproperties=font)
+                bx.yaxis.set_tick_params(width=0)
+
+                bx_X = axarr_X[i].twinx()
+                bx_X.set_xticklabels([])
+                bx_X.set_yticks([1])
+                bx_X.yaxis.set_tick_params(width=0)
+                bx_X.set_yticklabels([str(cols[i + 1])], fontproperties=font)
+
+            if kind == 'ordinal':
+                ax.invert_yaxis()
+                if bx:
+                    bx.invert_yaxis()
+
+            if color:
+
+                for tl in ax.yaxis.get_ticklabels():
+                    try:
+                        for kw, c in color.items():
+
+                            if kw in tl.get_text():
+                                tl.set_color(c)
+
+                    except:
+                        print('fail')
+                        pass
+                if bx:
+                    for tl in bx.yaxis.get_ticklabels():
+                        try:
+                            for kw, c in color.items():
+
+                                if kw in tl.get_text():
+                                    tl.set_color(c)
+                        except:
+                            pass
+
+            if color:
+                for kw, c in color.items():
+                    for j, lab__ in enumerate(yPos_.index):
+                        if kw in lab__:
+                            lines[j].set_color(c)
+                            lines[j].set_linewidth(2)
+                            lines[j].set_alpha(0.6)
+
+                            for kk, tic_pos in enumerate(
+                                ax.yaxis.get_ticklocs()):
+
+                                if yPos_.values[j][0] == tic_pos:
+
+                                    ax.yaxis.get_ticklabels()[kk].set_color(c)
+
+            ax.yaxis.set_tick_params(width=0)
+            ax.xaxis.set_tick_params(width=0)
+
+            ax.xaxis.grid(False)
+
+    f.suptitle(title, x=0.5, y=0.02, fontproperties=font)
+    plt.tight_layout()
+
+    for ax in f.axes:
+        ax.spines['top'].set_visible(False)
+        ax.spines['bottom'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+        ax.spines['left'].set_visible(False)
+
+    tw = ax.yaxis.get_text_widths(renderer)[0]
+    if wspace == 0:
+        pass
+    else:
+        #wspace = tw/dpi
+        aw = ax.get_tightbbox(renderer).width
+        wspace = tw / aw * 1.4
+
+    f.subplots_adjust(wspace=wspace)
+
+    if kind == "stack":
+        f.subplots_adjust(wspace=wspace, hspace=0)
+    else:
+        pass
+
+    if savename:
+        f.savefig( savename, dpi=dpi)
+
+    return f
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def plot_relative_performance(df: pd.DataFrame, tools: typing.List[str],
@@ -851,6 +1152,7 @@ def generate_ranking_per_dataset2(dfs: typing.List[pd.DataFrame], metric: str = 
     score.set_index('index')
     return result, score
 
+
 def collapse_seed(df: pd.DataFrame) -> pd.DataFrame:
     """
     Collapses a dataframe that has multiple runs per seed
@@ -1013,39 +1315,65 @@ def wilcoxon_averaging(df: pd.DataFrame, contains: typing.Optional[str] = None,
     return df
 
 
-def Nemenyi_posthoc(df: pd.DataFrame, contains: typing.Optional[str] = None,
-                       base_tool_name: str = 'None_es50_B100_N1.0') -> pd.DataFrame:
+def generate_ranking_per_fold_per_dataset_bags(df: pd.DataFrame, bootstrap: int = 200
+                                                ) -> pd.DataFrame:
     """
-    First this procedure computes the friedmanchisquare test to make sure that the tools
-    are different -- that is, the test performance actually yields a difference that is
-    meassurable.
+    Performs the rank calculation per bootstrap block where a block is a Aseed-fold-dataset pair
 
-    The Friedman test is the nonparametric version of the repeated measures analysis of
-    variance test, or repeated measures ANOVA.
-    The test can be thought of as a generalization of the Kruskal-Wallis H Test to more
-    than two samples.
+    Args:
+        dfs (List[pdDataFrame]): A list of dataframes each representing a seed
 
-    The default assumption, or null hypothesis, is that the multiple paired samples have
-    the same distribution.
-    A rejection of the null hypothesis indicates that one or more of the paired samples
-    has a different distribution.
-
-    Fail to Reject H0: Paired sample distributions are equal.
-    Reject H0: Paired sample distributions are not equal.
-
-
+    Returns:
+        pd.DataFrame: with the ranking
     """
-    # Just care right now for 100 bootstrap data
-    if contains is not None:
-        df = df[df["tool"].str.contains(contains)]
 
-    measurements = pd.pivot_table(
-        df, values='test', index=['task', 'fold', 'seed'], columns=['tool'])
+    # Form the desired array with raw scores, an average of everything
+    result = pd.pivot_table(df, values='test', index=['tool'], columns=['task'], aggfunc=np.mean)
+    df['wins'] = 0  # we rank based on wins
+    ranking = pd.pivot_table(df, values='wins', index=['tool'], columns=['task'], aggfunc=np.mean)
 
-    for tool in df['tool'].unique():
-        challenger = df.query(f"tool == '{tool}' & task == '{task}'").sort_values(['seed', 'fold'])
+    # fix the metric -- greater is better in certain cases. This can be done per task
 
-#pd.pivot_table(df, values='test', index=['task', 'tool'], columns=['fold']).groupby(level=0).rank(ascending=False, method='average', na_option='bottom').mean(axis='columns')
+    # Sort values for proper compare -- yet I don;t think it matters
+    df.sort_values(by=['tool', 'task', 'fold', 'seed'], inplace=True)
+
+    test_score_per_task_fold_tool = pd.pivot_table(df, values='test', index=['task', 'fold', 'tool'], columns='seed')
+    test_score_per_task_fold_tool.to_csv('test_score_per_task_fold_tool.csv')
+
+    folds = df['fold'].unique()
+
+    for task in tqdm.tqdm(ranking.columns):
+
+        # We divide by 2 because bootstrap is used in 2 placed
+        # we have blocks and within each block we have repetitions.
+        # we sample with replacemented bootstrap//2 times from a block
+        # which in this context is task/fold/autosklearnseed. Within this block
+        # are 10 repetitions and we take  bootstrap//2 comparissons
+        for boot in range(bootstrap // 2):
+            # Pick a random fold, seed
+            fold = np.random.choice(folds)
+            index = (task, fold)  # would yield a table with tool as row and repetitions as col
+
+            # Get the values per tool(rows) and columns(10 seed repetitions)
+            data = test_score_per_task_fold_tool.loc[index].to_numpy()
+            data[np.isnan(data)] = 0
+            # Do sampling with replacement to get tool as rows again, but different
+            # permutations of the 10 seeds
+            resample_index = np.random.randint(data.shape[1], size=(data.shape[0], bootstrap//2))
+            data = np.take_along_axis(data, resample_index, 1)
+            wins = pd.Series(
+                (rankdata(data, axis=0, method='min')-1).sum(axis=1),
+                index=test_score_per_task_fold_tool.loc[index].index
+            )
+            # Pretty cool using index: So the index are the tool we are evaluation.
+            # if a whole tool failed, it won't even be there and this tool for this
+            # task won't be incremented. We add the number of times that for this
+            # bootstrap block of fold/seed/task, an experiment was better than other
+            ranking[task] = ranking[task] + wins
+
+    ranking = ranking.rank(axis=0, method='average', ascending=False)
+    return ranking, result
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Utility to plot CSV results')
@@ -1069,7 +1397,7 @@ if __name__ == "__main__":
         required=True,
         type=str,
         # Aseed means here parent autosklearn seed
-        choices=['fold_dataset', 'block_Aseed_fold_dataset']
+        choices=['fold_dataset', 'block_Aseed_fold_dataset', 'bag_fold_dataset']
     )
     parser.add_argument(
         '--tools',
@@ -1105,7 +1433,12 @@ if __name__ == "__main__":
 
     # Average the folds across seed to remove noise
     if 'block_Aseed_fold_dataset' in args.rank:
+        # python plotter.py --csv misc/23_01_2021_defaultmetricisolatedensemble/seed1/ --csv misc/23_01_2021_defaultmetricisolatedensemble/seed2 --csv misc/23_01_2021_defaultmetricisolatedensemble/seed3 --tools None_es50_B100_N1.0 --tools autosklearnBBCScoreEnsemble_es50_B100_N1.0 --tools autosklearnBBCScoreEnsembleAVGMDEV_ES_es50_B100_N1.0 --rank block_Aseed_fold_dataset
+        # python plotter.py --csv misc/23_01_2021_defaultmetricisolatedensemble/seed1/ --csv misc/23_01_2021_defaultmetricisolatedensemble/seed2 --csv misc/23_01_2021_defaultmetricisolatedensemble/seed3 --tools None_es50_B100_N1.0 --tools autosklearnBBCEnsembleSelection_es50_B100_N1.0 --tools autosklearnBBCEnsembleSelection_ES_es50_B100_N1.0 --tools autosklearnBBCEnsembleSelectionNoPreSelect_es50_B100_N1.0 --tools autosklearnBBCEnsembleSelectionNoPreSelect_ES_es50_B100_N1.0 --tools autosklearnBBCEnsembleSelectionPreSelectInESRegularizedEnd_es50_B100_N1.0 --tools autosklearnBBCEnsembleSelectionPreSelectInESRegularizedEnd_ES_es50_B100_N1.0 --rank block_Aseed_fold_dataset
+        # python plotter.py --csv misc/23_01_2021_defaultmetricisolatedensemble/seed1/ --csv misc/23_01_2021_defaultmetricisolatedensemble/seed2 --csv misc/23_01_2021_defaultmetricisolatedensemble/seed3 --tools None_es50_B100_N1.0  --tools autosklearnBBCScoreEnsembleMAX_es50_B100_N1.0 --tools autosklearnBBCScoreEnsembleMAX_ES_es50_B100_N1.0 --tools autosklearnBBCScoreEnsembleMAXWinner_es50_B100_N1.0 --tools autosklearnBBCScoreEnsembleMAXWinner_ES_es50_B100_N1.0 --tools bagging_es50_B100_N1.0 --rank block_Aseed_fold_dataset
         ranking, rawscores = generate_ranking_per_Aseed_fold_per_dataset(df)
+    elif 'bag_fold_dataset' in args.rank:
+        ranking, rawscores = generate_ranking_per_fold_per_dataset_bags(df)
     elif 'fold_dataset' in args.rank:
         df = collapse_seed(df)
         ranking, rawscores = generate_ranking_per_fold_per_dataset(df)

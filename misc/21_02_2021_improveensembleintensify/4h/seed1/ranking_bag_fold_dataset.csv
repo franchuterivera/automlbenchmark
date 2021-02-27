@@ -1,0 +1,7 @@
+tool,Albert,Australian,MiniBooNE,adult,cnae-9,connect-4,higgs,kr-vs-kp,segment,vehicle
+autosklearnEnsembleIntensification_520_members10_repeats5_level1_strategyNone_ensemble_highest_repeat_trusted,5.0,2.0,2.0,6.0,4.0,5.0,5.0,4.0,4.0,3.0
+autosklearnEnsembleIntensification_520_members10_repeats5_level2_strategyInstancesAny_ensemble_highest_repeat_trusted,3.0,3.0,5.0,4.0,5.0,2.0,2.0,1.0,3.0,6.0
+autosklearnEnsembleIntensification_520_members10_repeats5_level2_strategyInstancesSelf_ensemble_highest_repeat_trusted,2.0,6.0,1.0,3.0,6.0,4.0,4.0,5.0,6.0,4.0
+autosklearnEnsembleIntensification_520_members5_repeats10_level2_strategyTimeSplit_ensemble_highest_repeat_trusted,6.0,5.0,4.0,5.0,3.0,3.0,6.0,6.0,5.0,5.0
+autosklearnHyperbandTowering_repeats5_level2_strategyinstancesself_ensemble_highest_repeat_trusted,4.0,4.0,6.0,2.0,2.0,6.0,3.0,2.0,2.0,1.0
+autosklearn_baseline,1.0,1.0,3.0,1.0,1.0,1.0,1.0,3.0,1.0,2.0

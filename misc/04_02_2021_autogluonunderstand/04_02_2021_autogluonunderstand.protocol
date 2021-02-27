@@ -11,6 +11,10 @@ python manager.py -f autosklearn -b master_thesis --partition bosch_cpu-cascadel
 python manager.py -f autosklearn -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 32G --runtime 3600 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.02.05-12.09.16
 python manager.py -f autosklearn -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 32G --runtime 3600 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.02.05-19.56.56
 python manager.py -f autosklearn -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 32G --runtime 3600 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.02.05-22.05.27
+# 1c 4h 8G
+python manager.py -f autosklearn_baseline -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 14400 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.02.21-14.54.17
+python manager.py -f autosklearn_baseline -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 14400 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.02.21-15.13.41
+python manager.py -f autosklearn_baseline -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 14400 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.02.21-15.35.04
 
 
 # Baseline Autogluon
@@ -23,7 +27,15 @@ python manager.py -f AutoGluon  -b master_thesis --partition bosch_cpu-cascadela
 python manager.py -f AutoGluon -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 28800  --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.02.04-00.18.36
 python manager.py -f AutoGluon -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 28800  --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.02.05-13.44.42
 python manager.py -f AutoGluon -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 28800  --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.02.06-21.32.47
+# --> Run also with sklearn models to understand performance hit
+python manager.py --tag seed0 -f AutoGluon_sklearn -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 28800  --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.02.26-21.58.30
+python manager.py --tag seed1 -f AutoGluon_sklearn -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 28800  --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.02.26-22.15.56
+python manager.py --tag seed2 -f AutoGluon_sklearn -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 28800  --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.02.26-22.22.55
 # 1c 1h 32G
 python manager.py -f AutoGluon -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 32G --runtime 3600 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.02.05-12.12.49
 python manager.py -f AutoGluon -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 32G --runtime 3600 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.02.05-19.27.38
 python manager.py -f AutoGluon -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 32G --runtime 3600 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.02.05-22.45.29
+# 1c 4h 32G
+python manager.py --tag seed0 -f AutoGluon -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 14400  --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.02.27-18.17.53
+python manager.py --tag seed1 -f AutoGluon -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 14400  --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.02.27-18.44.18
+python manager.py --tag seed2 -f AutoGluon -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 14400  --run_mode single
