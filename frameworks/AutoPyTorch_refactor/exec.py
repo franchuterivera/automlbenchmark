@@ -47,8 +47,7 @@ def run(dataset, config):
     if perf_metric is None:
         # TODO: figure out if we are going to blindly pass metrics through,
         # or if we use a strict mapping
-        #log.warning("Performance metric %s not supported.", config.metric)
-       print("Performance metric %s not supported.", config.metric)
+        print("Performance metric %s not supported.", config.metric)
 
     # Set resources based on datasize
     print(
@@ -116,7 +115,6 @@ def run(dataset, config):
         )
 
     # Convert output to strings for classification
-    #log.info("Predicting on the test set.")
     print("Predicting on the test set.")
     predictions = api.predict(X_test)
     probabilities = api.predict_proba(X_test) if is_classification else None
@@ -160,8 +158,8 @@ def run(dataset, config):
 
 def save_artifacts(estimator, config):
     try:
-        #models_repr = estimator.show_models()
-        #log.debug("Trained Ensemble:\n%s", models_repr)
+        models_repr = estimator.show_models()
+        print("Trained Ensemble:\n%s", models_repr)
         artifacts = config.framework_params.get('_save_artifacts', [])
         if 'models' in artifacts:
             models_file = os.path.join(output_subdir('models', config), 'models.txt')
@@ -183,7 +181,7 @@ def save_artifacts(estimator, config):
                 os.makedirs(os.path.dirname(dst), exist_ok=True)
                 copyfile(filename, dst)
     except Exception as e:
-        log.debug(f"Error when saving artifacts= {e}.", exc_info=True)
+        print(f"Error when saving artifacts= {e}.", exc_info=True)
 
 
 if __name__ == '__main__':
