@@ -123,6 +123,7 @@ def run(dataset, config):
 
     print("Saving Artifacts")
     save_artifacts(api, config)
+    print("Done saving Artifacts")
 
     try:
         print(f"The trajectory: ")
@@ -132,6 +133,20 @@ def run(dataset, config):
         print(f"Finish the run")
     except Exception as e:
         print(f"Run into {e} while printing information")
+
+    # Looks like pynisher is not able to kill all jobs
+    # Terminate them with brute-force and debug how to improve this
+    import psutil
+    current_process = psutil.Process()
+    children = current_process.children(recursive=True)
+    for child in children:
+        print('Child pid is {}:{}:{}'.format(child.pid, vars(child), vars(child)['_exitcode']))
+        child.terminate()
+        os.kill(child.pid, 9)
+    def on_terminate(proc):
+        print("process {} terminated with exit code {}".format(proc, proc.returncode))
+    gone, alive = psutil.wait_procs(children, timeout=3, callback=on_terminate)
+    print(f"gone={gone} and alive={alive}")
 
     return result(output_file=config.output_predictions_file,
                   predictions=predictions,

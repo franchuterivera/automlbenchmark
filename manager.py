@@ -17,10 +17,10 @@ import yaml
 import paramiko
 from scp import SCPClient
 
-
 from shutil import copyfile
 
 import numpy as np  # type: ignore
+import openml
 import pandas as pd  # type: ignore
 pd.set_option('display.width', 1000)
 pd.set_option('display.max_rows', 500)
@@ -83,7 +83,6 @@ SSH.connect(INTERNAL, username=USER, sock=vmchannel)
 def get_framework_information() -> typing.Dict[str, typing.Dict]:
     """
     Returns a dictionary with information from all the frameworks
-
     Returns:
         typing.Dict[str, Dict]: framework as key pointing to a dict with information
     """
@@ -102,7 +101,6 @@ def get_framework_information() -> typing.Dict[str, typing.Dict]:
 def get_author_from_benchmark() -> typing.Dict[str, typing.Dict]:
     """
     Gets the author from the configuration file
-
     Returns:
         typing.Dict[str, Dict]: framework as key pointing to a dict with information
     """
@@ -119,7 +117,6 @@ def get_author_from_benchmark() -> typing.Dict[str, typing.Dict]:
 def create_singularity_image(framework: str) -> None:
     """
     Creates a singularity image via a docker image
-
     Args:
         framework: The framework from which to generate the image
     """
@@ -127,6 +124,8 @@ def create_singularity_image(framework: str) -> None:
         f"git rev-parse --abbrev-ref HEAD",
     ], shell=True, stdout=subprocess.PIPE)
     current_branch = command.stdout.decode('utf-8').strip()
+    if 'master' in current_branch:
+        raise ValueError('Using the master branch is not yet supported!')
 
     author = get_author_from_benchmark()
     valid_frameworks = get_framework_information()
@@ -163,7 +162,6 @@ def validate_framework(framework: str) -> None:
         + Checking if the framework is in the frameworks folder
         + Check if the framework is in the resource file
         + Check if there is a valid singularity image for this job
-
     Args:
         framework (str): framework to validate
     """
@@ -181,7 +179,6 @@ def validate_framework(framework: str) -> None:
         logger.warn("Trying to generate the singularity image. Please enter 'y' for yes"
                     "When the benchmark ask you about if you are sure you want to generate"
                     "the image.")
-        raise NotImplementedError(sif_file)
         create_singularity_image(framework)
 
         # Try to create the file
@@ -192,9 +189,9 @@ def validate_framework(framework: str) -> None:
                               "to see how to generate this file. ")
 
 
-def generate_metadata(run_dir: str, args: typing.Any, timestamp: str) -> None:
+def generate_metadata(run_dir: str, args: typing.Any, timestamp: str,
+                      experiment_description:str) -> None:
     """Generates a metadata file with run information for debug purposes
-
     Args:
         run_dir (str): where to generate this file
         args (typing.Any): Namespace with args for this python script
@@ -215,6 +212,7 @@ def generate_metadata(run_dir: str, args: typing.Any, timestamp: str) -> None:
     valid_frameworks = get_framework_information()
     metadata['version'] = valid_frameworks[args.framework]['version']
     metadata['run_date'] = timestamp
+    metadata['description'] = experiment_description
     metadata['automlbenchmark_commit'] = subprocess.run(
         ['git rev-parse HEAD'], shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8').strip()
     metadata['automlbenchmark_commit_date'] = subprocess.run(
@@ -227,15 +225,13 @@ def generate_metadata(run_dir: str, args: typing.Any, timestamp: str) -> None:
 
 def remote_exists(directory: str) -> bool:
     """Checks if a directory exist on remote host
-
     Args:
         directory: The remote repository
-
     Returns:
         bool: whether or not the directory exists
     """
     logger.debug(f"[remote_exists] {directory}")
-    stdin, stdout, stderr = SSH.exec_command(f"ls -d {directory}")
+    stdin, stdout, stderr = SSH.exec_command(f"ls -d {directory}") #edited#
     stdout.channel.recv_exit_status()
     stderr.channel.recv_exit_status()
     if any(['cannot access' in a for a in stderr.readlines()]):
@@ -244,28 +240,12 @@ def remote_exists(directory: str) -> bool:
         return True
 
 
-def remote_glob(pattern: str) -> typing.List[str]:
-    logger.debug(f"[remote_glob] {pattern}")
-    stdin, stdout, stderr = SSH.exec_command(f"ls -d {pattern}")
-    stdout.channel.recv_exit_status()
-    stderr.channel.recv_exit_status()
-    errors = stderr.readlines()
-    files = stdout.readlines()
-    if any(['cannot access' in a for a in errors]):
-        return []
-    else:
-        return [f.rstrip() for f in files]
-
-
 def remote_makedirs(directory: str) -> bool:
     """Creates a nested directory
-
     Args:
         directory (str): the directory to create
-
     Returns:
         bool: True if the directory was created
-
     """
     logger.debug(f"[remote_makedirs] {directory}")
     stdin, stdout, stderr = SSH.exec_command(f"mkdir -p {directory}") #edited#
@@ -276,11 +256,9 @@ def remote_put(source: str, destination: str) -> bool:
     """
     Takes a local file from source and copies it to
     destination
-
     Args:
         source (str): the file to copy over to destination
         destination (str): The location of the file in remote
-
     Returns:
         bool: True if the new file exists in remote
     """
@@ -299,10 +277,8 @@ def remote_get(source: str) -> str:
     """
     Copies a file from remote to the /tmp directory for
     local processing
-
     Args:
         source (str): the file to copy from the remote
-
     Returns:
         str: the local full path of the file
     """
@@ -322,13 +298,10 @@ def remote_run(cmd: str) -> typing.List[str]:
     """
     Runs a command in the remote server and if
     successful, return the stdout line by line
-
     Args:
         cmd (str): string with the command to run
-
     Returs:
         List[str]: the stdout output
-
     Raises:
         Exception: if any error occurred
     """
@@ -339,22 +312,38 @@ def remote_run(cmd: str) -> typing.List[str]:
     errors = stderr.readlines()
     if any(errors):
         raise Exception(errors)
-    returned_lines = stdout.readlines()
-    logger.debug(f"[remote_run] {cmd}->{returned_lines}")
-    return returned_lines
+    return stdout.readlines()
 
-def create_run_dir_area(run_dir: typing.Optional[str], args: typing.Any
-                       ) -> str:
+
+def get_user_description() -> str:
+    """
+    Ask the user for a description of the experiment to be run.
+    Returns:
+        str: A description to annotate the experiment. This is to remind the
+             purpose of the experiment
+    """
+    correct = False
+    while not correct:
+        inp = input("Please provide a brief description of the experiment."
+                    "\nThis will be stored in the metadata to remind yourself the "
+                    "\npurpose of this experiment: ")
+
+        logger.info("We are gonna annotate this experiment with the description: "
+                    f"\n{inp}\n ")
+        correct = query_yes_no('Are you ok with this?')
+    return inp
+
+
+def create_run_dir_area(run_dir: typing.Optional[str], args: typing.Any,
+                        ) -> str:
     """Creates a run are if it doesn't previously exists
     The run area is special because it must contain:
         + config file to define which metric to optimize with
         + the constraint if using a special one
         + the framework when using a different version/tool
-
     Args:
         run_dir (str): where to create the run area
         args (typing.Any): the namespace with the arguments to the python script
-
     Returns:
         run_dir (str): the area in which to run
     """
@@ -368,6 +357,9 @@ def create_run_dir_area(run_dir: typing.Optional[str], args: typing.Any
 
     # TODO: make sure constraint given matches the constraint in which the run area was ran
 
+    # Get user description and store it in the metadata
+    experiment_description = get_user_description()
+
     # No run dir provided, create one!
     valid_frameworks = get_framework_information()
     version = valid_frameworks[args.framework]['version']
@@ -380,24 +372,17 @@ def create_run_dir_area(run_dir: typing.Optional[str], args: typing.Any
         timestamp,
     )
 
-    #os.makedirs(run_dir)
     remote_makedirs(run_dir)
 
     # make also a run dir for scripts / logs
-    #os.makedirs(os.path.join(run_dir, 'scripts'))
     remote_makedirs(os.path.join(run_dir, 'scripts'))
-    #os.makedirs(os.path.join(run_dir, 'logs'))
     remote_makedirs(os.path.join(run_dir, 'logs'))
     logger.info(f"Creating run directory: {run_dir}")
 
     # Copy over the frameworks dir to this area. We do so, because
     # we want to have a completely isolated and reproducible run.
     # So we copy over the resources to this directory
-    #copyfile('resources/frameworks.yaml', f"{run_dir}/frameworks.yaml")
     remote_put('resources/frameworks.yaml', f"{run_dir}/frameworks.yaml")
-
-    # Copy also the benchmarks
-    remote_put('resources/benchmarks', f"{run_dir}/benchmarks")
 
     # Copy the SIF file
     sif_file = f"frameworks/{args.framework}/{args.framework.lower()}_{version.lower()}-stable.sif"
@@ -408,21 +393,12 @@ def create_run_dir_area(run_dir: typing.Optional[str], args: typing.Any
         raise ValueError("We expect the sif file for singularity to be both in the "
                          f"run dir {run_dir} and {AUTOMLBENCHMARK}, yet copying failed! "
                          f"Command: cp {src} {dst}")
-    #copyfile(sif_file, f"{run_dir}/{os.path.basename(sif_file)}")
-    #remote_put(sif_file, f"{run_dir}/{os.path.basename(sif_file)}")
-
-    # Extract the version of smac/autosklearn
-    #cwd = os.getcwd();
-    #subprocess.run(
-    #    [f"cd {run_dir}; singularity exec  {os.path.basename(sif_file)} cp  -r /bench .; cd {cwd}"],
-    #    shell=True, stdout=subprocess.PIPE
-    #).stdout.decode('utf-8').strip()
 
     # We create the constrain we are gonna use
     constraint = f"{args.runtime}s{args.cores}c{args.memory}"
     with open(f"/tmp/constraints.yaml", 'w') as file_c:
         file_c.write(f"{constraint}:\n")
-        file_c.write(f"  folds: {args.total_folds}\n")
+        file_c.write("  folds: 10\n")
         file_c.write(f"  max_runtime_seconds: {args.runtime}\n")
         file_c.write(f"  cores: {args.cores}\n")
         file_c.write(f"  max_mem_size_mb: {MEMORY[args.memory]}\n")
@@ -439,19 +415,25 @@ def create_run_dir_area(run_dir: typing.Optional[str], args: typing.Any
         file_c.write("  constraints_file:\n")
         file_c.write("    " + '- \'{root}/resources/constraints.yaml\'' + "\n")
         file_c.write("    " + '- \'{user}/constraints.yaml\'' + "\n")
-        file_c.write("  definition_dir:\n")
-        file_c.write("    " + '- \'{user}/benchmarks\'' + "\n")
         file_c.write("\n")
         file_c.write("frameworks:\n")
         file_c.write("  definition_file:\n")
-        #file_c.write("    " + '- \'{root}/resources/frameworks.yaml\'' + "\n")
         file_c.write("    " + '- \'{user}/frameworks.yaml\'' + "\n")
     remote_put('/tmp/config.yaml', f"{run_dir}//config.yaml")
 
     # Lastly we create a metatada file
-    generate_metadata(run_dir, args, timestamp)
+    generate_metadata(run_dir, args, timestamp, experiment_description)
 
     return run_dir
+
+
+def slugify(value):
+    """
+    Normalizes string, converts to lowercase, removes non-alpha characters,
+    and converts spaces to hyphens.
+    """
+    value = str(re.sub('[^\w\s-]', '_', value))
+    return value
 
 
 def generate_run_file(
@@ -463,7 +445,6 @@ def generate_run_file(
     run_dir: str
 ) -> str:
     """Generates a bash script for the sbatch command
-
     Args:
         framework (str): the framework to run
         benchmark (str): in which benchmark to run it
@@ -471,14 +452,17 @@ def generate_run_file(
         task (str): in which dataset to run it and associated tasks
         fold (int): which of the 10 folds to run
         run_dir (str): in which directory to run the job
-
     Returns:
         str: the path to the bash file to run
     """
 
-    run_file = f"{run_dir}/scripts/{framework}_{benchmark}_{constraint}_{task}_{fold}.sh"
-
+    run_file = f"{run_dir}/scripts/{framework}_{slugify(benchmark)}_{constraint}_{slugify(task)}_{fold}.sh"
     virtual_memory_available = 4469755084 if '8G' in constraint else 34000000000
+
+    if 'openml' in task:
+        cmd = f"python runbenchmark.py {framework} {task} {constraint} --fold {fold} -m singularity --session {framework}_{slugify(benchmark)}_{constraint}_{slugify(task)}_{fold} -o {run_dir}/{framework}_{slugify(benchmark)}_{constraint}_{slugify(task)}_{fold} -u {run_dir}"
+    else:
+        cmd = f"python runbenchmark.py {framework} {benchmark} {constraint} --task {task} --fold {fold} -m singularity --session {framework}_{benchmark}_{constraint}_{task}_{fold} -o {run_dir}/{framework}_{benchmark}_{constraint}_{task}_{fold} -u {run_dir}"
 
     command = f"""#!/bin/bash
 #Setup the run
@@ -486,7 +470,7 @@ echo "Running on HOSTNAME=$HOSTNAME with name $SLURM_JOB_NAME"
 export PATH=/usr/local/kislurm/singularity-3.5/bin/:$PATH
 source {ENVIRONMENT_PATH}
 cd {AUTOMLBENCHMARK}
-if [ -z "$SLURM_ARRAY_TASK_ID" ]; then export TMPDIR=/tmp/{framework}_{benchmark}_{constraint}_{task}_{fold}_$SLURM_JOB_ID; else export TMPDIR=/tmp/{framework}_{benchmark}_{constraint}_{task}_{fold}$SLURM_ARRAY_JOB_ID'_'$SLURM_ARRAY_TASK_ID; fi
+if [ -z "$SLURM_ARRAY_TASK_ID" ]; then export TMPDIR=/tmp/{framework}_{slugify(benchmark)}_{constraint}_{task}_{fold}_$SLURM_JOB_ID; else export TMPDIR=/tmp/{framework}_{slugify(benchmark)}_{constraint}_{task}_{fold}$SLURM_ARRAY_JOB_ID'_'$SLURM_ARRAY_TASK_ID; fi
 echo TMPDIR=$TMPDIR
 export XDG_CACHE_HOME=$TMPDIR
 echo XDG_CACHE_HOME=$XDG_CACHE_HOME
@@ -500,11 +484,10 @@ export benchmark={benchmark}
 export constraint={constraint}
 export task={task}
 export fold={fold}
-
 # Sleep a random number of seconds after init to be safe of run
 sleep {np.random.randint(low=0,high=10)}
-echo 'python runbenchmark.py {framework} {benchmark} {constraint} --task {task} --fold {fold} -m singularity --session {framework}_{benchmark}_{constraint}_{task}_{fold} -o {run_dir}/{framework}_{benchmark}_{constraint}_{task}_{fold} -u {run_dir}'
-python runbenchmark.py {framework} {benchmark} {constraint} --task {task} --fold {fold} -m singularity --session {framework}_{benchmark}_{constraint}_{task}_{fold} -o {run_dir}/{framework}_{benchmark}_{constraint}_{task}_{fold} -u {run_dir}
+echo {cmd}
+{cmd}
 echo "Deleting temporal folder $TMPDIR"
 rm -rf $TMPDIR
 echo 'Finished the run'
@@ -516,29 +499,85 @@ echo 'Finished the run'
     return run_file
 
 
+def is_openml_suite(benchmark: str) -> bool:
+    """
+    Utility to check that the provided argument is a benchmark suite
+    Args:
+        benchmark (str): a string that could be a benchmark suite
+    Returns
+        (bool): whether or not the provided string is a benchmark suite
+    """
+    openml_type_id = benchmark.split('/')
+    if len(openml_type_id) == 3 and openml_type_id[0] == 'openml' and openml_type_id[1] == 's':
+        try:
+            openml.study.get_suite(openml_type_id[2])
+        except Exception:
+            logger.error(f"Could not interpret {benchmark} as suite. It will be ignored...")
+            return False
+        return True
+    return False
+
+
+def is_openml_task(task: str) -> bool:
+    """
+    Utility to check that the provided argument is an openml task
+    Args:
+        task (str): a string that could be a task
+    Returns
+        (bool): whether or not the provided string is a task
+    """
+    openml_type_id = task.split('/')
+    if len(openml_type_id) == 3 and openml_type_id[0] == 'openml' and openml_type_id[1] == 't':
+        try:
+            openml.tasks.get_task(openml_type_id[2], download_data=False)
+        except Exception:
+            logger.error(f"Could not interpret {task} as task. It will be ignored...")
+            return False
+        return True
+    return False
+
+
+def convert_openml_suite_to_openml_task(benchmark: str) -> typing.Dict[str, str]:
+    """
+    Convert an openml suite to tasks
+    Args:
+        benchmark (str): a string that could be a benchmark suite
+    Returns:
+        Dict[str, str]: A mapping from suite to tasks
+    """
+    suite = openml.study.get_suite(218)
+    return {benchmark: [f"openml/t/{task}" for task in suite.tasks]}
+
+
 def get_task_from_benchmark(benchmarks: typing.List[str]) -> typing.Dict[str, typing.List[str]]:
     """Returns a dict with benchmark to task mapping
-
     Args:
         benchmakrs (typing.List[str]): List of benchmakrs to run
-
     Returns:
         typing.Dict[str, str]: mapping from benchmark to task
     """
     task_from_benchmark = {}  # type: typing.Dict[str, typing.List]
 
     for benchmark in benchmarks:
-        task_from_benchmark[benchmark] = []
-        filename = os.path.join('resources', 'benchmarks', f"{benchmark}.yaml")
-        if not os.path.exists(filename):
-            raise Exception(f"File {filename} not found!")
-        with open(filename) as file:
-            data = yaml.load(file, Loader=yaml.FullLoader)
 
-        for task in data:
-            if task['name'] in ['__dummy-task', '__defaults__']:
-                continue
-            task_from_benchmark[benchmark].append(task['name'])
+        # In the case of openmlsuite
+        if is_openml_suite(benchmark):
+            task_from_benchmark.update(convert_openml_suite_to_openml_task(benchmark))
+        elif is_openml_task(benchmark):
+            # openml/t/59 is actually used as a benchmark and task at the same time
+            task_from_benchmark[benchmark] = [benchmark]
+        else:
+            task_from_benchmark[benchmark] = []
+            filename = os.path.join('resources', 'benchmarks', f"{benchmark}.yaml")
+            if not os.path.exists(filename):
+                raise Exception(f"File {filename} not found!")
+            with open(filename) as file:
+                data = yaml.load(file, Loader=yaml.FullLoader)
+
+            for task in data:
+                if task['name'] in ['__dummy-task', '__defaults__']:
+                    continue
+                task_from_benchmark[benchmark].append(task['name'])
 
     return task_from_benchmark
 
@@ -548,7 +587,6 @@ def score(df: pd.DataFrame, res_col: str = 'result') -> float:
     Get the results as the automlbenchmark team through
     https://github.com/openml/automlbenchmark/blob/master/reports/report/results.py
     return row[res_col] if row[res_col] in [row.auc, row.acc] else -row[res_col]
-
     Args:
         df (pd.DataFrame): A frame containing the result of executing a job
         res_col (str): The column in the dataframe that contains the actual result
@@ -574,7 +612,6 @@ def norm_score(
 ) -> float:
     """
     Normalizes the result score between a constant predictor and a random forest
-
     Args:
         framework (str): the framework to run
         benchmark (str): in which benchmark to run it
@@ -583,7 +620,6 @@ def norm_score(
         fold (int): which of the 10 folds to run
         score (float): the result of the framework/bechmakr/task/fold
         run_dir (str): from where to parse the results
-
     Returns:
         float: the normalized score
     """
@@ -610,10 +646,8 @@ def get_results(
 ) -> typing.Optional[float]:
     """
     Get the result of executing framework under a given set of constraints
-
     We rely on the existance of a result file, which contains a CSV with
     the results of the run
-
     Args:
         framework (str): the framework to run
         benchmark (str): in which benchmark to run it
@@ -621,26 +655,17 @@ def get_results(
         task (str): in which dataset to run it and associated tasks
         fold (int): which of the 10 folds to run
         score (float): the result of the framework/bechmakr/task/fold
-
     Returns:
         float: the un-normalized score
     """
-    result_file = f"{run_dir}/{framework}_{benchmark}_{constraint}_{task}_{fold}/results.csv"
+    result_file = f"{run_dir}/{framework}_{slugify(benchmark)}_{constraint}_{slugify(task)}_{fold}/results.csv"
 
     if not remote_exists(result_file):
         return None
 
     result_file = remote_get(result_file)
 
-    if os.path.getsize(result_file) < 5:
-        logger.error(f"result_file={result_file} is empty")
-        return None
-
-    try:
-        df = pd.read_csv(result_file)
-    except Exception as e:
-        print(f"result_file={result_file}")
-        raise e
+    df = pd.read_csv(result_file)
     df["fold"] = pd.to_numeric(df["fold"])
     df = df[(df['framework'] == framework) & (df['task'] == task) & (df['fold'] == fold)]
 
@@ -684,10 +709,8 @@ def query_yes_no(question, default='no'):
 
 def check_if_crashed(run_file) -> typing.Union[bool, str]:
     """Checks if a run crashed from the batch log file
-
     Args:
         run_file (str): the sbatch run file
-
     Return:
         str: Returns the cause of failure or false if no failure
     """
@@ -717,10 +740,8 @@ def check_if_crashed(run_file) -> typing.Union[bool, str]:
 def check_if_running(run_file: str, tag: typing.Optional[str] = None) -> bool:
     """
     Queries SLURM to check if a job is running or not
-
     Args:
         run_file (str): the script that might have been used to launch the run
-
     Returns:
         bool: Whether the job is running or not
     """
@@ -738,33 +759,29 @@ def check_if_running(run_file: str, tag: typing.Optional[str] = None) -> bool:
     for i, line in enumerate(remote_run(cmd)):
         if name in line:
             return True
-    return False
 
     # The check in the user job arrays
-    cmd = f"squeue --format=\"%.150i\" --noheader -u {USER}"
-    #result = subprocess.run([
-    #    f"squeue --format=\"%.50i\" --noheader -u {os.environ['USER']}"
-    #], shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
+    #cmd = f"squeue --format=\"%.50i\" --noheader -u {user}"
+    ##result = subprocess.run([
+    ##    f"squeue --format=\"%.50i\" --noheader -u {os.environ['USER']}"
+    ##], shell=True, stdout=subprocess.PIPE).stdout.decode('utf-8')
 
-    #jobids = [jobid.split('_')[0] for jobid in result.splitlines() if "_" in jobid]
-    jobids = [jobid.split('_')[0] for jobid in remote_run(cmd) if "_" in jobid]
-    if jobids:
-        jobids = list(set(jobids))
-    for i, array_job in enumerate(jobids):
-        #command = subprocess.run([
-        #], shell=True, stdout=subprocess.PIPE)
-        #command_out, filename = command.stdout.decode('utf-8').split('=')
-        cmd = f"scontrol show jobid -dd {array_job} | grep Command |  sort --unique"
-        filename = remote_run(cmd)[0]
+    ##jobids = [jobid.split('_')[0] for jobid in result.splitlines() if "_" in jobid]
+    #jobids = [jobid.split('_')[0] for jobid in remote_run(cmd) if "_" in jobid]
+    #if jobids:
+    #    jobids = list(set(jobids))
+    #for i, array_job in enumerate(jobids):
+    #    command = subprocess.run([
+    #        f"scontrol show jobid -dd {array_job} | grep Command |  sort --unique",
+    #    ], shell=True, stdout=subprocess.PIPE)
+    #    command_out, filename = command.stdout.decode('utf-8').split('=')
 
-        filename = filename.lstrip().rstrip()
-        filename = filename.replace('Command=', '')
-        if not remote_exists(filename):
-            raise Exception(f"Could not find file {filename} from command={cmd} array_job={array_job }")
-        filename = remote_get(filename)
-        with open(filename, 'r') as data_file:
-            if name in data_file.read():
-                return True
+    #    filename = filename.lstrip().rstrip()
+    #    if not os.path.exists(filename):
+    #        raise Exception(f"Could not find file {filename} from command={command_out} array_job={array_job }")
+    #    with open(filename, 'r') as data_file:
+    #        if name in data_file.read():
+    #            return True
 
     return False
 
@@ -816,13 +833,12 @@ allbosch_cpu-cascadelake    up    2:05:00     41  alloc kisexe[01-02,04-05,07,09
 
 def to_array_run(run_file, memory, cores, run_dir):
 
-    filename = f"arrayjob_{len(run_file)}_{os.getpid()}_{randrange(100)}.sh"
+    name = f"{run_dir}/scripts/arrayjob_{len(run_file)}_{os.getpid()}_{randrange(100)}.sh"
 
     command = f"""#!/bin/bash
 #SBATCH -o {run_dir}/logs/%x.%A.%a.out
 #SBATCH -c {cores}
 #SBATCH --mem {memory}
-
 echo "Here's what we know from the SLURM environment"
 echo SHELL=$SHELL
 echo HOME=$HOME
@@ -833,7 +849,6 @@ echo JOB_NAME=$JOB_NAME
 echo HOSTNAME=$HOSTNAME
 echo SLURM_ARRAY_TASK_ID=$SLURM_ARRAY_TASK_ID
 echo "Job started at: `date`"
-
 """
     for i, task in enumerate(run_file):
         command += f"\nif [ $SLURM_ARRAY_TASK_ID -eq {i} ]"
@@ -844,17 +859,14 @@ echo "Job started at: `date`"
         command += "\n\tfi\n"
     command += "\necho DONE at: `date`"
 
-    with open(filename, 'w') as f:
+    with open(name, 'w') as f:
         f.write(command)
-    remote_name = f"{run_dir}/scripts/{filename}"
-    remote_put(filename, remote_name)
-    return remote_name
+    return name
 
 
-def are_resource_available_to_run(partition: str, min_cpu_free=128, max_total_runs=5):
+def are_resource_available_to_run(partition: str, min_cpu_free=128, max_total_runs=50):
     """
     Query slurm to make sure we can launch jobs
-
     Args:
         partition (str): which partition to launch and check
         min_cpu_free: only launch if cpu free
@@ -887,7 +899,6 @@ def launch_run(
     run_dir: str,
 ):
     """Sends a job to sbatcht
-
     Args:
         run_files (typing.List[str]): the batch shell file
         args (typing.Any): namespace with the input script arguments
@@ -909,8 +920,9 @@ def launch_run(
         extra += ' --bosch'
 
     # For array
-    max_hours = 8 if args.runtime <= 14400 else 12
+    max_hours=4
     if 'array' in args.run_mode:
+        raise NotImplementedError(f"Have to fix this for remote running ")
         job_list_file = to_array_run(run_files, args.memory, args.cores, run_dir)
         name, ext = os.path.splitext(os.path.basename(job_list_file))
         max_run = min(int(args.max_active_runs), len(run_files))
@@ -930,7 +942,7 @@ def launch_run(
                 this_extra = extra + f" -p {args.partition} -t 0{max_hours}:00:00 --mem {args.memory} -c {args.cores} --job-name {job_name} -o {os.path.join(run_dir, 'logs', name + '_'+ timestamp + '.out')}"
                 _launch_sbatch_run(this_extra, task)
             else:
-                logger.warn(f"Skip {task} as there are no more free resources... try again later!")
+                logger.warning(f"Skip {task} as there are no more free resources... try again later!")
             # Wait 2 sec to update running job
             time.sleep(2)
     elif args.run_mode == 'interactive':
@@ -992,10 +1004,8 @@ def is_number(s: typing.Union[str, int, float]) -> bool:
     """
     Returns True if the provided string is a number. In any other case,
     it return False
-
     Args:
         s (str): the string to check
-
     Returns:
         bool: true if the string is number
     """
@@ -1015,12 +1025,10 @@ def get_job_status(
     folds: typing.List[int],
     constraint: str,
     run_dir: str,
-    args,
 ) -> typing.Dict[str, typing.Any]:
     """
     Buils a dictionary of dictionaries with the status
     of tasks for a given framework
-
     Args:
         framework (str): framework that ran
         benchmarks (typingList[str]):  in what benchmakrs they ran
@@ -1028,10 +1036,8 @@ def get_job_status(
         folds (typing.List[int]): in which folds for CV
         constraint (str): under what contraint it was ran
         run_dir (str): the directory where the runs where launched
-
     Returns:
         Dict: dictionary containing the framework/task/benchmakr/fold info
-
     """
 
     # Get the task
@@ -1039,9 +1045,9 @@ def get_job_status(
     total = 0
 
     jobs[framework] = dict()
-    logger.debug('_'*40)
-    logger.debug(f"\t\t{framework}")
-    logger.debug('_'*40)
+    logger.info('_'*40)
+    logger.info(f"\t\t{framework}")
+    logger.info('_'*40)
 
     for benchmark in benchmarks:
         jobs[framework][benchmark] = dict()
@@ -1108,9 +1114,9 @@ def get_job_status(
                 )
                 total = total + 1
 
-    logger.debug('_'*40)
-    logger.debug(f" A total of {total} runs checked")
-    logger.debug('_'*40)
+    logger.info('_'*40)
+    logger.info(f" A total of {total} runs checked")
+    logger.info('_'*40)
 
     return jobs
 
@@ -1122,12 +1128,10 @@ def launch(
 ) -> None:
     """
     Takes a jobs dictionary and launches the remaining runs that have not yet been completed
-
     Args:
         jobs (typing.Dict): A handy dictionary with frameworks/benchmarck/task/fold info
         args (typing.Any): Namespace with the input argument of this script
         run_dir (str): Are on where to launch the jobs
-
     """
 
     # get a list of jobs to run
@@ -1154,7 +1158,7 @@ def launch(
                                 status = 'Running'
                             else:
                                 status = 'Failed'
-                                if query_yes_no(f"For framework={framework} benchmark={benchmark} constraint={constraint} task={task} fold={fold} obtained: {jobs[framework][benchmark][task][fold]['results']}. Do you want to relaunch this run?") or args.force:
+                                if args.force or query_yes_no(f"For framework={framework} benchmark={benchmark} constraint={constraint} task={task} fold={fold} obtained: {jobs[framework][benchmark][task][fold]['results']}. Do you want to relaunch this run?"):
                                     run_files.append(jobs[framework][benchmark][task][fold]['run_file'])
                                     status = 'Relaunched'
 
@@ -1165,184 +1169,6 @@ def launch(
             args=args,
             run_dir=run_dir,
         )
-
-
-def get_metric_from_run_area(run_dir):
-    """
-    Extracts the metric from the metadata in a run_dir
-    Args:
-        run_dir (str): Are on where to launch the jobs
-    """
-    config_file = remote_get(os.path.join(run_dir, 'config.yaml'))
-    with open(config_file) as file:
-        data = yaml.load(file, Loader=yaml.FullLoader)
-    return data['benchmarks']['metrics']
-
-
-def collect_overfit(
-    jobs: typing.Dict,
-    args: typing.Any,
-    run_dir: str
-) -> pd.DataFrame:
-    """
-    Collects overfit data into a dataframe
-
-    Args:
-        jobs (typing.Dict): A handy dictionary with frameworks/benchmarck/task/fold info
-        args (typing.Any): Namespace with the input argument of this script
-        run_dir (str): Are on where to launch the jobs
-
-    Returns:
-
-    """
-
-    # Collect a dataframe that will contain columns
-    # tool Experiment metric train val test
-    constraint = f"{args.runtime}s{args.cores}c{args.memory}"
-    metric = get_metric_from_run_area(run_dir)
-    dataframe = []
-    for framework, framework_dict in jobs.items():
-        for benchmark, benchmark_dict in framework_dict.items():
-            for task, task_dict in benchmark_dict.items():
-                train, test, val = {}, {}, {}
-                for fold, data in task_dict.items():
-                    for overfit_file in remote_glob(os.path.join(
-                        run_dir,
-                        f"{framework}_{benchmark}_{constraint}_{task}_{fold}",
-                        '*',  # The directory name the benchmark created
-                        'overfit',
-                        task,
-                        str(fold),
-                        'overfit.csv'
-                    )):
-                        overfit_file = remote_get(overfit_file)
-                        frame = pd.read_csv(overfit_file, index_col=0)
-                        for index, row in frame.iterrows():
-                            row_dict = row.to_dict()
-                            # Make best_individual_modelSOMETHING -> best_individual_model
-                            if 'best_individual_model' in row_dict['model']:
-                                row_dict['model'] = 'best_individual_model'
-                            if 'best_ensemble_model' in row_dict['model']:
-                                row_dict['model'] = 'best_ensemble_model'
-                            if row_dict['model'] not in train:
-                                train[row_dict['model']] = []
-                            train[row_dict['model']].append(row_dict['train'])
-                            if row_dict['model'] not in val:
-                                val[row_dict['model']] = []
-                            val[row_dict['model']].append(row_dict['val'])
-                            if row_dict['model'] not in test:
-                                test[row_dict['model']] = []
-                            test[row_dict['model']].append(row_dict['test'])
-                for model in train.keys():
-                    row_dict = {
-                        'tool': framework,
-                        'task': task,
-                        'metric': metric,
-                        'model': model,
-                        'train_mean':  np.nanmean(train[model]) if np.any(train[model]) else 0,
-                        'val_mean':  np.nanmean(val[model]) if np.any(val[model]) else 0,
-                        'test_mean':  np.nanmean(test[model]) if np.any(test[model]) else 0,
-                        'train_std':  np.nanstd(train[model]) if np.any(train[model]) else 0,
-                        'val_std':  np.nanstd(val[model]) if np.any(val[model]) else 0,
-                        'test_std':  np.nanstd(test[model]) if np.any(test[model]) else 0,
-                    }
-                    dataframe.append(row_dict)
-
-    return pd.DataFrame(dataframe)
-
-
-def collect_overfit2(
-    jobs: typing.Dict,
-    args: typing.Any,
-    run_dir: str
-) -> pd.DataFrame:
-    """
-    Creates overfit dataset and print the total average. Just for autosklearn
-
-    Args:
-        jobs (typing.Dict): A handy dictionary with frameworks/benchmarck/task/fold info
-        args (typing.Any): Namespace with the input argument of this script
-        run_dir (str): Are on where to launch the jobs
-
-    Returns:
-
-    """
-
-    all_test_scores = []
-    all_overfits = []
-
-    # Collect a dataframe that will contain columns
-    # tool Experiment metric train val test
-    constraint = f"{args.runtime}s{args.cores}c{args.memory}"
-    metric = get_metric_from_run_area(run_dir)
-    dataframe = []
-    for framework, framework_dict in jobs.items():
-        for benchmark, benchmark_dict in framework_dict.items():
-            for task, task_dict in benchmark_dict.items():
-                train, test, val, overfit = {}, {}, {}, {}
-                for fold, data in task_dict.items():
-                    for overfit_file in remote_glob(os.path.join(
-                        run_dir,
-                        f"{framework}_{benchmark}_{constraint}_{task}_{fold}",
-                        '*',  # The directory name the benchmark created
-                        'overfit',
-                        task,
-                        str(fold),
-                        'overfit.csv'
-                    )):
-                        overfit_file = remote_get(overfit_file)
-                        frame = pd.read_csv(overfit_file, index_col=0)
-                        for index, row in frame.iterrows():
-                            row_dict = row.to_dict()
-
-                            # We care about the best individual model and ensemble
-                            if row_dict['model'] not in ['best_individual_model', 'best_ensemble_model']:
-                                continue
-
-                            # Collect data
-                            if row_dict['model'] not in train:
-                                train[row_dict['model']] = []
-                            train[row_dict['model']].append(row_dict['train'])
-                            if row_dict['model'] not in val:
-                                val[row_dict['model']] = []
-                            val[row_dict['model']].append(row_dict['val'])
-                            if row_dict['model'] not in test:
-                                test[row_dict['model']] = []
-                            test[row_dict['model']].append(row_dict['test'])
-                            if row_dict['model'] not in overfit:
-                                overfit[row_dict['model']] = []
-
-                            if row_dict['model'] == 'best_individual_model':
-                                key = 'best_ever_test_score_individual_model'
-                            elif row_dict['model'] == 'best_ensemble_model':
-                                key = 'best_ever_test_score_ensemble_model'
-                            else:
-                                raise NotImplementedError(row_dict['model'])
-                            overfit[row_dict['model']].append(
-                                frame[frame['model'] == key]['test'] - row_dict['test'])
-                for model in train.keys():
-                    row_dict = {
-                        'tool': framework,
-                        'task': task,
-                        'metric': metric,
-                        'model': model,
-                        'train_mean':  np.nanmean(train[model]) if np.any(train[model]) else 0,
-                        'val_mean':  np.nanmean(val[model]) if np.any(val[model]) else 0,
-                        'test_mean':  np.nanmean(test[model]) if np.any(test[model]) else 0,
-                        'overfit_mean':  np.nanmean(overfit[model]) if np.any(overfit[model]) else 0,
-                        'train_std':  np.nanstd(train[model]) if np.any(train[model]) else 0,
-                        'val_std':  np.nanstd(val[model]) if np.any(val[model]) else 0,
-                        'test_std':  np.nanstd(test[model]) if np.any(test[model]) else 0,
-                        'overfit_std':  np.nanstd(overfit[model]) if np.any(overfit[model]) else 0,
-                    }
-                    dataframe.append(row_dict)
-                    if model == 'best_ensemble_model':
-                        all_test_scores.extend(test[model])
-                        all_overfits.extend(overfit[model])
-    print(f"Average Test Score = {np.mean(all_test_scores)} +- {np.std(all_test_scores)}")
-    print(f"Average Overfit = {np.mean(all_overfits)} +- {np.std(all_overfits)}")
-
-    return pd.DataFrame(dataframe)
 
 
 def collect_overfit3(
@@ -1364,278 +1190,17 @@ def collect_overfit3(
     # Collect a dataframe that will contain columns
     # tool Experiment metric train val test
     constraint = f"{args.runtime}s{args.cores}c{args.memory}"
-    metric = get_metric_from_run_area(run_dir)
     dataframe = []
     for framework, framework_dict in jobs.items():
         for benchmark, benchmark_dict in framework_dict.items():
             for task, task_dict in benchmark_dict.items():
                 for fold, data in task_dict.items():
-
-                    if 'autosklearn' not in framework.lower() or True:
-                        result = jobs[framework][benchmark][task][fold]['results']
-                        dataframe.append({
-                            'tool': framework if not args.tag_with_constraint else f"{framework}_{constraint}",
-                            'task': task,
-                            'model': 'best_ensemble_model',
-                            'fold': fold,
-                            'train':  np.nan,
-                            'val':  np.nan,
-                            # assuming balacc in metric
-                            'test':  abs(result) if is_number(result) else 0,
-                            'overfit':  np.nan,
-                            'constraint': constraint,
-                        })
-                        continue
-
-                    for overfit_file in remote_glob(os.path.join(
-                        run_dir,
-                        f"{framework}_{benchmark}_{constraint}_{task}_{fold}",
-                        '*',  # The directory name the benchmark created
-                        'overfit',
-                        task,
-                        str(fold),
-                        'overfit.csv'
-                    )):
-                        overfit_file = remote_get(overfit_file)
-                        frame = pd.read_csv(overfit_file, index_col=0)
-                        for index, row in frame.iterrows():
-                            row_dict = row.to_dict()
-
-                            # We care about the best individual model and ensemble
-                            if row_dict['model'] not in ['best_individual_model', 'best_ensemble_model'] and 'best_ensemble_model' not in row_dict['model']:
-                                continue
-                            model = row_dict['model']
-
-                            train = row_dict['train']
-                            val = row_dict['val']
-                            test = row_dict['test']
-                            if row_dict['model'] == 'best_individual_model':
-                                key = 'best_ever_test_score_individual_model'
-                            elif 'best_ensemble_model' in row_dict['model']:
-                                key = row_dict['model']
-                            elif row_dict['model'] == 'best_ensemble_model':
-                                key = 'best_ever_test_score_ensemble_model'
-                            else:
-                                raise NotImplementedError(row_dict['model'])
-                            overfit = float(frame[frame['model'] == key]['test'].iloc[0] - row_dict['test'])
-                            dataframe.append({
-                                'tool': framework,
-                                'task': task,
-                                'model': model,
-                                'fold': fold,
-                                'train':  train,
-                                'val':  val,
-                                'test':  test,
-                                'overfit':  overfit,
-                            })
-    return pd.DataFrame(dataframe)
-
-
-def collect_ensemble_history(
-    jobs: typing.Dict,
-    args: typing.Any,
-    run_dir: str
-) -> pd.DataFrame:
-    """
-    Collects the overfit files, integrating them per fold into a single framework file
-
-    Args:
-        jobs (typing.Dict): A handy dictionary with frameworks/benchmarck/task/fold info
-        args (typing.Any): Namespace with the input argument of this script
-        run_dir (str): Are on where to launch the jobs
-
-    Returns:
-
-    """
-
-    # Collect a dataframe that will contain columns
-    # tool Experiment metric train val test
-    constraint = f"{args.runtime}s{args.cores}c{args.memory}"
-    dataframe = []
-    for framework, framework_dict in jobs.items():
-        for benchmark, benchmark_dict in framework_dict.items():
-            for task, task_dict in benchmark_dict.items():
-                for fold, data in task_dict.items():
-                    for overfit_file in remote_glob(os.path.join(
-                        run_dir,
-                        f"{framework}_{benchmark}_{constraint}_{task}_{fold}",
-                        '*',  # The directory name the benchmark created
-                        'debug',
-                        task,
-                        str(fold),
-                        'ensemble_history.csv'
-                    )):
-                        overfit_file = remote_get(overfit_file)
-                        frame = pd.read_csv(overfit_file, index_col=0)
-                        # Tag with identifiers
-                        frame['fold'] = fold
-                        frame['tool'] = framework
-                        frame['task'] = task
-
-                        # Convert to relative time
-                        dataframe.append(frame)
-    return pd.concat(dataframe).reset_index(drop=True)
-
-
-def collect_performance_history(
-    jobs: typing.Dict,
-    args: typing.Any,
-    run_dir: str
-) -> pd.DataFrame:
-    """
-    Collects the overfit files, integrating them per fold into a single framework file
-
-    Args:
-        jobs (typing.Dict): A handy dictionary with frameworks/benchmarck/task/fold info
-        args (typing.Any): Namespace with the input argument of this script
-        run_dir (str): Are on where to launch the jobs
-
-    Returns:
-
-    """
-
-    # Collect a dataframe that will contain columns
-    # tool Experiment metric train val test
-    constraint = f"{args.runtime}s{args.cores}c{args.memory}"
-    dataframe = []
-    for framework, framework_dict in jobs.items():
-        for benchmark, benchmark_dict in framework_dict.items():
-            for task, task_dict in benchmark_dict.items():
-                for fold, data in task_dict.items():
-                    rh_dataframe = []
-                    for run_history_file in remote_glob(os.path.join(
-                        run_dir,
-                        f"{framework}_{benchmark}_{constraint}_{task}_{fold}",
-                        '*',  # The directory name the benchmark created
-                        'debug',
-                        task,
-                        str(fold),
-                        'smac3-output',
-                        '*', #_run_SEED
-                        'runhistory.json'
-                    )):
-                        run_history_file = remote_get(run_history_file)
-                        with open(run_history_file) as f:
-                            runhistory = json.load(f)
-
-                        for run in runhistory['data']:
-                            if 'SUCCESS' not in str(run[1][2]):
-                                continue
-
-                            # Alternatively, it is possible to also obtain the start time with ``run_value.starttime``
-                            endtime = pd.Timestamp(time.strftime('%Y-%m-%d %H:%M:%S',
-                                                                 time.localtime(run[1][4])))
-                            val_score = 1.0 - run[1][0]
-                            test_score = 1.0 - run[1][5]['test_loss']
-                            train_score = 1.0 - run[1][5]['train_loss']
-                            rh_dataframe.append({
-                                'Timestamp': endtime,
-                                'single_best_optimization_score': val_score,
-                                'single_best_test_score': test_score,
-                                'single_best_train_score': train_score,
-                                'task': task,
-                                'fold': fold,
-                                'framework': framework,
-                            })
-                    rh_dataframe = pd.DataFrame(rh_dataframe)
-                    ensemble_dataframe = []
-                    for ensemble in remote_glob(os.path.join(
-                        run_dir,
-                        f"{framework}_{benchmark}_{constraint}_{task}_{fold}",
-                        '*',  # The directory name the benchmark created
-                        'debug',
-                        task,
-                        str(fold),
-                        '.auto-sklearn',
-                        'ensemble_history.json',
-                    )):
-                        ensemble_file = remote_get(ensemble)
-                        with open(ensemble_file) as f:
-                            ensemble = json.load(f)
-
-                        timestamps = [t for t in ensemble['Timestamp'].values()]
-                        ensemble_optimization_scores = [t for t in ensemble['ensemble_optimization_score'].values()]
-                        ensemble_test_score = [t for t in ensemble['ensemble_test_score'].values()]
-                        for t, opt, test in zip(timestamps, ensemble_optimization_scores, ensemble_test_score):
-                            ensemble_dataframe.append({
-                                'Timestamp': pd.Timestamp(t, unit='ms'),
-                                'ensemble_optimization_score': opt,
-                                'ensemble_test_score': test,
-                                'task': task,
-                                'fold': fold,
-                                'framework': framework,
-                            })
-                    ensemble_dataframe = pd.DataFrame(ensemble_dataframe)
-                    dataframe.append(
-                        pd.merge(
-                            rh_dataframe,
-                            ensemble_dataframe,
-                            on="Timestamp", how='outer'
-                        ).sort_values('Timestamp').fillna(method='ffill')
-                    )
+                    result_file = f"{run_dir}/{framework}_{slugify(benchmark)}_{constraint}_{slugify(task)}_{fold}/results.csv"
+                    if remote_exists(result_file):
+                        result_file = remote_get(result_file)
+                        dataframe.append(pd.read_csv(result_file))
 
     return pd.concat(dataframe).reset_index(drop=True)
-
-
-def collect_stats(
-    jobs: typing.Dict,
-    args: typing.Any,
-    run_dir: str
-) -> pd.DataFrame:
-    """
-    Collects the overfit files, integrating them per fold into a single framework file
-
-    Args:
-        jobs (typing.Dict): A handy dictionary with frameworks/benchmarck/task/fold info
-        args (typing.Any): Namespace with the input argument of this script
-        run_dir (str): Are on where to launch the jobs
-
-    Returns:
-
-    """
-
-    # Collect a dataframe that will contain columns
-    # tool Experiment metric train val test
-    constraint = f"{args.runtime}s{args.cores}c{args.memory}"
-    dataframe = []
-    for framework, framework_dict in jobs.items():
-        for benchmark, benchmark_dict in framework_dict.items():
-            for task, task_dict in benchmark_dict.items():
-                for fold, data in task_dict.items():
-                    rh_dataframe = []
-                    for stats_file in remote_glob(os.path.join(
-                        run_dir,
-                        f"{framework}_{benchmark}_{constraint}_{task}_{fold}",
-                        '*',  # The directory name the benchmark created
-                        'debug',
-                        task,
-                        str(fold),
-                        'smac3-output',
-                        '*', #_run_SEED
-                        'stats.json'
-                    )):
-                        stats_file = remote_get(stats_file)
-                        with open(stats_file) as f:
-                            stats = json.load(f)
-
-                        dataframe.append({
-                            'framework': framework,
-                            'task': task,
-                            'fold': fold,
-                            "submitted_ta_runs": stats['submitted_ta_runs'],
-                            "finished_ta_runs": stats['finished_ta_runs'],
-                            "n_configs": stats['n_configs'],
-                            "wallclock_time_used": stats['wallclock_time_used'],
-                            "ta_time_used": stats['ta_time_used'],
-                            "inc_changed": stats['inc_changed'],
-                            "_n_configs_per_intensify": stats['_n_configs_per_intensify'],
-                            "_n_calls_of_intensify": stats['_n_calls_of_intensify'],
-                            "_ema_n_configs_per_intensifiy": stats['_ema_n_configs_per_intensifiy'],
-                            "_EMA_ALPHA": stats['_EMA_ALPHA'],
-                        })
-
-    return pd.DataFrame(dataframe)
-
 
 def get_normalized_score(
     jobs: typing.Dict[str, typing.Dict],
@@ -1646,14 +1211,12 @@ def get_normalized_score(
 ) -> pd.DataFrame:
     """
     Creates a pandas dataframe with the normalized score for the runs
-
     Args:
         jobs (typing.Dict): A handy dictionary with frameworks/benchmarck/task/fold info
         framework (str): framework that ran
         benchmarks (typingList[str]):  in what benchmakrs they ran
         tasks (typing.List[str]): what task ids where ran
         folds (typing.List[int]): in which folds for CV
-
     Returns
         pd.DataFrame: A Frame with the CV average of the normalized scores of each run
     """
@@ -1693,14 +1256,12 @@ def get_problems(
 ) -> pd.DataFrame:
     """
     Creates a pandas dataframe with the reason for crash of a run
-
     Args:
         jobs (typing.Dict): A handy dictionary with frameworks/benchmarck/task/fold info
         framework (str): framework that ran
         benchmarks (typingList[str]):  in what benchmakrs they ran
         tasks (typing.List[str]): what task ids where ran
         folds (typing.List[int]): in which folds for CV
-
     Returns
         pd.DataFrame: A Frame with crash information per run
     """
@@ -1823,7 +1384,7 @@ def get_model_list(run_file):
             os.path.join('results', result_file, 'full_models', task, fold, '*.zip')
         )
         if len(model_file) < 1:
-            print(f"Error while parsing {run_file}.. No model file found!")
+            logger.critical(f"Error while parsing {run_file}.. No model file found!")
             return []
         return get_h2o_model_list(model_file[-1])
     else:
@@ -1859,95 +1420,8 @@ def get_used_models_per_framework(jobs):
 
                 rows.append(model_usage)
         framework_models[framework] = pd.DataFrame(rows)
-        print(framework_models[framework])
         framework_models[framework].to_csv(f"{framework}_models.csv", index=False)
     return framework_models
-
-
-def collect_overhead(
-    jobs: typing.Dict,
-    args: typing.Any,
-    run_dir: str
-) -> pd.DataFrame:
-    """
-    Creates overfit dataset and print the total average. Just for autosklearn
-
-    Args:
-        jobs (typing.Dict): A handy dictionary with frameworks/benchmarck/task/fold info
-        args (typing.Any): Namespace with the input argument of this script
-        run_dir (str): Are on where to launch the jobs
-
-    Returns:
-
-    """
-
-    # Collect a dataframe that will contain columns
-    # tool Experiment metric train val test
-    constraint = f"{args.runtime}s{args.cores}c{args.memory}"
-
-    # Get first the list of jobs names to query
-    job_names = []
-    for framework, framework_dict in jobs.items():
-        for benchmark, benchmark_dict in framework_dict.items():
-            for task, task_dict in benchmark_dict.items():
-                for fold, data in task_dict.items():
-                    run_file = jobs[framework][benchmark][task][fold]['run_file']
-                    name, ext = os.path.splitext(os.path.basename(run_file))
-                    job_names.append(name)
-
-    # Then get the overhead form slurm
-    cmd = f"sacct -u riverav --format=JobID,JobName%100,MaxRSS,Elapsed,MaxDiskRead,MaxDiskWrite,MaxRSS,MaxVMSize,MinCPU,TotalCPU --parsable2 --name={','.join(job_names)} -S 2020-11-01"
-    lines = remote_run(cmd)
-    header = lines.pop(0).split('|')
-    # We have to process 2 lines at the same time
-    it = iter(lines)
-    JobName2overhead = {}
-    for line in iter(it):
-        # JobID|JobName|MaxRSS|Elapsed|MaxDiskRead|MaxDiskWrite|MaxRSS|MaxVMSize|MinCPU|TotalCPU
-        # 5432402|autosklearnBBCScoreEnsembleLatest_B_10_Nb_100_master_thesis_3600s1c8G_adult_4||01:00:31||||||12:33.749
-        # 5432402.batch|batch|3052644K|01:00:31|180.41M|26.34M|3052644K|7083644K|00:03:56|12:33.749
-        # 5432406|autosklearnBBCScoreEnsembleLatest_B_10_Nb_100_master_thesis_3600s1c8G_Albert_3||01:01:35||||||52:43.492
-        # 5432406.batch|batch|5653216K|01:01:35|8938.85M|576.34M|5653216K|9714760K|00:10:02|52:43.492
-        first_line = line.split('|')
-        second_line = next(it).split('|')
-        data = {}
-        for i, (first, second) in enumerate(zip(first_line, second_line)):
-            # It is super annoying that what we want might be in the first line or in the second
-            # line.
-            if 'batch' in first or first == '':
-                data[header[i].rstrip()] = second.rstrip()
-            else:
-                data[header[i].rstrip()] = first.rstrip()
-
-        JobName2overhead[data['JobName']] = data
-
-    dataframe = []
-    for framework, framework_dict in jobs.items():
-        for benchmark, benchmark_dict in framework_dict.items():
-            for task, task_dict in benchmark_dict.items():
-                for fold, data in task_dict.items():
-                    run_file = jobs[framework][benchmark][task][fold]['run_file']
-                    name, ext = os.path.splitext(os.path.basename(run_file))
-                    row = {
-                        'tool': framework,
-                        'task': task,
-                        'fold': fold,
-                    }
-                    row.update(JobName2overhead[name])
-                    # Throw in there the number of smac models fitted
-                    try:
-                        cmd = f"grep StatusType.SUCCESS {run_dir}/{framework}_{benchmark}_{constraint}_{task}_{fold}/*/debug/{task}/{fold}/smac3-output/run_*/runhistory.json"
-                        row['SMACModelsSUCCESS'] = len(remote_run(cmd))
-                    except Exception:
-                        row['SMACModelsSUCCESS'] = 0
-                    try:
-                        cmd = f"grep StatusType. {run_dir}/{framework}_{benchmark}_{constraint}_{task}_{fold}/*/debug/{task}/{fold}/smac3-output/run_*/runhistory.json"
-                        row['SMACModelsALL'] = len(remote_run(cmd))
-                    except Exception:
-                        row['SMACModelsALL'] = 0
-                    dataframe.append(row)
-    dataframe = pd.DataFrame(dataframe)
-    return dataframe
 
 
 if __name__ == "__main__":
@@ -1965,7 +1439,6 @@ if __name__ == "__main__":
         action='append',
         help='What benchmark to run',
         required=True,
-        choices=['test', 'small', 'medium', 'large', 'master_thesis'],
     )
     parser.add_argument(
         '-t',
@@ -1990,7 +1463,7 @@ if __name__ == "__main__":
         '-m',
         '--memory',
         default='32G',
-        choices=['12G', '32G', '8G'],
+        choices=['12G', '32G'],
         help='the ammount of memory to allocate to a job'
     )
     parser.add_argument(
@@ -2002,16 +1475,14 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         '--binary_metric',
-        #default="['acc']",
-        default="['balacc', 'auc', 'acc']",
-        #default="['auc', 'logloss', 'acc']",
+        #default="['balacc', 'auc', 'acc']",
+        default="['auc', 'logloss', 'acc']",
         help='What metric set to use. Notice that it has to be a string'
     )
     parser.add_argument(
         '--multiclass_metric',
-        default="['balacc', 'logloss', 'acc']",
-        #default="['acc']",
-        #default="['logloss', 'acc']",
+        #default="['balacc', 'logloss', 'acc']",
+        default="['logloss', 'acc']",
         help='What metric set to use. Notice that it has to be a string'
     )
     parser.add_argument(
@@ -2020,20 +1491,13 @@ if __name__ == "__main__":
         help='What metric set to use. Notice that it has to be a string'
     )
     parser.add_argument(
-        '--total_folds',
-        type=int,
-        required=False,
-        default=5,
-        help='Total amount of folds to run'
-    )
-    parser.add_argument(
         '--folds',
         type=int,
-        choices=list(range(5)),
+        choices=list(range(10)),
         action='append',
         required=False,
         default=[],
-        help='What fold out of 10 to launch'
+        help='What fold out of 10 to launch. If none is provided, it will be assumed all 10 folds need to be ran'
     )
     parser.add_argument(
         '--run_mode',
@@ -2073,30 +1537,6 @@ if __name__ == "__main__":
         help='generates a problems dataframe'
     )
     parser.add_argument(
-        '--collect_overhead',
-        type=str2bool,
-        nargs='?',
-        const=True,
-        default=False,
-        help='generates a overhead'
-    )
-    parser.add_argument(
-        '--collect_history',
-        type=str2bool,
-        nargs='?',
-        const=True,
-        default=False,
-        help='generates a problems dataframe'
-    )
-    parser.add_argument(
-        '--collect_stats',
-        type=str2bool,
-        nargs='?',
-        const=True,
-        default=False,
-        help='generates a problems dataframe'
-    )
-    parser.add_argument(
         '--models',
         type=str2bool,
         nargs='?',
@@ -2113,14 +1553,6 @@ if __name__ == "__main__":
         default=None,
         required=False,
         help='to tag a run so name does not collide'
-    )
-    parser.add_argument(
-        '--tag_with_constraint',
-        type=str2bool,
-        nargs='?',
-        const=True,
-        default=False,
-        help='generates a models used dataframe'
     )
     parser.add_argument(
         '--force',
@@ -2156,13 +1588,13 @@ if __name__ == "__main__":
         shell=True,
         stdout=subprocess.PIPE
     ).stdout.decode('utf-8')
-    print(f"updated_files = {updated_files}")
+    logger.info(f"updated_files = {updated_files}")
+
     # Make sure the run_dir has the desired information
     run_dir = create_run_dir_area(
         run_dir=args.run_dir,
         args=args,
     )
-
 
     # Tasks are benchmark dependent
     if args.task:
@@ -2185,7 +1617,7 @@ if __name__ == "__main__":
 
     # If no folds provided, then use all of them
     if len(args.folds) == 0:
-        args.folds = list(range(args.total_folds))
+        args.folds = list(range(10))
 
     # Get the job status
     constraint = f"{args.runtime}s{args.cores}c{args.memory}"
@@ -2195,8 +1627,7 @@ if __name__ == "__main__":
         tasks=tasks,
         folds=args.folds,
         constraint=constraint,
-        run_dir=run_dir,
-        args=args,
+        run_dir=run_dir
     )
 
     # Can only run on array or normal mode
@@ -2213,41 +1644,9 @@ if __name__ == "__main__":
             args=args,
             run_dir=run_dir
         )
-        constraint = f"{args.runtime}s{args.cores}c{args.memory}"
-        filename = f"{args.framework}_overfit.csv" if args.tag_with_constraint is None else f"{args.framework}_{constraint}_overfit.csv"
+        filename = f"{args.framework}_overfit.csv"
         logger.info(f"Please check {filename}")
         overfit.to_csv(filename)
-
-    if args.collect_history:
-        overfit = collect_performance_history(
-            jobs=jobs,
-            args=args,
-            run_dir=run_dir
-        )
-        filename = f"{args.framework}_history.csv"
-        logger.info(f"Please check {filename}")
-        overfit.to_csv(filename)
-
-    if args.collect_stats:
-        stats = collect_stats(
-            jobs=jobs,
-            args=args,
-            run_dir=run_dir
-        )
-        filename = f"{args.framework}_stats.csv"
-        logger.info(f"Please check {filename}")
-        stats.to_csv(filename)
-
-    if args.collect_overhead:
-        overhead = collect_overhead(
-            jobs=jobs,
-            args=args,
-            run_dir=run_dir
-        )
-        filename = f"{args.framework}_overhead.csv"
-        logger.info(f"Please check {filename}")
-        overhead.to_csv(filename)
-
     # Close the connection to the server
     SSH.close()
     VM.close()
