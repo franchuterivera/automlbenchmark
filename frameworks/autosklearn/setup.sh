@@ -2,7 +2,7 @@
 HERE=$(dirname "$0")
 AMLB_DIR="$1"
 VERSION=${2:-"latest"}
-REPO=${3:-"https://github.com/automl/auto-sklearn.git"}
+REPO=${3:-"https://github.com/franchuterivera/auto-sklearn.git"}
 PKG=${4:-"auto-sklearn"}
 if [[ "$VERSION" == "latest" ]]; then
     VERSION="master"
@@ -15,14 +15,12 @@ if [[ -x "$(command -v apt-get)" ]]; then
     SUDO apt-get install -y build-essential swig
 fi
 
-PIP install packaging
-if [[ "$VERSION" =~ ^[0-9] ]]; then
-    PIP install --no-cache-dir ${PKG}==${VERSION}
-else
-#    PIP install --no-cache-dir -e git+${REPO}@${VERSION}#egg=${PKG}
-    TARGET_DIR="${HERE}/lib/${PKG}"
-    rm -Rf ${TARGET_DIR}
-    git clone --depth 1 --single-branch --branch ${VERSION} --recurse-submodules ${REPO} ${TARGET_DIR}
-    PIP install -e ${TARGET_DIR}
-fi
-
+PIP install --no-cache-dir liac-arff packaging numpy
+TARGET_DIR="${HERE}/lib/${PKG}"
+rm -Rf ${TARGET_DIR}
+git clone ${REPO} ${TARGET_DIR}
+cd ${TARGET_DIR}
+git checkout development
+cd ${HERE}
+PIP install -r ${TARGET_DIR}/requirements.txt
+PIP install -e ${TARGET_DIR}

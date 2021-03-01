@@ -4,6 +4,7 @@ import logging
 import os
 import shutil
 import warnings
+import tempfile as tmp
 warnings.simplefilter("ignore")
 
 import matplotlib
@@ -12,8 +13,7 @@ matplotlib.use('agg')  # no need for tk
 
 from autogluon.tabular import TabularPrediction as task
 from autogluon.core.utils.savers import save_pkl, save_pd
-import autogluon.tabular.metrics as metrics
-from autogluon.tabular.constants import BINARY, MULTICLASS, REGRESSION
+import  autogluon.core.metrics as metrics
 
 from frameworks.shared.callee import call_run, result, output_subdir, utils
 
@@ -33,6 +33,7 @@ def run(dataset, config):
         r2=metrics.r2,
         # rmse=metrics.root_mean_squared_error,  # metrics.root_mean_squared_error incorrectly registered in autogluon REGRESSION_METRICS
         rmse=metrics.mean_squared_error,  # for now, we can let autogluon optimize training on mse: anyway we compute final score from predictions.
+        balacc=metrics.balanced_accuracy,
     )
 
     perf_metric = metrics_mapping[config.metric] if config.metric in metrics_mapping else None
@@ -49,7 +50,8 @@ def run(dataset, config):
     label = dataset.target.name
     print(f"Columns dtypes:\n{train.dtypes}")
 
-    output_dir = output_subdir("models", config)
+    #output_dir = output_subdir("models", config)
+    output_dir = tmp.gettempdir()
     with utils.Timer() as training:
         predictor = task.fit(
             train_data=train,
@@ -65,21 +67,28 @@ def run(dataset, config):
     X_test = test.drop(columns=label)
     y_test = test[label]
 
+    print(f"Fonished training now to predict")
     with utils.Timer() as predict:
         predictions = predictor.predict(X_test)
 
     probabilities = predictor.predict_proba(dataset=X_test, as_pandas=True, as_multiclass=True) if is_classification else None
     prob_labels = probabilities.columns.values.tolist() if probabilities is not None else None
+    print(f"Fonished even predict")
 
-    leaderboard = predictor._learner.leaderboard(X_test, y_test, silent=True)
-    with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.width', 1000):
-        print(leaderboard)
+    try:
+        leaderboard = predictor._learner.leaderboard(X_test, y_test, silent=True)
+        with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.width', 1000):
+            print(leaderboard)
 
-    overfit_frame = generate_overfit_artifacts(predictor, test)
-    save_artifacts(predictor, leaderboard, config, overfit_frame)
+        #overfit_frame = generate_overfit_artifacts(predictor, test)
+        #save_artifacts(predictor, leaderboard, config, overfit_frame=None)
+        num_models_trained = len(leaderboard)
+        num_models_ensemble = len(predictor._trainer.get_minimum_model_set(predictor._trainer.model_best))
+    except Exception as e:
+        num_models_ensemble = 0
+        num_models_trained = 0
+        print(f"{e} happened")
 
-    num_models_trained = len(leaderboard)
-    num_models_ensemble = len(predictor._trainer.get_minimum_model_set(predictor._trainer.model_best))
 
     return result(output_file=config.output_predictions_file,
                   predictions=predictions,
@@ -99,7 +108,7 @@ def save_artifacts(predictor, leaderboard, config, overfit_frame):
         models_dir = output_subdir("models", config)
         shutil.rmtree(os.path.join(models_dir, "utils"), ignore_errors=True)
 
-        if 'overfit' in artifacts:
+        if 'overfit' in artifacts and overfit_frame is not None:
             overfit_file = os.path.join(output_subdir('overfit', config), 'overfit.csv')
             overfit_frame.to_csv(overfit_file)
 

@@ -33,7 +33,7 @@ TARGET_DIR="${HERE}/lib/${PKG}"
 rm -Rf ${TARGET_DIR}
 git clone ${REPO} ${TARGET_DIR}
 cd ${TARGET_DIR}
-git checkout train_score
+git checkout psutil
 PIP install -e ${TARGET_DIR}/core
 PIP install -e ${TARGET_DIR}/tabular
 PIP install -e ${TARGET_DIR}/mxnet

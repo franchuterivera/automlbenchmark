@@ -851,6 +851,7 @@ def generate_ranking_per_dataset2(dfs: typing.List[pd.DataFrame], metric: str = 
     score.set_index('index')
     return result, score
 
+
 def collapse_seed(df: pd.DataFrame) -> pd.DataFrame:
     """
     Collapses a dataframe that has multiple runs per seed
@@ -1013,39 +1014,65 @@ def wilcoxon_averaging(df: pd.DataFrame, contains: typing.Optional[str] = None,
     return df
 
 
-def Nemenyi_posthoc(df: pd.DataFrame, contains: typing.Optional[str] = None,
-                       base_tool_name: str = 'None_es50_B100_N1.0') -> pd.DataFrame:
+def generate_ranking_per_fold_per_dataset_bags(df: pd.DataFrame, bootstrap: int = 200
+                                                ) -> pd.DataFrame:
     """
-    First this procedure computes the friedmanchisquare test to make sure that the tools
-    are different -- that is, the test performance actually yields a difference that is
-    meassurable.
+    Performs the rank calculation per bootstrap block where a block is a Aseed-fold-dataset pair
 
-    The Friedman test is the nonparametric version of the repeated measures analysis of
-    variance test, or repeated measures ANOVA.
-    The test can be thought of as a generalization of the Kruskal-Wallis H Test to more
-    than two samples.
+    Args:
+        dfs (List[pdDataFrame]): A list of dataframes each representing a seed
 
-    The default assumption, or null hypothesis, is that the multiple paired samples have
-    the same distribution.
-    A rejection of the null hypothesis indicates that one or more of the paired samples
-    has a different distribution.
-
-    Fail to Reject H0: Paired sample distributions are equal.
-    Reject H0: Paired sample distributions are not equal.
-
-
+    Returns:
+        pd.DataFrame: with the ranking
     """
-    # Just care right now for 100 bootstrap data
-    if contains is not None:
-        df = df[df["tool"].str.contains(contains)]
 
-    measurements = pd.pivot_table(
-        df, values='test', index=['task', 'fold', 'seed'], columns=['tool'])
+    # Form the desired array with raw scores, an average of everything
+    result = pd.pivot_table(df, values='test', index=['tool'], columns=['task'], aggfunc=np.mean)
+    df['wins'] = 0  # we rank based on wins
+    ranking = pd.pivot_table(df, values='wins', index=['tool'], columns=['task'], aggfunc=np.mean)
 
-    for tool in df['tool'].unique():
-        challenger = df.query(f"tool == '{tool}' & task == '{task}'").sort_values(['seed', 'fold'])
+    # fix the metric -- greater is better in certain cases. This can be done per task
 
-#pd.pivot_table(df, values='test', index=['task', 'tool'], columns=['fold']).groupby(level=0).rank(ascending=False, method='average', na_option='bottom').mean(axis='columns')
+    # Sort values for proper compare -- yet I don;t think it matters
+    df.sort_values(by=['tool', 'task', 'fold', 'seed'], inplace=True)
+
+    test_score_per_task_fold_tool = pd.pivot_table(df, values='test', index=['task', 'fold', 'tool'], columns='seed')
+    test_score_per_task_fold_tool.to_csv('test_score_per_task_fold_tool.csv')
+
+    folds = df['fold'].unique()
+
+    for task in tqdm.tqdm(ranking.columns):
+
+        # We divide by 2 because bootstrap is used in 2 placed
+        # we have blocks and within each block we have repetitions.
+        # we sample with replacemented bootstrap//2 times from a block
+        # which in this context is task/fold/autosklearnseed. Within this block
+        # are 10 repetitions and we take  bootstrap//2 comparissons
+        for boot in range(bootstrap // 2):
+            # Pick a random fold, seed
+            fold = np.random.choice(folds)
+            index = (task, fold)  # would yield a table with tool as row and repetitions as col
+
+            # Get the values per tool(rows) and columns(10 seed repetitions)
+            data = test_score_per_task_fold_tool.loc[index].to_numpy()
+            data[np.isnan(data)] = 0
+            # Do sampling with replacement to get tool as rows again, but different
+            # permutations of the 10 seeds
+            resample_index = np.random.randint(data.shape[1], size=(data.shape[0], bootstrap//2))
+            data = np.take_along_axis(data, resample_index, 1)
+            wins = pd.Series(
+                (rankdata(data, axis=0, method='min')-1).sum(axis=1),
+                index=test_score_per_task_fold_tool.loc[index].index
+            )
+            # Pretty cool using index: So the index are the tool we are evaluation.
+            # if a whole tool failed, it won't even be there and this tool for this
+            # task won't be incremented. We add the number of times that for this
+            # bootstrap block of fold/seed/task, an experiment was better than other
+            ranking[task] = ranking[task] + wins
+
+    ranking = ranking.rank(axis=0, method='average', ascending=False)
+    return ranking, result
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Utility to plot CSV results')
@@ -1069,7 +1096,7 @@ if __name__ == "__main__":
         required=True,
         type=str,
         # Aseed means here parent autosklearn seed
-        choices=['fold_dataset', 'block_Aseed_fold_dataset']
+        choices=['fold_dataset', 'block_Aseed_fold_dataset', 'bag_fold_dataset']
     )
     parser.add_argument(
         '--tools',
@@ -1106,6 +1133,8 @@ if __name__ == "__main__":
     # Average the folds across seed to remove noise
     if 'block_Aseed_fold_dataset' in args.rank:
         ranking, rawscores = generate_ranking_per_Aseed_fold_per_dataset(df)
+    elif 'bag_fold_dataset' in args.rank:
+        ranking, rawscores = generate_ranking_per_fold_per_dataset_bags(df)
     elif 'fold_dataset' in args.rank:
         df = collapse_seed(df)
         ranking, rawscores = generate_ranking_per_fold_per_dataset(df)

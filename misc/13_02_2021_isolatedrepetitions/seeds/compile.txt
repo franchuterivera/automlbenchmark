@@ -1,1 +1,0 @@
-df.groupby(['hue', 'model', 'dataset_name', 'level', 'repeat']).mean().reset_index().pivot(values='performance', index=['repeat', 'dataset_name', 'hue', 'model'], columns=['level'])

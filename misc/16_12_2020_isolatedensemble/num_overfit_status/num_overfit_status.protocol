@@ -1,2 +1,0 @@
-python manager.py -f AutoGluon -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2020.12.31-12.59.17
-python manager.py -f H2OAutoML -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600  --run_dir /home/riverav/AUTOML_BENCHMARK/H2OAutoML/3.30.0.4/2020.12.31-13.23.24

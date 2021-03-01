@@ -1,7 +1,0 @@
-tool,Albert,Australian,MiniBooNE,adult,cnae-9,connect-4,higgs,kr-vs-kp,segment,vehicle
-autosklearn,1.8,2.6,1.8,4.2,2.2,1.0,4.4,3.8,3.6,2.2
-autosklearnHyperBandAVGRepeats_eta3_cv5_repeats10_avgFalse,3.2,2.9,2.0,2.6,4.7,2.8,2.8,3.2,3.6,3.7
-autosklearnHyperBandAVGRepeats_eta3_cv5_repeats10_avgTrue,3.8,3.6,2.2,1.4,4.5,2.2,2.2,3.6,3.3,2.5
-autosklearnHyperBandAVGRepeats_eta3_cv5_repeats5_avgFalse,3.4,3.0,5.2,3.6,2.8,,4.2,3.2,2.4,5.2
-autosklearnHyperBandAVGRepeats_eta3_cv5_repeats5_avgTrue,2.8,2.9,5.8,3.2,2.6,,3.2,3.2,3.1,4.3
-autosklearnHyperBandAVGRepeats_eta3_cv5_repeats5_avgTrue_Stack2_halftime,,,4.0,,4.2,,4.2,4.0,5.0,3.1

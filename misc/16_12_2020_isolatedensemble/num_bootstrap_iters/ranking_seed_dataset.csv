@@ -1,6 +1,0 @@
-,index,Albert,Australian,MiniBooNE,adult,cnae-9,connect-4,higgs,kr-vs-kp,segment,vehicle,Avg. Ranking
-0,autosklearn,5.0,2.0,1.0,1.0,1.0,1.0,1.0,2.0,5.0,2.0,2.1
-1,autosklearnHyperBandFolds eta2 cv5 repeats1,1.0,1.0,5.0,5.0,5.0,3.0,2.0,4.0,4.0,3.0,3.3
-2,autosklearnHyperBandFolds eta2 cv5 repeats10,4.0,4.0,3.0,3.0,3.0,5.0,5.0,1.0,1.0,4.0,3.3
-3,autosklearnHyperBandFolds eta2 cv5 repeats3,3.0,5.0,2.0,2.0,2.0,2.0,4.0,5.0,2.0,5.0,3.2
-4,autosklearnHyperBandFolds eta3 cv5 repeats1,2.0,3.0,4.0,4.0,4.0,4.0,3.0,3.0,3.0,1.0,3.1

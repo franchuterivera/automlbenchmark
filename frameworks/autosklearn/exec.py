@@ -70,14 +70,15 @@ def run(dataset, config):
     # (cores - 1) * ml_memory_limit_mb + ensemble_memory_limit_mb = config.max_mem_size_mb
     total_memory_mb = utils.system_memory_mb().total
     if ml_memory_limit == 'auto':
-        ml_memory_limit = max(min(math.ceil(config.max_mem_size_mb / n_jobs),
-                                  math.ceil(total_memory_mb / n_jobs)),
-                              3072)  # 3072 is autosklearn defaults
-    if ensemble_memory_limit == 'auto':
-        ensemble_memory_limit = max(math.ceil(ml_memory_limit - (total_memory_mb - config.max_mem_size_mb)),
-                                    math.ceil(ml_memory_limit / 3),  # default proportions
-                                    1024)  # 1024 is autosklearn defaults
-    log.info("Using %sMB memory per ML job and %sMB for ensemble job on a total of %s jobs.", ml_memory_limit, ensemble_memory_limit, n_jobs)
+        ml_memory_limit = max(
+            min(
+                config.max_mem_size_mb / n_jobs,
+                math.ceil(total_memory_mb / n_jobs)
+            ),
+            3072  # 3072 is autosklearn default and we use it as a lower bound
+        )
+
+    log.info("Using %sMB memory per ML job and %sMB for ensemble job on a total of %s jobs.", ml_memory_limit, ml_memory_limit, n_jobs)
 
     log.warning("Using meta-learned initialization, which might be bad (leakage).")
     # TODO: do we need to set per_run_time_limit too?
@@ -92,8 +93,7 @@ def run(dataset, config):
 
     auto_sklearn = estimator(time_left_for_this_task=config.max_runtime_seconds,
                              n_jobs=n_jobs,
-                             ml_memory_limit=ml_memory_limit,
-                             ensemble_memory_limit=ensemble_memory_limit,
+                             memory_limit=ml_memory_limit,
                              delete_tmp_folder_after_terminate=False,
                              delete_output_folder_after_terminate=False,
                              seed=config.seed,

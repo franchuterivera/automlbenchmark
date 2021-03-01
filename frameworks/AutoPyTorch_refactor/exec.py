@@ -1,4 +1,3 @@
-from shutil import copyfile
 import logging
 import math
 import os
@@ -9,6 +8,7 @@ import pickle
 import numpy as np
 from pandas.api.types import is_numeric_dtype
 import pandas as pd
+from shutil import copyfile
 
 os.environ['JOBLIB_TEMP_FOLDER'] = tmp.gettempdir()
 os.environ['OMP_NUM_THREADS'] = '1'
@@ -125,11 +125,11 @@ def run(dataset, config):
     save_artifacts(api, config)
 
     try:
+        print(f"The trajectory: ")
         print(api.run_history, api.trajectory)
-        print(api.ensemble_)
-        print(api.ensemble_.get_selected_model_identifiers())
-        print(api.ensemble_.weights_)
+        print(f"The selected models: ")
         print(api.show_models())
+        print(f"Finish the run")
     except Exception as e:
         print(f"Run into {e} while printing information")
 
@@ -149,7 +149,6 @@ def save_artifacts(estimator, config):
         #log.debug("Trained Ensemble:\n%s", models_repr)
         artifacts = config.framework_params.get('_save_artifacts', [])
         if 'models' in artifacts:
-            print("Saving Artifacts -- models")
             models_file = os.path.join(output_subdir('models', config), 'models.txt')
             with open(models_file, 'w') as f:
                 f.write(models_repr)

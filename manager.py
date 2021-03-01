@@ -401,8 +401,15 @@ def create_run_dir_area(run_dir: typing.Optional[str], args: typing.Any
 
     # Copy the SIF file
     sif_file = f"frameworks/{args.framework}/{args.framework.lower()}_{version.lower()}-stable.sif"
+    src = f"{AUTOMLBENCHMARK}/frameworks/{args.framework}/{os.path.basename(sif_file)}"
+    dst = f"{run_dir}/{os.path.basename(sif_file)}"
+    remote_run(f"cp {src} {dst}")
+    if not remote_exists(dst):
+        raise ValueError("We expect the sif file for singularity to be both in the "
+                         f"run dir {run_dir} and {AUTOMLBENCHMARK}, yet copying failed! "
+                         f"Command: cp {src} {dst}")
     #copyfile(sif_file, f"{run_dir}/{os.path.basename(sif_file)}")
-    remote_put(sif_file, f"{run_dir}/{os.path.basename(sif_file)}")
+    #remote_put(sif_file, f"{run_dir}/{os.path.basename(sif_file)}")
 
     # Extract the version of smac/autosklearn
     #cwd = os.getcwd();
@@ -2142,12 +2149,6 @@ if __name__ == "__main__":
     if not args.run_dir:
         validate_framework(args.framework)
 
-    # Make sure the run_dir has the desired information
-    run_dir = create_run_dir_area(
-        run_dir=args.run_dir,
-        args=args,
-    )
-
     # Update the remote version of the benchmakr with the local version
     print(os.getcwd())
     updated_files = subprocess.run(
@@ -2156,6 +2157,12 @@ if __name__ == "__main__":
         stdout=subprocess.PIPE
     ).stdout.decode('utf-8')
     print(f"updated_files = {updated_files}")
+    # Make sure the run_dir has the desired information
+    run_dir = create_run_dir_area(
+        run_dir=args.run_dir,
+        args=args,
+    )
+
 
     # Tasks are benchmark dependent
     if args.task:
