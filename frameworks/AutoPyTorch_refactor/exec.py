@@ -110,6 +110,8 @@ def run(dataset, config):
             X_test=X_test,
             y_test=y_test,
             optimize_metric=perf_metric.name,
+            # Give enough time for 2 ensembles or at least 10 mins
+            func_eval_time_limit=min(config.max_runtime_seconds//2, 600),
             # Be a little bit pessimistic towards time
             total_walltime_limit=config.max_runtime_seconds-10,
         )
