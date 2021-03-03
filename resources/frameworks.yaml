@@ -1675,3 +1675,92 @@ autosklearnEnsembleIntensification_920_members10_repeats5_level2_strategyInstanc
     max_ensemble_members: 10
     min_challengers: 9
     stack_at_most: 20
+
+    # #bad run because meta missed the gradient boosting
+    # autosklearnEnsembleIntensification_920_members10_repeats5_level2_strategyInstancesSelf_ensemble_highest_repeat_trusted_NOinitconfigs_metaon_BO:
+    #  version: '920'
+    #  project: https://automl.github.io/auto-sklearn/
+    #  params:
+    #    _save_artifacts: ['overfit', 'debug']
+    #    k_folds: 5
+    #    repeats: 5
+    #    max_stacking_level: 2
+    #    stacking_strategy: 'instances_selfasbase'
+    #    ensemble_folds: 'highest_repeat_trusted'
+    #    max_ensemble_members: 10
+    #    min_challengers: 9
+    #    stack_at_most: 20
+
+##################################################
+# Try min challengers after I fixed the metadata #
+##################################################
+autosklearnEnsembleIntensification_members10_repeats5_level2_strategyInstancesAny_ensemble_highest_repeat_trusted_NOinitconfigs_BO_minchall9:
+  version: 'metaonrepeat'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 5
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 9
+    stack_at_most: 20
+
+autosklearnEnsembleIntensification_members10_repeats5_level2_strategyInstancesAny_ensemble_highest_repeat_trusted_Noinitconfigs_BO_minchall20:
+  version: 'metaonrepeat'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 5
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 20
+
+autosklearnEnsembleIntensification_members10_repeats5_level2_strategyInstancesAny_ensemble_highest_repeat_trusted_Noinitconfigs_BO_minchall50:
+  version: 'metaonrepeat'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 5
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 50
+    stack_at_most: 20
+
+autosklearnEnsembleIntensification_920_members10_repeats5_level2_strategyInstancesAny_ensemble_highest_repeat_trusted_initconfigs_BO_minchall20:
+  version: '920'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 5
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 20
+    initial_configurations_via_metalearning: 0
+    stack_at_most: 20
+
+autosklearnEnsembleIntensification_920_members10_repeats5_level2_strategyInstancesAny_ensemble_highest_repeat_trusted_initconfigs_BO_minchall50:
+  version: '920'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 5
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 50
+    initial_configurations_via_metalearning: 0
+    stack_at_most: 20
