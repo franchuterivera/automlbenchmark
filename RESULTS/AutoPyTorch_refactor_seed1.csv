@@ -1,0 +1,324 @@
+,id,task,framework,constraint,fold,result,metric,mode,version,params,tag,utc,duration,models,seed,info,acc
+0,openml.org/t/146818,Australian,AutoPyTorch_refactor,3600s8c32G,0,0.884058,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:26:25,3665.2,0,332497844,,0.884058
+0,openml.org/t/XX,adult,AutoPyTorch_refactor,3600s8c32G,0,0.8693961105,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8693961105
+1,openml.org/t/146818,Australian,AutoPyTorch_refactor,3600s8c32G,1,0.8550719999999999,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:26:23,3663.3,0,3286992093,,0.8550719999999999
+1,openml.org/t/XX,adult,AutoPyTorch_refactor,3600s8c32G,1,0.8753326509999999,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8753326509999999
+10,openml.org/t/10101,blood-transfusion,AutoPyTorch_refactor,3600s8c32G,0,0.746667,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:27:33,3667.1,0,1132518628,,0.746667
+10,openml.org/t/XX,Amazon_employee_access,AutoPyTorch_refactor,3600s8c32G,0,0.9447665548,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9447665548
+100,openml.org/t/3,kr-vs-kp,AutoPyTorch_refactor,3600s8c32G,5,1.0,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:33:12,3683.8,0,1062291690,,1.0
+100,openml.org/t/XX,jungle_chess_2pcs_raw_endgame_complete,AutoPyTorch_refactor,3600s8c32G,7,0.8634538153,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8634538153
+101,openml.org/t/XX,jungle_chess_2pcs_raw_endgame_complete,AutoPyTorch_refactor,3600s8c32G,8,0.8821954485,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8821954485
+101,openml.org/t/XX,kr-vs-kp,AutoPyTorch_refactor,3600s8c32G,6,0.9905956113,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9905956113
+102,openml.org/t/XX,jungle_chess_2pcs_raw_endgame_complete,AutoPyTorch_refactor,3600s8c32G,9,0.871457264,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.871457264
+102,openml.org/t/XX,kr-vs-kp,AutoPyTorch_refactor,3600s8c32G,7,0.9937304075,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9937304075
+103,openml.org/t/3945,KDDCup09_appetency,AutoPyTorch_refactor,3600s8c32G,1,0.9822,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:02:56,3664.3,0,3801612857,,0.9822
+103,openml.org/t/XX,kr-vs-kp,AutoPyTorch_refactor,3600s8c32G,8,0.9905956113,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9905956113
+104,openml.org/t/3,kr-vs-kp,AutoPyTorch_refactor,3600s8c32G,9,0.996865,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:34:08,3688.3,0,1141991646,,0.996865
+104,openml.org/t/3945,KDDCup09_appetency,AutoPyTorch_refactor,3600s8c32G,2,0.9822,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:03:18,3672.8,0,1047855271,,0.9822
+105,openml.org/t/3945,KDDCup09_appetency,AutoPyTorch_refactor,3600s8c32G,3,0.9822,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:03:37,3668.8,0,1242018800,,0.9822
+105,openml.org/t/XX,mfeat-factors,AutoPyTorch_refactor,3600s8c32G,0,0.98,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.98
+106,openml.org/t/12,mfeat-factors,AutoPyTorch_refactor,3600s8c32G,1,0.98,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:05:30,3665.5,0,651585898,,0.98
+106,openml.org/t/3945,KDDCup09_appetency,AutoPyTorch_refactor,3600s8c32G,4,0.9822,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:05:38,3670.0,0,1925445351,,0.9822
+107,openml.org/t/3945,KDDCup09_appetency,AutoPyTorch_refactor,3600s8c32G,6,0.9822,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:06:18,3666.7,0,800473162,,0.9822
+107,openml.org/t/XX,mfeat-factors,AutoPyTorch_refactor,3600s8c32G,2,0.985,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.985
+108,openml.org/t/12,mfeat-factors,AutoPyTorch_refactor,3600s8c32G,3,0.98,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:28:18,3684.4,0,2373289403,,0.98
+108,openml.org/t/3945,KDDCup09_appetency,AutoPyTorch_refactor,3600s8c32G,8,0.9822,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:06:56,3670.7,0,8841434,,0.9822
+109,openml.org/t/12,mfeat-factors,AutoPyTorch_refactor,3600s8c32G,4,0.97,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:29:41,3669.4,0,2395226481,,0.97
+109,openml.org/t/XX,MiniBooNE,AutoPyTorch_refactor,3600s8c32G,0,0.8960559698999999,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8960559698999999
+11,openml.org/t/10101,blood-transfusion,AutoPyTorch_refactor,3600s8c32G,1,0.773333,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:26:56,3631.5,0,3997006867,,0.773333
+11,openml.org/t/XX,Amazon_employee_access,AutoPyTorch_refactor,3600s8c32G,1,0.9462923406,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9462923406
+110,openml.org/t/12,mfeat-factors,AutoPyTorch_refactor,3600s8c32G,5,0.965,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:28:26,3670.8,0,1301961928,,0.965
+110,openml.org/t/XX,MiniBooNE,AutoPyTorch_refactor,3600s8c32G,1,0.8911355423999999,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8911355423999999
+111,openml.org/t/12,mfeat-factors,AutoPyTorch_refactor,3600s8c32G,6,0.99,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:30:40,3770.3,0,113902585,,0.99
+111,openml.org/t/XX,MiniBooNE,AutoPyTorch_refactor,3600s8c32G,2,0.9118167141,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9118167141
+112,openml.org/t/12,mfeat-factors,AutoPyTorch_refactor,3600s8c32G,7,0.985,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:29:13,3664.1,0,4030354524,,0.985
+112,openml.org/t/168335,MiniBooNE,AutoPyTorch_refactor,3600s8c32G,3,0.9295760000000001,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T19:51:25,3665.5,0,1191042874,,0.9295760000000001
+113,openml.org/t/12,mfeat-factors,AutoPyTorch_refactor,3600s8c32G,8,0.99,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:28:56,3665.1,0,2982800386,,0.99
+113,openml.org/t/XX,MiniBooNE,AutoPyTorch_refactor,3600s8c32G,4,0.8984314931999999,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8984314931999999
+114,openml.org/t/12,mfeat-factors,AutoPyTorch_refactor,3600s8c32G,9,0.985,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:30:36,3675.5,0,736411434,,0.985
+114,openml.org/t/168335,MiniBooNE,AutoPyTorch_refactor,3600s8c32G,5,0.895817,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T20:10:11,3882.6,0,1617030892,,0.895817
+115,openml.org/t/XX,MiniBooNE,AutoPyTorch_refactor,3600s8c32G,6,0.9035060741,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9035060741
+115,openml.org/t/XX,phoneme,AutoPyTorch_refactor,3600s8c32G,0,0.8817005545000001,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8817005545000001
+116,openml.org/t/XX,MiniBooNE,AutoPyTorch_refactor,3600s8c32G,7,0.898277718,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.898277718
+116,openml.org/t/XX,phoneme,AutoPyTorch_refactor,3600s8c32G,1,0.9205175601000001,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9205175601000001
+117,openml.org/t/9952,phoneme,AutoPyTorch_refactor,3600s8c32G,2,0.87061,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:29:12,3662.1,0,1986537766,,0.87061
+117,openml.org/t/XX,MiniBooNE,AutoPyTorch_refactor,3600s8c32G,8,0.8891280947,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8891280947
+118,openml.org/t/168335,MiniBooNE,AutoPyTorch_refactor,3600s8c32G,9,0.90935,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T20:07:19,3666.5,0,2014575580,,0.90935
+118,openml.org/t/9952,phoneme,AutoPyTorch_refactor,3600s8c32G,3,0.889094,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:29:09,3664.3,0,1598054941,,0.889094
+119,openml.org/t/9952,phoneme,AutoPyTorch_refactor,3600s8c32G,4,0.885185,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:28:42,3618.8,0,2713201942,,0.885185
+119,openml.org/t/XX,nomao,AutoPyTorch_refactor,3600s8c32G,0,0.9692486220000001,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9692486220000001
+12,openml.org/t/10101,blood-transfusion,AutoPyTorch_refactor,3600s8c32G,2,0.746667,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:27:29,3666.3,0,3060626943,,0.746667
+12,openml.org/t/34539,Amazon_employee_access,AutoPyTorch_refactor,3600s8c32G,2,0.947818,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:33:53,3662.6,0,1880484624,,0.947818
+120,openml.org/t/XX,nomao,AutoPyTorch_refactor,3600s8c32G,1,0.9695387293000001,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9695387293000001
+120,openml.org/t/XX,phoneme,AutoPyTorch_refactor,3600s8c32G,5,0.9018518519,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9018518519
+121,openml.org/t/9952,phoneme,AutoPyTorch_refactor,3600s8c32G,6,0.922222,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:29:39,3667.2,0,3075050515,,0.922222
+121,openml.org/t/XX,nomao,AutoPyTorch_refactor,3600s8c32G,2,0.9654772266,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9654772266
+122,openml.org/t/9977,nomao,AutoPyTorch_refactor,3600s8c32G,3,0.97244,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T20:30:23,3673.3,0,3295131291,,0.97244
+122,openml.org/t/XX,phoneme,AutoPyTorch_refactor,3600s8c32G,7,0.9055555556,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9055555556
+123,openml.org/t/9977,nomao,AutoPyTorch_refactor,3600s8c32G,4,0.970699,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T20:28:53,3662.6,0,2374870893,,0.970699
+123,openml.org/t/XX,phoneme,AutoPyTorch_refactor,3600s8c32G,8,0.887037037,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.887037037
+124,openml.org/t/XX,nomao,AutoPyTorch_refactor,3600s8c32G,6,0.9689495067,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9689495067
+124,openml.org/t/XX,phoneme,AutoPyTorch_refactor,3600s8c32G,9,0.9,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9
+125,openml.org/t/146822,segment,AutoPyTorch_refactor,3600s8c32G,0,0.9870129999999999,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:30:16,3688.3,0,1350453310,,0.9870129999999999
+125,openml.org/t/XX,nomao,AutoPyTorch_refactor,3600s8c32G,7,0.9759141033,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9759141033
+126,openml.org/t/XX,nomao,AutoPyTorch_refactor,3600s8c32G,8,0.9677887406,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9677887406
+126,openml.org/t/XX,segment,AutoPyTorch_refactor,3600s8c32G,1,0.9653679654,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9653679654
+127,openml.org/t/146822,segment,AutoPyTorch_refactor,3600s8c32G,2,0.9740260000000001,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:29:57,3663.2,0,2218917067,,0.9740260000000001
+127,openml.org/t/XX,nomao,AutoPyTorch_refactor,3600s8c32G,9,0.9706906558,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9706906558
+128,openml.org/t/168338,riccardo,AutoPyTorch_refactor,3600s8c32G,0,0.75,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:10:01,3623.7,0,3563464534,,0.75
+128,openml.org/t/XX,segment,AutoPyTorch_refactor,3600s8c32G,3,0.9696969697,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9696969697
+129,openml.org/t/168338,riccardo,AutoPyTorch_refactor,3600s8c32G,1,0.75,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:11:46,3625.4,0,1522744455,,0.75
+129,openml.org/t/XX,segment,AutoPyTorch_refactor,3600s8c32G,4,0.9913419913,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9913419913
+13,openml.org/t/10101,blood-transfusion,AutoPyTorch_refactor,3600s8c32G,3,0.813333,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:28:06,3704.1,0,2200408114,,0.813333
+13,openml.org/t/34539,Amazon_employee_access,AutoPyTorch_refactor,3600s8c32G,3,0.947818,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:33:39,3650.6,0,4179014939,,0.947818
+130,openml.org/t/146822,segment,AutoPyTorch_refactor,3600s8c32G,5,0.9740260000000001,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:29:42,3628.8,0,2744313161,,0.9740260000000001
+130,openml.org/t/168338,riccardo,AutoPyTorch_refactor,3600s8c32G,2,0.75,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:11:40,3624.2,0,3117007515,,0.75
+131,openml.org/t/146822,segment,AutoPyTorch_refactor,3600s8c32G,6,0.9870129999999999,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:29:46,3640.0,0,46685593,,0.9870129999999999
+131,openml.org/t/168338,riccardo,AutoPyTorch_refactor,3600s8c32G,3,0.75,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:12:23,3629.9,0,522133352,,0.75
+132,openml.org/t/146822,segment,AutoPyTorch_refactor,3600s8c32G,7,0.948052,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:31:27,3724.3,0,2008225507,,0.948052
+132,openml.org/t/168338,riccardo,AutoPyTorch_refactor,3600s8c32G,4,0.75,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:12:24,3622.0,0,422222311,,0.75
+133,openml.org/t/146822,segment,AutoPyTorch_refactor,3600s8c32G,8,0.9870129999999999,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:30:28,3661.3,0,3425891399,,0.9870129999999999
+133,openml.org/t/168338,riccardo,AutoPyTorch_refactor,3600s8c32G,5,0.75,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:12:53,3630.0,0,750965588,,0.75
+134,openml.org/t/168338,riccardo,AutoPyTorch_refactor,3600s8c32G,6,0.75,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:13:09,3625.6,0,231612270,,0.75
+134,openml.org/t/XX,segment,AutoPyTorch_refactor,3600s8c32G,9,0.9783549784000001,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9783549784000001
+135,openml.org/t/168338,riccardo,AutoPyTorch_refactor,3600s8c32G,7,0.75,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:13:49,3635.6,0,234165373,,0.75
+135,openml.org/t/168912,sylvine,AutoPyTorch_refactor,3600s8c32G,0,0.923977,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:30:48,3663.5,0,1648984114,,0.923977
+136,openml.org/t/168338,riccardo,AutoPyTorch_refactor,3600s8c32G,8,0.75,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:13:57,3632.0,0,3065225645,,0.75
+136,openml.org/t/168912,sylvine,AutoPyTorch_refactor,3600s8c32G,1,0.945419,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:30:48,3666.7,0,1145490407,,0.945419
+137,openml.org/t/168338,riccardo,AutoPyTorch_refactor,3600s8c32G,9,0.75,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:14:19,3626.2,0,1168384135,,0.75
+137,openml.org/t/XX,sylvine,AutoPyTorch_refactor,3600s8c32G,2,0.9473684211,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9473684211
+138,openml.org/t/168332,Robert,AutoPyTorch_refactor,3600s8c32G,0,0.099,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:14:20,3626.1,0,906073595,,0.099
+138,openml.org/t/168912,sylvine,AutoPyTorch_refactor,3600s8c32G,3,0.94347,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:31:05,3662.3,0,507616378,,0.94347
+139,openml.org/t/168332,Robert,AutoPyTorch_refactor,3600s8c32G,1,0.099,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:14:38,3620.8,0,3921360315,,0.099
+139,openml.org/t/XX,sylvine,AutoPyTorch_refactor,3600s8c32G,4,0.953125,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.953125
+14,openml.org/t/10101,blood-transfusion,AutoPyTorch_refactor,3600s8c32G,4,0.786667,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:27:42,3679.1,0,701739628,,0.786667
+14,openml.org/t/XX,Amazon_employee_access,AutoPyTorch_refactor,3600s8c32G,4,0.9548367409,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9548367409
+140,openml.org/t/168332,Robert,AutoPyTorch_refactor,3600s8c32G,2,0.099,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:14:37,3623.5,0,4095432754,,0.099
+140,openml.org/t/168912,sylvine,AutoPyTorch_refactor,3600s8c32G,5,0.9375,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:31:02,3620.0,0,2744014010,,0.9375
+141,openml.org/t/168332,Robert,AutoPyTorch_refactor,3600s8c32G,3,0.099,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:14:52,3624.0,0,3430375743,,0.099
+141,openml.org/t/168912,sylvine,AutoPyTorch_refactor,3600s8c32G,6,0.9394530000000001,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:31:35,3671.6,0,1226229331,,0.9394530000000001
+142,openml.org/t/168332,Robert,AutoPyTorch_refactor,3600s8c32G,4,0.099,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:14:49,3624.3,0,3254179459,,0.099
+142,openml.org/t/XX,sylvine,AutoPyTorch_refactor,3600s8c32G,7,0.935546875,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.935546875
+143,openml.org/t/168332,Robert,AutoPyTorch_refactor,3600s8c32G,5,0.1,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:15:05,3626.1,0,2897710091,,0.1
+143,openml.org/t/168912,sylvine,AutoPyTorch_refactor,3600s8c32G,8,0.9550780000000001,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:31:39,3663.5,0,923973787,,0.9550780000000001
+144,openml.org/t/168332,Robert,AutoPyTorch_refactor,3600s8c32G,6,0.099,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:15:52,3627.0,0,3290880512,,0.099
+144,openml.org/t/168912,sylvine,AutoPyTorch_refactor,3600s8c32G,9,0.9394530000000001,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:32:03,3663.0,0,3533845304,,0.9394530000000001
+145,openml.org/t/168332,Robert,AutoPyTorch_refactor,3600s8c32G,7,0.099,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:15:46,3620.0,0,3478457452,,0.099
+145,openml.org/t/53,vehicle,AutoPyTorch_refactor,3600s8c32G,0,0.858824,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:31:18,3629.9,0,2134470170,,0.858824
+146,openml.org/t/168332,Robert,AutoPyTorch_refactor,3600s8c32G,8,0.099,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:15:54,3625.5,0,2674118446,,0.099
+146,openml.org/t/53,vehicle,AutoPyTorch_refactor,3600s8c32G,1,0.788235,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:31:29,3635.6,0,1563287745,,0.788235
+147,openml.org/t/168332,Robert,AutoPyTorch_refactor,3600s8c32G,9,0.099,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:16:36,3625.6,0,2786397031,,0.099
+147,openml.org/t/53,vehicle,AutoPyTorch_refactor,3600s8c32G,2,0.8235290000000001,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:32:21,3664.3,0,3885062116,,0.8235290000000001
+148,openml.org/t/146212,Shuttle,AutoPyTorch_refactor,3600s8c32G,0,0.999655,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T21:30:29,3672.3,0,3978535196,,0.999655
+148,openml.org/t/53,vehicle,AutoPyTorch_refactor,3600s8c32G,3,0.8235290000000001,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:32:26,3661.9,0,4140589422,,0.8235290000000001
+149,openml.org/t/53,vehicle,AutoPyTorch_refactor,3600s8c32G,4,0.8235290000000001,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:32:40,3668.0,0,3855651354,,0.8235290000000001
+149,openml.org/t/XX,Shuttle,AutoPyTorch_refactor,3600s8c32G,1,0.9994827586,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9994827586
+15,openml.org/t/10101,blood-transfusion,AutoPyTorch_refactor,3600s8c32G,5,0.76,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:27:09,3645.7,0,3634893931,,0.76
+15,openml.org/t/XX,Amazon_employee_access,AutoPyTorch_refactor,3600s8c32G,5,0.9487335978,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9487335978
+150,openml.org/t/53,vehicle,AutoPyTorch_refactor,3600s8c32G,5,0.8352940000000001,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:32:12,3642.2,0,2598525809,,0.8352940000000001
+150,openml.org/t/XX,Shuttle,AutoPyTorch_refactor,3600s8c32G,2,1.0,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,1.0
+151,openml.org/t/53,vehicle,AutoPyTorch_refactor,3600s8c32G,6,0.809524,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:32:59,3680.5,0,672577130,,0.809524
+151,openml.org/t/XX,Shuttle,AutoPyTorch_refactor,3600s8c32G,3,0.9996551723999999,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9996551723999999
+152,openml.org/t/53,vehicle,AutoPyTorch_refactor,3600s8c32G,7,0.809524,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:32:19,3637.5,0,782275103,,0.809524
+152,openml.org/t/XX,Shuttle,AutoPyTorch_refactor,3600s8c32G,4,0.9996551723999999,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9996551723999999
+153,openml.org/t/53,vehicle,AutoPyTorch_refactor,3600s8c32G,8,0.833333,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:32:08,3626.2,0,1351092653,,0.833333
+153,openml.org/t/XX,Shuttle,AutoPyTorch_refactor,3600s8c32G,5,0.9993103448,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9993103448
+154,openml.org/t/53,vehicle,AutoPyTorch_refactor,3600s8c32G,9,0.761905,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:32:09,3623.4,0,1071326258,,0.761905
+154,openml.org/t/XX,Shuttle,AutoPyTorch_refactor,3600s8c32G,6,0.9998275862,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9998275862
+155,openml.org/t/XX,Shuttle,AutoPyTorch_refactor,3600s8c32G,7,1.0,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,1.0
+156,openml.org/t/XX,Shuttle,AutoPyTorch_refactor,3600s8c32G,8,0.9996551723999999,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9996551723999999
+157,openml.org/t/XX,Shuttle,AutoPyTorch_refactor,3600s8c32G,9,1.0,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,1.0
+158,openml.org/t/168331,Volkert,AutoPyTorch_refactor,3600s8c32G,0,0.65289,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T21:34:52,3722.9,0,2548167378,,0.65289
+159,openml.org/t/XX,Volkert,AutoPyTorch_refactor,3600s8c32G,1,0.5650831761,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.5650831761
+16,openml.org/t/10101,blood-transfusion,AutoPyTorch_refactor,3600s8c32G,6,0.8,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:27:30,3665.8,0,4242046597,,0.8
+16,openml.org/t/34539,Amazon_employee_access,AutoPyTorch_refactor,3600s8c32G,6,0.950259,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:34:15,3662.5,0,1989868786,,0.950259
+160,openml.org/t/XX,Volkert,AutoPyTorch_refactor,3600s8c32G,2,0.5491339393,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.5491339393
+161,openml.org/t/168331,Volkert,AutoPyTorch_refactor,3600s8c32G,3,0.574859,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T21:43:50,3712.2,0,1398165504,,0.574859
+162,openml.org/t/XX,Volkert,AutoPyTorch_refactor,3600s8c32G,4,0.6453438518,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.6453438518
+163,openml.org/t/XX,Volkert,AutoPyTorch_refactor,3600s8c32G,5,0.5796604356,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.5796604356
+164,openml.org/t/168331,Volkert,AutoPyTorch_refactor,3600s8c32G,6,0.56817,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T21:35:57,3666.6,0,2462238501,,0.56817
+165,openml.org/t/XX,Volkert,AutoPyTorch_refactor,3600s8c32G,7,0.6287086263,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.6287086263
+166,openml.org/t/XX,Volkert,AutoPyTorch_refactor,3600s8c32G,8,0.6357400103,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.6357400103
+167,openml.org/t/168331,Volkert,AutoPyTorch_refactor,3600s8c32G,9,0.678786,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T21:38:35,3677.8,0,2850273684,,0.678786
+17,openml.org/t/34539,Amazon_employee_access,AutoPyTorch_refactor,3600s8c32G,7,0.949039,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:34:00,3647.1,0,2174618357,,0.949039
+17,openml.org/t/XX,blood-transfusion,AutoPyTorch_refactor,3600s8c32G,7,0.8133333333,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8133333333
+18,openml.org/t/XX,Amazon_employee_access,AutoPyTorch_refactor,3600s8c32G,8,0.9475129692,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9475129692
+18,openml.org/t/XX,blood-transfusion,AutoPyTorch_refactor,3600s8c32G,8,0.7567567568000001,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.7567567568000001
+19,openml.org/t/10101,blood-transfusion,AutoPyTorch_refactor,3600s8c32G,9,0.797297,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:27:49,3662.1,0,1602637112,,0.797297
+19,openml.org/t/XX,Amazon_employee_access,AutoPyTorch_refactor,3600s8c32G,9,0.9478021978,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9478021978
+2,openml.org/t/XX,Australian,AutoPyTorch_refactor,3600s8c32G,2,0.8115942029000001,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8115942029000001
+2,openml.org/t/XX,adult,AutoPyTorch_refactor,3600s8c32G,2,0.8679361179,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8679361179
+20,openml.org/t/XX,APSFailure,AutoPyTorch_refactor,3600s8c32G,0,0.9934210526,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9934210526
+20,openml.org/t/XX,car,AutoPyTorch_refactor,3600s8c32G,0,0.9942196531999999,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9942196531999999
+21,openml.org/t/146821,car,AutoPyTorch_refactor,3600s8c32G,1,1.0,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:28:09,3673.4,0,2907628960,,1.0
+21,openml.org/t/168868,APSFailure,AutoPyTorch_refactor,3600s8c32G,1,0.991842,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:34:37,3671.0,0,2086257720,,0.991842
+22,openml.org/t/XX,APSFailure,AutoPyTorch_refactor,3600s8c32G,2,0.9927631579,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9927631579
+22,openml.org/t/XX,car,AutoPyTorch_refactor,3600s8c32G,2,1.0,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,1.0
+23,openml.org/t/168868,APSFailure,AutoPyTorch_refactor,3600s8c32G,3,0.994605,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:35:09,3666.0,0,1037114161,,0.994605
+23,openml.org/t/XX,car,AutoPyTorch_refactor,3600s8c32G,3,1.0,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,1.0
+24,openml.org/t/XX,APSFailure,AutoPyTorch_refactor,3600s8c32G,4,0.9940789473999999,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9940789473999999
+24,openml.org/t/XX,car,AutoPyTorch_refactor,3600s8c32G,4,1.0,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,1.0
+25,openml.org/t/146821,car,AutoPyTorch_refactor,3600s8c32G,5,1.0,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:28:11,3669.1,0,3771488477,,1.0
+25,openml.org/t/XX,APSFailure,AutoPyTorch_refactor,3600s8c32G,5,0.9922368421,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9922368421
+26,openml.org/t/146821,car,AutoPyTorch_refactor,3600s8c32G,6,0.988439,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:28:18,3664.4,0,1114209230,,0.988439
+26,openml.org/t/XX,APSFailure,AutoPyTorch_refactor,3600s8c32G,6,0.9942105263,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9942105263
+27,openml.org/t/XX,APSFailure,AutoPyTorch_refactor,3600s8c32G,7,0.9942105263,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9942105263
+27,openml.org/t/XX,car,AutoPyTorch_refactor,3600s8c32G,7,0.9942196531999999,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9942196531999999
+28,openml.org/t/146821,car,AutoPyTorch_refactor,3600s8c32G,8,1.0,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:28:41,3672.8,0,1923426982,,1.0
+28,openml.org/t/168868,APSFailure,AutoPyTorch_refactor,3600s8c32G,8,0.991842,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:34:54,3665.2,0,375365900,,0.991842
+29,openml.org/t/XX,APSFailure,AutoPyTorch_refactor,3600s8c32G,9,0.9936842105,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9936842105
+29,openml.org/t/XX,car,AutoPyTorch_refactor,3600s8c32G,9,1.0,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,1.0
+3,openml.org/t/146818,Australian,AutoPyTorch_refactor,3600s8c32G,3,0.884058,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:26:43,3670.2,0,3383735142,,0.884058
+3,openml.org/t/XX,adult,AutoPyTorch_refactor,3600s8c32G,3,0.8652743653,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8652743653
+30,openml.org/t/XX,bank-marketing,AutoPyTorch_refactor,3600s8c32G,0,0.9024767802,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9024767802
+30,openml.org/t/XX,christine,AutoPyTorch_refactor,3600s8c32G,0,0.7490774908,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.7490774908
+31,openml.org/t/168908,christine,AutoPyTorch_refactor,3600s8c32G,1,0.7398520000000001,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:29:03,3670.6,0,1387807854,,0.7398520000000001
+31,openml.org/t/XX,bank-marketing,AutoPyTorch_refactor,3600s8c32G,1,0.9051094891,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9051094891
+32,openml.org/t/14965,bank-marketing,AutoPyTorch_refactor,3600s8c32G,2,0.906658,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:36:30,3670.6,0,3793692347,,0.906658
+32,openml.org/t/168908,christine,AutoPyTorch_refactor,3600s8c32G,2,0.738007,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:29:29,3674.7,0,2458010876,,0.738007
+33,openml.org/t/168908,christine,AutoPyTorch_refactor,3600s8c32G,3,0.7214020000000001,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:33:30,3681.5,0,2163855275,,0.7214020000000001
+33,openml.org/t/XX,bank-marketing,AutoPyTorch_refactor,3600s8c32G,3,0.9073213890999999,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9073213890999999
+34,openml.org/t/XX,bank-marketing,AutoPyTorch_refactor,3600s8c32G,4,0.9082061491,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9082061491
+34,openml.org/t/XX,christine,AutoPyTorch_refactor,3600s8c32G,4,0.6992619926000001,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.6992619926000001
+35,openml.org/t/168908,christine,AutoPyTorch_refactor,3600s8c32G,5,0.7287819999999999,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:37:39,3669.5,0,2334241789,,0.7287819999999999
+35,openml.org/t/XX,bank-marketing,AutoPyTorch_refactor,3600s8c32G,5,0.9028975890000001,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9028975890000001
+36,openml.org/t/168908,christine,AutoPyTorch_refactor,3600s8c32G,6,0.730627,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:31:16,3666.0,0,228412008,,0.730627
+36,openml.org/t/XX,bank-marketing,AutoPyTorch_refactor,3600s8c32G,6,0.902012829,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.902012829
+37,openml.org/t/14965,bank-marketing,AutoPyTorch_refactor,3600s8c32G,7,0.905331,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T17:37:09,3670.7,0,2496366354,,0.905331
+37,openml.org/t/168908,christine,AutoPyTorch_refactor,3600s8c32G,7,0.7214020000000001,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:32:54,3673.7,0,1878250182,,0.7214020000000001
+38,openml.org/t/168908,christine,AutoPyTorch_refactor,3600s8c32G,8,0.7282810000000001,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:33:28,3676.4,0,5323844,,0.7282810000000001
+38,openml.org/t/XX,bank-marketing,AutoPyTorch_refactor,3600s8c32G,8,0.9146206591,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9146206591
+39,openml.org/t/168908,christine,AutoPyTorch_refactor,3600s8c32G,9,0.687616,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:30:58,3667.8,0,4276978578,,0.687616
+39,openml.org/t/XX,bank-marketing,AutoPyTorch_refactor,3600s8c32G,9,0.9068790091,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9068790091
+4,openml.org/t/146818,Australian,AutoPyTorch_refactor,3600s8c32G,4,0.884058,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:28:27,3698.0,0,3522501799,,0.884058
+4,openml.org/t/XX,adult,AutoPyTorch_refactor,3600s8c32G,4,0.8718263718000001,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8718263718000001
+40,openml.org/t/9981,cnae-9,AutoPyTorch_refactor,3600s8c32G,0,0.9444440000000001,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:28:29,3620.2,0,3109599751,,0.9444440000000001
+40,openml.org/t/XX,connect-4,AutoPyTorch_refactor,3600s8c32G,0,0.7107756069,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.7107756069
+41,openml.org/t/9981,cnae-9,AutoPyTorch_refactor,3600s8c32G,1,0.907407,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:28:26,3620.0,0,1651684273,,0.907407
+41,openml.org/t/XX,connect-4,AutoPyTorch_refactor,3600s8c32G,1,0.8062462995999999,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8062462995999999
+42,openml.org/t/9981,cnae-9,AutoPyTorch_refactor,3600s8c32G,2,0.916667,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:29:25,3671.8,0,3767043901,,0.916667
+42,openml.org/t/XX,connect-4,AutoPyTorch_refactor,3600s8c32G,2,0.6583777383,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.6583777383
+43,openml.org/t/9981,cnae-9,AutoPyTorch_refactor,3600s8c32G,3,0.9537040000000001,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:29:13,3622.0,0,1143578082,,0.9537040000000001
+43,openml.org/t/XX,connect-4,AutoPyTorch_refactor,3600s8c32G,3,0.6582297217,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.6582297217
+44,openml.org/t/9981,cnae-9,AutoPyTorch_refactor,3600s8c32G,4,0.9722219999999999,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:28:39,3621.4,0,690427569,,0.9722219999999999
+44,openml.org/t/XX,connect-4,AutoPyTorch_refactor,3600s8c32G,4,0.6792480758,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.6792480758
+45,openml.org/t/XX,cnae-9,AutoPyTorch_refactor,3600s8c32G,5,0.9722222222,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9722222222
+45,openml.org/t/XX,connect-4,AutoPyTorch_refactor,3600s8c32G,5,0.6582297217,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.6582297217
+46,openml.org/t/9981,cnae-9,AutoPyTorch_refactor,3600s8c32G,6,0.9537040000000001,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:29:24,3666.6,0,1992707205,,0.9537040000000001
+46,openml.org/t/XX,connect-4,AutoPyTorch_refactor,3600s8c32G,6,0.7078152753,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.7078152753
+47,openml.org/t/9981,cnae-9,AutoPyTorch_refactor,3600s8c32G,7,0.9722219999999999,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:31:05,3615.7,0,2012870436,,0.9722219999999999
+47,openml.org/t/XX,connect-4,AutoPyTorch_refactor,3600s8c32G,7,0.8130273870999999,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8130273870999999
+48,openml.org/t/XX,cnae-9,AutoPyTorch_refactor,3600s8c32G,8,0.9537037037,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9537037037
+48,openml.org/t/XX,connect-4,AutoPyTorch_refactor,3600s8c32G,8,0.7148778681999999,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.7148778681999999
+49,openml.org/t/146195,connect-4,AutoPyTorch_refactor,3600s8c32G,9,0.658327,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T18:47:10,3666.1,0,2390883384,,0.658327
+49,openml.org/t/9981,cnae-9,AutoPyTorch_refactor,3600s8c32G,9,0.9722219999999999,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:28:34,3611.8,0,3527519996,,0.9722219999999999
+5,openml.org/t/146818,Australian,AutoPyTorch_refactor,3600s8c32G,5,0.8405799999999999,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:27:37,3645.8,0,2125862488,,0.8405799999999999
+5,openml.org/t/XX,adult,AutoPyTorch_refactor,3600s8c32G,5,0.8724406224,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8724406224
+50,openml.org/t/146825,Fashion-MNIST,AutoPyTorch_refactor,3600s8c32G,0,0.1,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T18:37:41,3623.9,0,4246797823,,0.1
+50,openml.org/t/31,credit-g,AutoPyTorch_refactor,3600s8c32G,0,0.81,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:29:53,3696.4,0,3370081934,,0.81
+51,openml.org/t/146825,Fashion-MNIST,AutoPyTorch_refactor,3600s8c32G,1,0.1,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T18:38:44,3641.0,0,68427449,,0.1
+51,openml.org/t/31,credit-g,AutoPyTorch_refactor,3600s8c32G,1,0.73,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:28:55,3621.5,0,1260810359,,0.73
+52,openml.org/t/XX,Fashion-MNIST,AutoPyTorch_refactor,3600s8c32G,2,0.19157142859999998,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.19157142859999998
+52,openml.org/t/XX,credit-g,AutoPyTorch_refactor,3600s8c32G,2,0.74,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.74
+53,openml.org/t/146825,Fashion-MNIST,AutoPyTorch_refactor,3600s8c32G,3,0.628571,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T18:39:26,3665.4,0,3023654868,,0.628571
+53,openml.org/t/31,credit-g,AutoPyTorch_refactor,3600s8c32G,3,0.78,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:30:01,3691.9,0,3473825251,,0.78
+54,openml.org/t/146825,Fashion-MNIST,AutoPyTorch_refactor,3600s8c32G,4,0.106857,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T18:39:06,3815.8,0,165195778,,0.106857
+54,openml.org/t/31,credit-g,AutoPyTorch_refactor,3600s8c32G,4,0.73,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:29:54,3683.1,0,2314388390,,0.73
+55,openml.org/t/146825,Fashion-MNIST,AutoPyTorch_refactor,3600s8c32G,5,0.845714,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T18:35:18,3622.9,0,146628120,,0.845714
+55,openml.org/t/31,credit-g,AutoPyTorch_refactor,3600s8c32G,5,0.75,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:29:53,3675.1,0,2327977593,,0.75
+56,openml.org/t/146825,Fashion-MNIST,AutoPyTorch_refactor,3600s8c32G,6,0.32514299999999996,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T18:36:55,3627.7,0,2398382400,,0.32514299999999996
+56,openml.org/t/31,credit-g,AutoPyTorch_refactor,3600s8c32G,6,0.74,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:28:56,3615.5,0,1359070720,,0.74
+57,openml.org/t/146825,Fashion-MNIST,AutoPyTorch_refactor,3600s8c32G,7,0.818286,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T18:36:40,3664.4,0,3781933419,,0.818286
+57,openml.org/t/XX,credit-g,AutoPyTorch_refactor,3600s8c32G,7,0.79,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.79
+58,openml.org/t/146825,Fashion-MNIST,AutoPyTorch_refactor,3600s8c32G,8,0.860143,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T18:36:27,3666.0,0,1979831886,,0.860143
+58,openml.org/t/31,credit-g,AutoPyTorch_refactor,3600s8c32G,8,0.75,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:29:07,3624.1,0,4198692595,,0.75
+59,openml.org/t/146825,Fashion-MNIST,AutoPyTorch_refactor,3600s8c32G,9,0.472714,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:02:58,3622.6,0,3836415076,,0.472714
+59,openml.org/t/31,credit-g,AutoPyTorch_refactor,3600s8c32G,9,0.76,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:30:22,3688.5,0,2353153676,,0.76
+6,openml.org/t/146818,Australian,AutoPyTorch_refactor,3600s8c32G,6,0.884058,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:27:20,3634.1,0,2621813182,,0.884058
+6,openml.org/t/XX,adult,AutoPyTorch_refactor,3600s8c32G,6,0.872031122,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.872031122
+60,openml.org/t/168337,guillermo,AutoPyTorch_refactor,3600s8c32G,0,0.6,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:01:09,3626.9,0,525642879,,0.6
+60,openml.org/t/168909,dilbert,AutoPyTorch_refactor,3600s8c32G,0,0.972,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:32:51,3678.8,0,192219578,,0.972
+61,openml.org/t/168337,guillermo,AutoPyTorch_refactor,3600s8c32G,1,0.6,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:01:06,3631.6,0,3886183654,,0.6
+61,openml.org/t/168909,dilbert,AutoPyTorch_refactor,3600s8c32G,1,0.973,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:32:34,3674.1,0,2151649721,,0.973
+62,openml.org/t/168337,guillermo,AutoPyTorch_refactor,3600s8c32G,2,0.6,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:01:09,3627.2,0,3817589689,,0.6
+62,openml.org/t/168909,dilbert,AutoPyTorch_refactor,3600s8c32G,2,0.971,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:33:34,3676.8,0,369533440,,0.971
+63,openml.org/t/168337,guillermo,AutoPyTorch_refactor,3600s8c32G,3,0.6,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:01:16,3632.5,0,3825602423,,0.6
+63,openml.org/t/XX,dilbert,AutoPyTorch_refactor,3600s8c32G,3,0.9790000000000001,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.9790000000000001
+64,openml.org/t/168337,guillermo,AutoPyTorch_refactor,3600s8c32G,4,0.6,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:01:20,3627.9,0,1027617654,,0.6
+64,openml.org/t/168909,dilbert,AutoPyTorch_refactor,3600s8c32G,4,0.977,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:32:30,3677.0,0,4182609879,,0.977
+65,openml.org/t/168337,guillermo,AutoPyTorch_refactor,3600s8c32G,5,0.6,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:01:19,3626.3,0,4134966207,,0.6
+65,openml.org/t/168909,dilbert,AutoPyTorch_refactor,3600s8c32G,5,0.973,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:33:11,3674.2,0,1219956677,,0.973
+66,openml.org/t/168337,guillermo,AutoPyTorch_refactor,3600s8c32G,6,0.6,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:01:21,3619.9,0,2507543216,,0.6
+66,openml.org/t/168909,dilbert,AutoPyTorch_refactor,3600s8c32G,6,0.983,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:33:42,3669.3,0,1913564167,,0.983
+67,openml.org/t/168337,guillermo,AutoPyTorch_refactor,3600s8c32G,7,0.5995,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:01:33,3630.2,0,884120080,,0.5995
+67,openml.org/t/168909,dilbert,AutoPyTorch_refactor,3600s8c32G,7,0.9790000000000001,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:32:49,3669.5,0,2246923846,,0.9790000000000001
+68,openml.org/t/168337,guillermo,AutoPyTorch_refactor,3600s8c32G,8,0.5995,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:01:15,3626.3,0,3777833843,,0.5995
+68,openml.org/t/168909,dilbert,AutoPyTorch_refactor,3600s8c32G,8,0.975,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:32:59,3677.9,0,395156897,,0.975
+69,openml.org/t/168337,guillermo,AutoPyTorch_refactor,3600s8c32G,9,0.5995,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:01:30,3624.2,0,3135112276,,0.5995
+69,openml.org/t/168909,dilbert,AutoPyTorch_refactor,3600s8c32G,9,0.983,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:33:03,3676.1,0,2091150409,,0.983
+7,openml.org/t/146818,Australian,AutoPyTorch_refactor,3600s8c32G,7,0.8695649999999999,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:28:09,3679.1,0,2396925345,,0.8695649999999999
+7,openml.org/t/XX,adult,AutoPyTorch_refactor,3600s8c32G,7,0.8726453726000001,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8726453726000001
+70,openml.org/t/168910,fabert,AutoPyTorch_refactor,3600s8c32G,1,0.6917479999999999,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:34:19,3670.9,0,2254519970,,0.6917479999999999
+70,openml.org/t/XX,Helena,AutoPyTorch_refactor,3600s8c32G,0,0.2742331288,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.2742331288
+71,openml.org/t/168910,fabert,AutoPyTorch_refactor,3600s8c32G,2,0.6917479999999999,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:34:46,3683.6,0,2232640302,,0.6917479999999999
+71,openml.org/t/XX,Helena,AutoPyTorch_refactor,3600s8c32G,1,0.2549079755,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.2549079755
+72,openml.org/t/168910,fabert,AutoPyTorch_refactor,3600s8c32G,3,0.6674760000000001,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:33:39,3695.3,0,3056564718,,0.6674760000000001
+72,openml.org/t/XX,Helena,AutoPyTorch_refactor,3600s8c32G,2,0.24984662579999997,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.24984662579999997
+73,openml.org/t/168910,fabert,AutoPyTorch_refactor,3600s8c32G,7,0.701094,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:34:30,3664.5,0,973302706,,0.701094
+73,openml.org/t/XX,Helena,AutoPyTorch_refactor,3600s8c32G,3,0.21625766870000002,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.21625766870000002
+74,openml.org/t/XX,Helena,AutoPyTorch_refactor,3600s8c32G,4,0.2242331288,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.2242331288
+74,openml.org/t/XX,fabert,AutoPyTorch_refactor,3600s8c32G,8,0.6852976914,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.6852976914
+75,openml.org/t/168911,jasmine,AutoPyTorch_refactor,3600s8c32G,0,0.782609,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:30:33,3618.5,0,918426758,,0.782609
+75,openml.org/t/XX,Helena,AutoPyTorch_refactor,3600s8c32G,5,0.2829754601,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.2829754601
+76,openml.org/t/168329,Helena,AutoPyTorch_refactor,3600s8c32G,6,0.279644,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T18:38:18,3667.1,0,1428908154,,0.279644
+76,openml.org/t/168911,jasmine,AutoPyTorch_refactor,3600s8c32G,1,0.799331,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:32:19,3709.5,0,354442706,,0.799331
+77,openml.org/t/168911,jasmine,AutoPyTorch_refactor,3600s8c32G,2,0.819398,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:31:17,3644.6,0,1684755551,,0.819398
+77,openml.org/t/XX,Helena,AutoPyTorch_refactor,3600s8c32G,7,0.2971314619,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.2971314619
+78,openml.org/t/168911,jasmine,AutoPyTorch_refactor,3600s8c32G,3,0.799331,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:31:25,3684.0,0,2666580306,,0.799331
+78,openml.org/t/XX,Helena,AutoPyTorch_refactor,3600s8c32G,8,0.2494247584,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.2494247584
+79,openml.org/t/168911,jasmine,AutoPyTorch_refactor,3600s8c32G,4,0.785235,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:31:36,3697.5,0,1924590635,,0.785235
+79,openml.org/t/XX,Helena,AutoPyTorch_refactor,3600s8c32G,9,0.3293449916,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.3293449916
+8,openml.org/t/146818,Australian,AutoPyTorch_refactor,3600s8c32G,8,0.8550719999999999,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:26:23,3631.2,0,2876117823,,0.8550719999999999
+8,openml.org/t/XX,adult,AutoPyTorch_refactor,3600s8c32G,8,0.8763308763,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8763308763
+80,openml.org/t/146606,higgs,AutoPyTorch_refactor,3600s8c32G,1,0.720959,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:05:42,3667.3,0,2297009791,,0.720959
+80,openml.org/t/XX,jasmine,AutoPyTorch_refactor,3600s8c32G,5,0.7953020134000001,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.7953020134000001
+81,openml.org/t/146606,higgs,AutoPyTorch_refactor,3600s8c32G,2,0.725548,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:04:45,3667.8,0,2823387712,,0.725548
+81,openml.org/t/168911,jasmine,AutoPyTorch_refactor,3600s8c32G,6,0.798658,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:30:56,3617.4,0,1880414092,,0.798658
+82,openml.org/t/146606,higgs,AutoPyTorch_refactor,3600s8c32G,7,0.717593,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:02:50,3663.6,0,2862216732,,0.717593
+82,openml.org/t/168911,jasmine,AutoPyTorch_refactor,3600s8c32G,7,0.781879,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:31:27,3671.8,0,3927801409,,0.781879
+83,openml.org/t/168911,jasmine,AutoPyTorch_refactor,3600s8c32G,8,0.83557,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:31:07,3633.0,0,352800927,,0.83557
+83,openml.org/t/XX,Jannis,AutoPyTorch_refactor,3600s8c32G,0,0.6982326248,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.6982326248
+84,openml.org/t/XX,Jannis,AutoPyTorch_refactor,3600s8c32G,1,0.7050394077,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.7050394077
+84,openml.org/t/XX,jasmine,AutoPyTorch_refactor,3600s8c32G,9,0.8187919463,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8187919463
+85,openml.org/t/XX,Jannis,AutoPyTorch_refactor,3600s8c32G,2,0.7192500597,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.7192500597
+85,openml.org/t/XX,kc1,AutoPyTorch_refactor,3600s8c32G,0,0.8815165877,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8815165877
+86,openml.org/t/168330,Jannis,AutoPyTorch_refactor,3600s8c32G,3,0.700466,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T18:38:59,3668.9,0,2884894747,,0.700466
+86,openml.org/t/3917,kc1,AutoPyTorch_refactor,3600s8c32G,1,0.862559,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:30:23,3616.6,0,1557271244,,0.862559
+87,openml.org/t/3917,kc1,AutoPyTorch_refactor,3600s8c32G,2,0.834123,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:31:19,3669.8,0,3722563930,,0.834123
+87,openml.org/t/XX,Jannis,AutoPyTorch_refactor,3600s8c32G,4,0.7047653170999999,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.7047653170999999
+88,openml.org/t/3917,kc1,AutoPyTorch_refactor,3600s8c32G,3,0.8672989999999999,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:31:48,3618.5,0,651325153,,0.8672989999999999
+88,openml.org/t/XX,Jannis,AutoPyTorch_refactor,3600s8c32G,5,0.7016600979000001,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.7016600979000001
+89,openml.org/t/3917,kc1,AutoPyTorch_refactor,3600s8c32G,4,0.85782,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:31:43,3614.2,0,2030543378,,0.85782
+89,openml.org/t/XX,Jannis,AutoPyTorch_refactor,3600s8c32G,6,0.7018989609,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.7018989609
+9,openml.org/t/146818,Australian,AutoPyTorch_refactor,3600s8c32G,9,0.8550719999999999,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:26:53,3661.7,0,2144204397,,0.8550719999999999
+9,openml.org/t/XX,adult,AutoPyTorch_refactor,3600s8c32G,9,0.8769451268999999,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8769451268999999
+90,openml.org/t/3917,kc1,AutoPyTorch_refactor,3600s8c32G,5,0.862559,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:32:40,3670.6,0,3262711437,,0.862559
+90,openml.org/t/XX,Jannis,AutoPyTorch_refactor,3600s8c32G,7,0.7050041801000001,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.7050041801000001
+91,openml.org/t/168330,Jannis,AutoPyTorch_refactor,3600s8c32G,8,0.713126,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T19:38:30,3701.4,0,3754790125,,0.713126
+91,openml.org/t/3917,kc1,AutoPyTorch_refactor,3600s8c32G,6,0.8720379999999999,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:32:32,3663.2,0,3959332197,,0.8720379999999999
+92,openml.org/t/3917,kc1,AutoPyTorch_refactor,3600s8c32G,7,0.853081,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-07T16:32:58,3661.7,0,3803278121,,0.853081
+92,openml.org/t/XX,Jannis,AutoPyTorch_refactor,3600s8c32G,9,0.6947330706,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.6947330706
+93,openml.org/t/3917,kc1,AutoPyTorch_refactor,3600s8c32G,8,0.8720379999999999,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:32:15,3643.8,0,967659549,,0.8720379999999999
+93,openml.org/t/XX,jungle_chess_2pcs_raw_endgame_complete,AutoPyTorch_refactor,3600s8c32G,0,0.8621151271999999,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8621151271999999
+94,openml.org/t/3917,kc1,AutoPyTorch_refactor,3600s8c32G,9,0.857143,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:32:59,3688.6,0,3124939456,,0.857143
+94,openml.org/t/XX,jungle_chess_2pcs_raw_endgame_complete,AutoPyTorch_refactor,3600s8c32G,1,0.8639000445999999,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8639000445999999
+95,openml.org/t/167119,jungle_chess_2pcs_raw_endgame_complete,AutoPyTorch_refactor,3600s8c32G,2,0.869924,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T19:38:12,3664.0,0,3298207917,,0.869924
+95,openml.org/t/XX,kr-vs-kp,AutoPyTorch_refactor,3600s8c32G,0,0.990625,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.990625
+96,openml.org/t/3,kr-vs-kp,AutoPyTorch_refactor,3600s8c32G,1,0.98125,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:33:02,3670.6,0,2612479198,,0.98125
+96,openml.org/t/XX,jungle_chess_2pcs_raw_endgame_complete,AutoPyTorch_refactor,3600s8c32G,3,0.874832664,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.874832664
+97,openml.org/t/XX,jungle_chess_2pcs_raw_endgame_complete,AutoPyTorch_refactor,3600s8c32G,4,0.8739402053,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8739402053
+97,openml.org/t/XX,kr-vs-kp,AutoPyTorch_refactor,3600s8c32G,2,0.990625,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.990625
+98,openml.org/t/3,kr-vs-kp,AutoPyTorch_refactor,3600s8c32G,3,1.0,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:32:07,3612.1,0,1096297646,,1.0
+98,openml.org/t/XX,jungle_chess_2pcs_raw_endgame_complete,AutoPyTorch_refactor,3600s8c32G,5,0.8741633199,acc,singularity,refactor_development,debug,stable,2021-03-07T03:35:18,3663.4,0,3264102342,,0.8741633199
+99,openml.org/t/167119,jungle_chess_2pcs_raw_endgame_complete,AutoPyTorch_refactor,3600s8c32G,6,0.861892,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T19:40:40,3743.5,0,1641283966,,0.861892
+99,openml.org/t/3,kr-vs-kp,AutoPyTorch_refactor,3600s8c32G,4,1.0,acc,singularity,refactor_development,{'_save_artifacts': ['debug']},stable,2021-03-05T16:31:55,3608.5,0,4139473036,,1.0

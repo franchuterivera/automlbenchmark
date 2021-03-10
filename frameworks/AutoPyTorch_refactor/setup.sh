@@ -26,13 +26,6 @@ cd ${HERE}
 PIP install -r ${TARGET_DIR}/requirements.txt
 PIP install -e ${TARGET_DIR}
 
-PIP uninstall --yes smac
-git clone https://github.com/franchuterivera/SMAC3.git
-cd SMAC3
-git checkout  debug_msg
-cd ${HERE}
-PIP install -e SMAC3
-
 PIP uninstall --yes pynisher
 git clone https://github.com/franchuterivera/pynisher.git
 cd pynisher

@@ -22,7 +22,6 @@ import autoPyTorch.metrics as metrics
 from frameworks.shared.callee import call_run, result, output_subdir, utils
 
 
-
 def run(dataset, config):
     print("\n**** AutoPyTorch {} ****\n".format(autoPyTorch.__version__))
     warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -68,14 +67,6 @@ def run(dataset, config):
     y_train = train[label]
     X_test = test.drop(columns=label)
     y_test = test[label]
-    # Objects happen in automlbenchmark -- fix that
-    X_train = X_train.convert_dtypes()
-    for x in X_train.columns:
-        X_test[x] = X_test[x].astype(X_train[x].dtypes.name)
-        if not is_numeric_dtype(X_test[x]):
-            X_test[x] = X_test[x].astype('category')
-            X_train[x] = X_train[x].astype('category')
-    print(f"Columns dtypes after fix :\n{X_train.dtypes}")
 
     training_params = {k: v for k, v in config.framework_params.items() if not k.startswith('_')}
 
@@ -128,8 +119,6 @@ def run(dataset, config):
     try:
         print(f"The trajectory: ")
         print(api.run_history, api.trajectory)
-        print(f"The selected models: ")
-        print(api.show_models())
         print(f"Finish the run")
     except Exception as e:
         print(f"Run into {e} while printing information")
@@ -183,7 +172,7 @@ def save_artifacts(estimator, config):
                 os.makedirs(os.path.dirname(dst), exist_ok=True)
                 copyfile(filename, dst)
     except Exception as e:
-        print(f"Error when saving artifacts= {e}.", exc_info=True)
+        print(f"Error when saving artifacts= {e}.")
 
 
 if __name__ == '__main__':

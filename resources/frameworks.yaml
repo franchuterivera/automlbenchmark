@@ -1050,6 +1050,12 @@ AutoPyTorch_refactor_cocktails:
   params:
     _save_artifacts: ['debug']
 
+AutoPyTorch_refactor_cocktails_preprocessingON:
+  version: 'refactor_development'
+  project: https://automl.github.io/autoPyTorch
+  params:
+    _save_artifacts: ['debug']
+
 AutoPyTorch_refactor_noensemble:
   version: 'refactor_development'
   project: https://automl.github.io/autoPyTorch

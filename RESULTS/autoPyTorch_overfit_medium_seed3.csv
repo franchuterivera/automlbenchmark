@@ -1,0 +1,82 @@
+,id,task,framework,constraint,fold,result,metric,mode,version,params,tag,utc,duration,models,seed,info,acc,predict_duration
+0,openml.org/t/7592,adult,autoPyTorch,3600s8c32G,0,0.8722620000000001,acc,singularity,reproduce,,stable,2021-03-09T00:39:48,4846.7,1.0,1971932693,,0.8722620000000001,0.520007
+1,openml.org/t/7592,adult,autoPyTorch,3600s8c32G,1,0.8739,acc,singularity,reproduce,,stable,2021-03-09T00:40:06,4860.5,1.0,974144151,,0.8739,0.48335500000000003
+2,openml.org/t/7592,adult,autoPyTorch,3600s8c32G,2,0.8734639999999999,acc,singularity,reproduce,,stable,2021-03-09T01:17:15,7092.4,1.0,4171768816,,0.8734639999999999,0.774654
+3,openml.org/t/7592,adult,autoPyTorch,3600s8c32G,3,0.866503,acc,singularity,reproduce,,stable,2021-03-09T00:33:07,4418.3,1.0,703758184,,0.866503,0.5822189999999999
+4,openml.org/t/7592,adult,autoPyTorch,3600s8c32G,4,0.8738739999999999,acc,singularity,reproduce,,stable,2021-03-09T00:44:52,5119.7,1.0,3084531032,,0.8738739999999999,0.602446
+5,openml.org/t/7592,adult,autoPyTorch,3600s8c32G,5,0.870188,acc,singularity,reproduce,,stable,2021-03-09T00:51:07,5490.6,1.0,3801934176,,0.870188,0.555218
+6,openml.org/t/7592,adult,autoPyTorch,3600s8c32G,6,0.870188,acc,singularity,reproduce,,stable,2021-03-09T01:00:45,6071.4,1.0,3741492725,,0.870188,0.575883
+7,openml.org/t/7592,adult,autoPyTorch,3600s8c32G,7,0.87326,acc,singularity,reproduce,,stable,2021-03-09T00:46:22,5213.6,1.0,1816266918,,0.87326,0.57744
+8,openml.org/t/7592,adult,autoPyTorch,3600s8c32G,8,0.8806309999999999,acc,singularity,reproduce,,stable,2021-03-09T00:50:24,5453.8,1.0,585263955,,0.8806309999999999,0.6412640000000001
+9,openml.org/t/7592,adult,autoPyTorch,3600s8c32G,9,0.8796069999999999,acc,singularity,reproduce,,stable,2021-03-09T00:48:47,5357.2,1.0,2963205158,,0.8796069999999999,0.6386689999999999
+10,openml.org/t/34539,Amazon_employee_access,autoPyTorch,3600s8c32G,0,0.947818,acc,singularity,reproduce,,stable,2021-03-09T00:39:50,4792.3,1.0,2315058623,,0.947818,0.41721899999999995
+11,openml.org/t/34539,Amazon_employee_access,autoPyTorch,3600s8c32G,1,0.954226,acc,singularity,reproduce,,stable,2021-03-09T00:36:15,4573.6,1.0,2589493925,,0.954226,0.416835
+12,openml.org/t/34539,Amazon_employee_access,autoPyTorch,3600s8c32G,2,0.946903,acc,singularity,reproduce,,stable,2021-03-09T00:27:11,4028.8,1.0,2679277013,,0.946903,0.371143
+13,openml.org/t/34539,Amazon_employee_access,autoPyTorch,3600s8c32G,3,0.950565,acc,singularity,reproduce,,stable,2021-03-09T00:44:31,4786.2,1.0,3031785400,,0.950565,0.42127600000000004
+14,openml.org/t/34539,Amazon_employee_access,autoPyTorch,3600s8c32G,4,0.954837,acc,singularity,reproduce,,stable,2021-03-09T01:06:30,5140.9,1.0,870929053,,0.954837,0.44283199999999995
+15,openml.org/t/34539,Amazon_employee_access,autoPyTorch,3600s8c32G,5,0.9459870000000001,acc,singularity,reproduce,,stable,2021-03-09T00:43:21,3754.2,1.0,464398301,,0.9459870000000001,0.46976899999999994
+16,openml.org/t/34539,Amazon_employee_access,autoPyTorch,3600s8c32G,6,0.948428,acc,singularity,reproduce,,stable,2021-03-09T01:01:38,3960.2,1.0,638081916,,0.948428,0.43425
+17,openml.org/t/34539,Amazon_employee_access,autoPyTorch,3600s8c32G,8,0.9508700000000001,acc,singularity,reproduce,,stable,2021-03-09T01:53:11,6655.5,1.0,143734096,,0.9508700000000001,0.501849
+18,openml.org/t/34539,Amazon_employee_access,autoPyTorch,3600s8c32G,9,0.9517700000000001,acc,singularity,reproduce,,stable,2021-03-09T01:14:33,4283.5,1.0,2704149302,,0.9517700000000001,0.313963
+19,openml.org/t/14965,bank-marketing,autoPyTorch,3600s8c32G,0,0.9084479999999999,acc,singularity,reproduce,,stable,2021-03-09T01:39:04,4272.6,1.0,2920809120,,0.9084479999999999,0.485368
+20,openml.org/t/14965,bank-marketing,autoPyTorch,3600s8c32G,1,0.9068790000000001,acc,singularity,reproduce,,stable,2021-03-09T01:42:19,4447.7,1.0,2265434131,,0.9068790000000001,0.49808500000000006
+21,openml.org/t/14965,bank-marketing,autoPyTorch,3600s8c32G,2,0.9119659999999999,acc,singularity,reproduce,,stable,2021-03-09T02:16:08,6166.4,1.0,1829821034,,0.9119659999999999,0.544137
+22,openml.org/t/14965,bank-marketing,autoPyTorch,3600s8c32G,3,0.913515,acc,singularity,reproduce,,stable,2021-03-09T01:59:36,5148.5,1.0,2347385166,,0.913515,0.52372
+23,openml.org/t/14965,bank-marketing,autoPyTorch,3600s8c32G,4,0.9068790000000001,acc,singularity,reproduce,,stable,2021-03-09T01:48:20,4377.1,1.0,2434261176,,0.9068790000000001,0.42003500000000005
+24,openml.org/t/14965,bank-marketing,autoPyTorch,3600s8c32G,5,0.901792,acc,singularity,reproduce,,stable,2021-03-09T01:54:10,4658.2,1.0,3500000492,,0.901792,0.604466
+25,openml.org/t/14965,bank-marketing,autoPyTorch,3600s8c32G,6,0.9004639999999999,acc,singularity,reproduce,,stable,2021-03-09T02:00:23,4995.7,1.0,3348190637,,0.9004639999999999,0.49132700000000007
+26,openml.org/t/14965,bank-marketing,autoPyTorch,3600s8c32G,7,0.902676,acc,singularity,reproduce,,stable,2021-03-09T02:16:47,5920.5,1.0,781056660,,0.902676,1.0136100000000001
+27,openml.org/t/14965,bank-marketing,autoPyTorch,3600s8c32G,8,0.914178,acc,singularity,reproduce,,stable,2021-03-09T02:22:49,6211.3,1.0,2922754764,,0.914178,0.514258
+28,openml.org/t/14965,bank-marketing,autoPyTorch,3600s8c32G,9,0.9121879999999999,acc,singularity,reproduce,,stable,2021-03-09T01:58:44,4715.8,1.0,3621468328,,0.9121879999999999,0.545711
+29,openml.org/t/146195,connect-4,autoPyTorch,3600s8c32G,0,0.865009,acc,singularity,reproduce,,stable,2021-03-09T02:16:19,5773.8,1.0,635487534,,0.865009,0.47293900000000005
+30,openml.org/t/146195,connect-4,autoPyTorch,3600s8c32G,3,0.8624930000000001,acc,singularity,reproduce,,stable,2021-03-09T02:36:10,6875.2,1.0,1887221305,,0.8624930000000001,0.514318
+31,openml.org/t/146195,connect-4,autoPyTorch,3600s8c32G,4,0.861456,acc,singularity,reproduce,,stable,2021-03-09T02:34:30,6773.2,1.0,11274438,,0.861456,0.48718
+32,openml.org/t/146195,connect-4,autoPyTorch,3600s8c32G,5,0.8515389999999999,acc,singularity,reproduce,,stable,2021-03-09T02:17:28,5721.0,1.0,1930294422,,0.8515389999999999,0.511462
+33,openml.org/t/146195,connect-4,autoPyTorch,3600s8c32G,8,0.860992,acc,singularity,reproduce,,stable,2021-03-09T02:27:32,6237.9,1.0,3230237287,,0.860992,0.483469
+34,openml.org/t/146825,Fashion-MNIST,autoPyTorch,3600s8c32G,7,,acc,singularity,reproduce,,stable,2021-03-09T02:48:59,7203.5,,3664474919,TimeoutError: Interrupting thread current after 7200s timeout.,,
+35,openml.org/t/146606,higgs,autoPyTorch,3600s8c32G,2,0.7353390000000001,acc,singularity,reproduce,,stable,2021-03-09T03:09:11,6862.9,1.0,4097292968,,0.7353390000000001,1.05974
+36,openml.org/t/146606,higgs,autoPyTorch,3600s8c32G,8,0.726568,acc,singularity,reproduce,,stable,2021-03-09T03:12:00,6899.4,1.0,3148264129,,0.726568,1.13792
+37,openml.org/t/168330,Jannis,autoPyTorch,3600s8c32G,9,0.714917,acc,singularity,reproduce,,stable,2021-03-09T03:17:07,7181.2,1.0,3982931495,,0.714917,0.622922
+38,openml.org/t/167119,jungle_chess_2pcs_raw_endgame_complete,autoPyTorch,3600s8c32G,0,0.8761709999999999,acc,singularity,reproduce,,stable,2021-03-09T02:50:01,5551.7,1.0,1773662505,,0.8761709999999999,0.416418
+39,openml.org/t/167119,jungle_chess_2pcs_raw_endgame_complete,autoPyTorch,3600s8c32G,3,0.882642,acc,singularity,reproduce,,stable,2021-03-09T02:44:18,5178.6,1.0,320815366,,0.882642,0.31249899999999997
+40,openml.org/t/167119,jungle_chess_2pcs_raw_endgame_complete,autoPyTorch,3600s8c32G,4,0.88755,acc,singularity,reproduce,,stable,2021-03-09T02:51:34,5594.3,1.0,2136965330,,0.88755,0.371502
+41,openml.org/t/167119,jungle_chess_2pcs_raw_endgame_complete,autoPyTorch,3600s8c32G,5,0.8821950000000001,acc,singularity,reproduce,,stable,2021-03-09T02:43:50,5123.5,1.0,1595440647,,0.8821950000000001,0.401125
+42,openml.org/t/167119,jungle_chess_2pcs_raw_endgame_complete,autoPyTorch,3600s8c32G,6,0.8739399999999999,acc,singularity,reproduce,,stable,2021-03-09T02:51:37,5584.1,1.0,581209166,,0.8739399999999999,0.40845
+43,openml.org/t/167119,jungle_chess_2pcs_raw_endgame_complete,autoPyTorch,3600s8c32G,7,0.8813030000000001,acc,singularity,reproduce,,stable,2021-03-09T02:47:13,5327.5,1.0,3356004333,,0.8813030000000001,0.389403
+44,openml.org/t/167119,jungle_chess_2pcs_raw_endgame_complete,autoPyTorch,3600s8c32G,8,0.8824190000000001,acc,singularity,reproduce,,stable,2021-03-09T02:46:57,5279.9,1.0,3159571268,,0.8824190000000001,0.33664299999999997
+45,openml.org/t/167119,jungle_chess_2pcs_raw_endgame_complete,autoPyTorch,3600s8c32G,9,0.876144,acc,singularity,reproduce,,stable,2021-03-09T02:43:42,5081.5,1.0,2789492546,,0.876144,0.388777
+46,openml.org/t/3945,KDDCup09_appetency,autoPyTorch,3600s8c32G,0,,acc,singularity,reproduce,,stable,2021-03-09T01:19:01,6.2,,4103527223,"ValueError: Found unknown categories ['MF5cqBA', 'Gvgmg2o'] in column 0 during transform",,
+47,openml.org/t/3945,KDDCup09_appetency,autoPyTorch,3600s8c32G,1,,acc,singularity,reproduce,,stable,2021-03-09T01:19:01,6.3,,3326118053,"ValueError: Found unknown categories ['Gvgmg2o', 'MF5cqBA'] in column 0 during transform",,
+48,openml.org/t/3945,KDDCup09_appetency,autoPyTorch,3600s8c32G,2,,acc,singularity,reproduce,,stable,2021-03-09T01:19:01,6.3,,1777579808,"ValueError: Found unknown categories ['Gvgmg2o', 'MF5cqBA'] in column 0 during transform",,
+49,openml.org/t/3945,KDDCup09_appetency,autoPyTorch,3600s8c32G,3,,acc,singularity,reproduce,,stable,2021-03-09T01:19:14,5.5,,2918054506,"ValueError: Found unknown categories ['Gvgmg2o', 'MF5cqBA'] in column 0 during transform",,
+50,openml.org/t/3945,KDDCup09_appetency,autoPyTorch,3600s8c32G,4,,acc,singularity,reproduce,,stable,2021-03-09T01:19:17,5.5,,1390442938,"ValueError: Found unknown categories ['Gvgmg2o', 'MF5cqBA'] in column 0 during transform",,
+51,openml.org/t/3945,KDDCup09_appetency,autoPyTorch,3600s8c32G,5,,acc,singularity,reproduce,,stable,2021-03-09T01:19:14,5.5,,1888199956,"ValueError: Found unknown categories ['Gvgmg2o', 'MF5cqBA'] in column 0 during transform",,
+52,openml.org/t/3945,KDDCup09_appetency,autoPyTorch,3600s8c32G,6,,acc,singularity,reproduce,,stable,2021-03-09T01:19:33,5.6,,1858398388,"ValueError: Found unknown categories ['MF5cqBA', 'Gvgmg2o'] in column 0 during transform",,
+53,openml.org/t/3945,KDDCup09_appetency,autoPyTorch,3600s8c32G,7,,acc,singularity,reproduce,,stable,2021-03-09T01:19:28,5.5,,1511770672,"ValueError: Found unknown categories ['Gvgmg2o', 'MF5cqBA'] in column 0 during transform",,
+54,openml.org/t/3945,KDDCup09_appetency,autoPyTorch,3600s8c32G,8,,acc,singularity,reproduce,,stable,2021-03-09T01:19:33,5.5,,470895235,ValueError: Found unknown categories ['Gvgmg2o'] in column 0 during transform,,
+55,openml.org/t/3945,KDDCup09_appetency,autoPyTorch,3600s8c32G,9,,acc,singularity,reproduce,,stable,2021-03-09T01:19:34,5.5,,3742189749,ValueError: Found unknown categories ['MF5cqBA'] in column 0 during transform,,
+56,openml.org/t/9977,nomao,autoPyTorch,3600s8c32G,0,0.9744709999999999,acc,singularity,reproduce,,stable,2021-03-09T03:25:15,5447.6,1.0,2064839979,,0.9744709999999999,0.393753
+57,openml.org/t/9977,nomao,autoPyTorch,3600s8c32G,1,0.971569,acc,singularity,reproduce,,stable,2021-03-09T03:18:46,4882.7,1.0,2529947376,,0.971569,0.37302399999999997
+58,openml.org/t/9977,nomao,autoPyTorch,3600s8c32G,2,0.9695389999999999,acc,singularity,reproduce,,stable,2021-03-09T03:20:56,4902.7,1.0,373967687,,0.9695389999999999,0.37408600000000003
+59,openml.org/t/9977,nomao,autoPyTorch,3600s8c32G,3,0.9747610000000001,acc,singularity,reproduce,,stable,2021-03-09T03:23:30,5022.9,1.0,1483169935,,0.9747610000000001,0.33465
+60,openml.org/t/9977,nomao,autoPyTorch,3600s8c32G,4,0.97331,acc,singularity,reproduce,,stable,2021-03-09T03:26:11,5132.6,1.0,590011599,,0.97331,0.379065
+61,openml.org/t/9977,nomao,autoPyTorch,3600s8c32G,5,0.973302,acc,singularity,reproduce,,stable,2021-03-09T03:39:09,5650.7,1.0,2550709243,,0.973302,0.41714300000000004
+62,openml.org/t/9977,nomao,autoPyTorch,3600s8c32G,6,0.9712709999999999,acc,singularity,reproduce,,stable,2021-03-09T03:51:53,6353.6,1.0,2348311204,,0.9712709999999999,0.375643
+63,openml.org/t/9977,nomao,autoPyTorch,3600s8c32G,7,0.9756239999999999,acc,singularity,reproduce,,stable,2021-03-09T03:35:30,5151.6,1.0,4042303188,,0.9756239999999999,0.31758200000000003
+64,openml.org/t/9977,nomao,autoPyTorch,3600s8c32G,8,0.9698200000000001,acc,singularity,reproduce,,stable,2021-03-09T03:59:39,6511.7,1.0,375121167,,0.9698200000000001,0.38243299999999997
+65,openml.org/t/9977,nomao,autoPyTorch,3600s8c32G,9,0.9712709999999999,acc,singularity,reproduce,,stable,2021-03-09T03:47:52,5641.1,1.0,3776305464,,0.9712709999999999,0.399615
+66,openml.org/t/146212,Shuttle,autoPyTorch,3600s8c32G,1,0.999655,acc,singularity,reproduce,,stable,2021-03-09T04:43:40,6798.5,1.0,2786152322,,0.999655,0.498667
+67,openml.org/t/146212,Shuttle,autoPyTorch,3600s8c32G,2,1.0,acc,singularity,reproduce,,stable,2021-03-09T04:28:47,5875.1,1.0,887056252,,1.0,0.43052700000000005
+68,openml.org/t/146212,Shuttle,autoPyTorch,3600s8c32G,3,0.999655,acc,singularity,reproduce,,stable,2021-03-09T04:31:25,6029.6,1.0,1618430812,,0.999655,0.426679
+69,openml.org/t/146212,Shuttle,autoPyTorch,3600s8c32G,4,1.0,acc,singularity,reproduce,,stable,2021-03-09T04:33:42,6137.1,1.0,3414203257,,1.0,0.523351
+70,openml.org/t/146212,Shuttle,autoPyTorch,3600s8c32G,6,1.0,acc,singularity,reproduce,,stable,2021-03-09T04:33:24,6092.5,1.0,648793803,,1.0,0.42456000000000005
+71,openml.org/t/146212,Shuttle,autoPyTorch,3600s8c32G,7,1.0,acc,singularity,reproduce,,stable,2021-03-09T04:30:34,5917.4,1.0,1470937249,,1.0,0.533948
+72,openml.org/t/146212,Shuttle,autoPyTorch,3600s8c32G,8,0.999483,acc,singularity,reproduce,,stable,2021-03-09T04:37:50,6360.0,1.0,362970344,,0.999483,0.493609
+73,openml.org/t/168331,Volkert,autoPyTorch,3600s8c32G,0,0.722003,acc,singularity,reproduce,,stable,2021-03-09T04:46:41,6703.6,1.0,1829202912,,0.722003,0.623287
+74,openml.org/t/168331,Volkert,autoPyTorch,3600s8c32G,2,0.725433,acc,singularity,reproduce,,stable,2021-03-09T04:55:57,7110.6,1.0,50547039,,0.725433,0.574866
+75,openml.org/t/168331,Volkert,autoPyTorch,3600s8c32G,3,0.72852,acc,singularity,reproduce,,stable,2021-03-09T04:48:38,6638.8,1.0,891090966,,0.72852,0.627887
+76,openml.org/t/168331,Volkert,autoPyTorch,3600s8c32G,4,0.726634,acc,singularity,reproduce,,stable,2021-03-09T04:55:05,6816.4,1.0,2018210307,,0.726634,0.580941
+77,openml.org/t/168331,Volkert,autoPyTorch,3600s8c32G,5,0.724404,acc,singularity,reproduce,,stable,2021-03-09T04:56:03,6842.9,1.0,1471304631,,0.724404,0.6176149999999999
+78,openml.org/t/168331,Volkert,autoPyTorch,3600s8c32G,7,0.729206,acc,singularity,reproduce,,stable,2021-03-09T05:03:27,6985.1,1.0,1999761317,,0.729206,0.662702
+79,openml.org/t/168331,Volkert,autoPyTorch,3600s8c32G,8,0.729377,acc,singularity,reproduce,,stable,2021-03-09T05:07:56,7156.6,1.0,2933585828,,0.729377,0.6220399999999999
+80,openml.org/t/168331,Volkert,autoPyTorch,3600s8c32G,9,0.732464,acc,singularity,reproduce,,stable,2021-03-09T04:59:47,6609.9,1.0,448973667,,0.732464,0.5843229999999999

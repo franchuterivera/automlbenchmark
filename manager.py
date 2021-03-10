@@ -920,7 +920,7 @@ def launch_run(
         extra += ' --bosch'
 
     # For array
-    max_hours=4
+    max_hours=2
     if 'array' in args.run_mode:
         raise NotImplementedError(f"Have to fix this for remote running ")
         job_list_file = to_array_run(run_files, args.memory, args.cores, run_dir)

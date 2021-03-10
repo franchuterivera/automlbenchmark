@@ -143,7 +143,7 @@ def get_updates_for_regularitzation_cocktails():
                    value_range=['Zero'],
                    default_value='Zero')
     # preprocessors=[none]
-    include_updates['feature_preprocessor'] = ['NoFeaturePreprocessor']
+    #include_updates['feature_preprocessor'] = ['NoFeaturePreprocessor']
     # imputation_strategies=[median]
     updates.append(node_name="imputer",
                    hyperparameter="numerical_strategy",
@@ -152,6 +152,21 @@ def get_updates_for_regularitzation_cocktails():
     # loss_modules=[cross_entropy_weighted]
     # normalization_strategies=[standardize]
     include_updates['scaler'] = ['StandardScaler']
+    # @francisco let us leave the scheduler option open and
+    # its parameter also open and not hardcoded
+    # I was thinking, can we give values to the cosine schedulers
+    # on the initial budget and multiplication factor ?
+    # because if so, it would make a lot of sense,
+    # to give it 12.5 as an initial budget and multiplication factor of 2
+    # lr_scheduler=[cosine_annealing]
+    # updates.append(node_name="lr_scheduler",
+    #                hyperparameter="CosineAnnealingWarmRestarts:T_0",
+    #                value_range=[11, 12],
+    #                default_value=12)
+    # updates.append(node_name="lr_scheduler",
+    #                hyperparameter="CosineAnnealingWarmRestarts:T_mult",
+    #                value_range=[1.9999, 2.0],
+    #                default_value=2.0)
 
     # No early stopping
     pipeline_update = {"early_stopping": -1}
