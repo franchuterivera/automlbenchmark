@@ -7,6 +7,7 @@ import pandas as pd
 
 dfs = []
 for filename in [
+    '/home/chico/master_thesis/automlbenchmark/misc/13_02_2021_isolatedrepetitions/sklearn/2_folds/all_data.csv',
     '/home/chico/master_thesis/automlbenchmark/misc/13_02_2021_isolatedrepetitions/sklearn/5_folds/all_data.csv',
     '/home/chico/master_thesis/automlbenchmark/misc/13_02_2021_isolatedrepetitions/sklearn/10_folds/all_data.csv',
 ]:
@@ -24,7 +25,7 @@ df = df[~df['model'].str.contains("GradientBoostingClassifier")]
 
 total_outer = len(df['dataset_name'].unique())
 total_inner = len(df['model'].unique())
-fig = plt.figure(figsize=(10, 8))
+fig = plt.figure(figsize=(18, 12))
 outer = gridspec.GridSpec(math.ceil(math.sqrt(total_outer)), math.floor(math.sqrt(total_outer)), wspace=0.2, hspace=0.2)
 for i, dataset_name in enumerate(df['dataset_name'].unique()):
     inner = gridspec.GridSpecFromSubplotSpec(total_inner, 1,
@@ -56,5 +57,6 @@ for i, dataset_name in enumerate(df['dataset_name'].unique()):
             ax.set_title(f"OpenMLID={dataset_name}")
 handles, labels = ax.get_legend_handles_labels()
 fig.legend(handles, labels, loc='lower center', ncol=10)
-
+plt.tight_layout()
+plt.savefig(f"effectdifferentfolds.pdf")
 plt.show()

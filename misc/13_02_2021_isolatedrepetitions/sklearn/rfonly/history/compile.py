@@ -13,7 +13,7 @@ total_tools = len(df['model'].unique())
 
 for dataset_name in data['dataset_name'].unique():
     # Plot configuration
-    fig = plt.figure()
+    fig = plt.figure(figsize=(8.0, 5.0))
     fig.subplots_adjust(hspace=0.4, wspace=0.4)
     fig.suptitle(f"Dataset={dataset_name} @ 2-repeats-5-folds-cv")
     for i, model in enumerate(data['model'].unique()):
@@ -28,5 +28,7 @@ for dataset_name in data['dataset_name'].unique():
         ax.set_title(f"{model}")
         ax.set(ylabel='Balanced Accuracy')
         ax.grid(True)
-    plt.show()
+    plt.savefig(f"notallconfig_improve_{dataset_name}.pdf")
+    plt.tight_layout()
+    #plt.show()
     plt.close()

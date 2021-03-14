@@ -32,7 +32,7 @@ total = len(df['task'].unique())
 df['model'] = df['model'].str[:-3]
 
 # Plot configuration
-fig = plt.figure()
+fig = plt.figure(figsize=(18,12))
 fig.subplots_adjust(hspace=0.4, wspace=0.4)
 fig.suptitle(f"AutoGluon Leaderboard for 8h 1c 8Gb")
 for i, task in enumerate(df['task'].unique()):
@@ -69,5 +69,6 @@ for i, task in enumerate(df['task'].unique()):
     ax.set_title(f"Task={task}")
     ax.set(ylabel='Test Balanced Accuracy', xlabel='Stacking Level')
     ax.grid(True)
-plt.show()
+#plt.show()
+plt.savefig('autogluonleaderboard.pdf')
 plt.close()

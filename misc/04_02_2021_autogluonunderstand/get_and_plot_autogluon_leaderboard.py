@@ -119,5 +119,5 @@ if __name__ == "__main__":
     g.map_dataframe(sns.barplot, y="model", x="performance", hue='variable', palette="colorblind")
     g.set_axis_labels("Model", "Balanced Accuracy L1-L0")
     g.add_legend()
-    #plt.savefig(f"{_repeats.pdf")
+    plt.savefig(f"{autogluonleaderboard.pdf")
     plt.show()

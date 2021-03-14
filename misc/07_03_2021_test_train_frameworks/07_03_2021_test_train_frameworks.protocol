@@ -1,0 +1,35 @@
+# ACC
+Runs for Frank talk
+python manager_orig.py -f AutoGluon --benchmark large --partition bosch_cpu-cascadelake --binary_metric "['acc']" --multiclass_metric "['acc']" --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.02.18-11.43.54
+python manager_orig.py -f AutoGluon --benchmark large --partition bosch_cpu-cascadelake --binary_metric "['acc']" --multiclass_metric "['acc']" --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.02.19-21.04.20
+python manager_orig.py -f AutoGluon --benchmark large --partition bosch_cpu-cascadelake --binary_metric "['acc']" --multiclass_metric "['acc']" --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.02.18-19.03.26
+python manager_orig.py -f autosklearn_0123 --benchmark small --partition bosch_cpu-cascadelake --binary_metric "['acc']" --multiclass_metric "['acc']" --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/0.12.3/2021.02.18-18.05.46
+python manager_orig.py -f autosklearn_0123 --benchmark small --partition bosch_cpu-cascadelake --binary_metric "['acc']" --multiclass_metric "['acc']" --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/0.12.3/2021.02.19-00.39.16
+python manager_orig.py -f autosklearn_0123 --benchmark small --partition bosch_cpu-cascadelake --binary_metric "['acc']" --multiclass_metric "['acc']" --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/0.12.3/2021.02.21-22.51.42
+python manager_orig.py -f autoPyTorch --benchmark large --partition bosch_cpu-cascadelake --binary_metric "['acc']" --multiclass_metric "['acc']" --run_dir /home/riverav/AUTOML_BENCHMARK/autoPyTorch/reproduce/2021.02.21-22.28.01
+python manager_orig.py -f H2OAutoML --benchmark small --partition bosch_cpu-cascadelake --binary_metric "['acc']" --multiclass_metric "['acc']" --run_dir /home/riverav/AUTOML_BENCHMARK/H2OAutoML/3.30.0.4/2021.03.07-17.57.27
+
+#Balanced accuracy 
+python manager_orig.py --tag seed0 -f AutoGluon --benchmark small --partition bosch_cpu-cascadelake --binary_metric "['balacc']" --multiclass_metric "['balacc']" --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.02.23-01.17.42
+python manager_orig.py --tag seed0 -f AutoGluon --benchmark small --partition bosch_cpu-cascadelake --binary_metric "['balacc']" --multiclass_metric "['balacc']" --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.02.23-18.17.48
+python manager_orig.py --tag seed0 -f autosklearn_0123 --benchmark small --partition bosch_cpu-cascadelake --binary_metric "['balacc']" --multiclass_metric "['balacc']" --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/0.12.3/2021.02.23-14.36.09
+python manager_orig.py --tag seed0 -f AutoPyTorch_refactor --benchmark small --partition bosch_cpu-cascadelake --binary_metric "['balacc']" --multiclass_metric "['balacc']" --run_dir /home/riverav/AUTOML_BENCHMARK/AutoPyTorch/refactor_development/2021.02.23-17.55.52
+python manager_orig.py  -f H2OAutoML --benchmark small --partition bosch_cpu-cascadelake --binary_metric "['balacc']" --multiclass_metric "['balacc']" --run_dir /home/riverav/AUTOML_BENCHMARK/H2OAutoML/3.30.0.4/2021.03.07-13.33.19
+
+
+
+
+
+
+deadlock: 
+python manager.py -f AutoPyTorch_refactor -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600 --binary_metric "['acc']" --multiclass_metric "['acc']"   --run_mode single --task Australian
+Creating run directory: /home/riverav/AUTOML_BENCHMARK/AutoPyTorch/refactor_development/2021.02.18-21.50.57
+
+
+
+# First time run of comparisson:
+python manager_orig.py -f autoPyTorch --benchmark small --partition bosch_cpu-cascadelake --task Australian --run_dir /home/riverav/AUTOML_BENCHMARK/autoPyTorch/reproduce/2021.01.23-02.59.43
+python manager_orig.py -f autoPyTorch --benchmark small --partition bosch_cpu-cascadelake  --run_dir /home/riverav/AUTOML_BENCHMARK/autoPyTorch/reproduce/2021.02.10-03.32.57
+python manager_orig.py -f AutoGluon --benchmark large --partition bosch_cpu-cascadelake  --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.01.24-02.32.08
+python manager_orig.py -f AutoGluon --benchmark small  --partition bosch_cpu-cascadelake --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.02.10-02.31.13
+python manager_orig.py -f AutoPyTorch_refactor --benchmark small --partition bosch_cpu-cascadelake  --run_mode single  --run_dir /home/riverav/AUTOML_BENCHMARK/AutoPyTorch/refactor_development/2021.02.11-04.37.16

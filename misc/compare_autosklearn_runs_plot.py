@@ -26,7 +26,7 @@ ax = data.reset_index().plot(
 #handles, labels = ax.get_legend_handles_labels()
 #ax.legend(handles, labels, loc='center', ncol=5)
 ax.set_title(f"Individual model debug")
-plt.xlim((0.6,1))
+plt.xlim((0.675,1))
 plt.legend(loc='lower right')
 plt.show()
 ax = data.reset_index().plot(
@@ -38,7 +38,7 @@ ax = data.reset_index().plot(
 )
 #handles, labels = ax.get_legend_handles_labels()
 #ax.legend(handles, labels, loc='center', ncol=5)
-ax.set_title(f"Ensemblle model debug")
-plt.xlim((0.6,1))
+ax.set_title(f"Ensemble model debug")
+plt.xlim((0.675,1))
 plt.legend(loc='lower right')
 plt.show()

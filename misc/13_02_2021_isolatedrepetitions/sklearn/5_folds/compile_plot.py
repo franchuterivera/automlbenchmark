@@ -30,7 +30,7 @@ data = data[data['hue']=='test_performance_singlemodelFalse']
 total = len(df['dataset_name'].unique())
 
 # Plot configuration
-fig = plt.figure()
+fig = plt.figure(figsize=(18,12))
 fig.subplots_adjust(hspace=0.4, wspace=0.4)
 fig.suptitle(f"Avg Model Performance of 5-k-fold splits")
 for i, dataset_name in enumerate(data['dataset_name'].unique()):
@@ -49,5 +49,5 @@ for i, dataset_name in enumerate(data['dataset_name'].unique()):
     ax.set_title(f"OpenMLID={dataset_name}")
     ax.set(ylabel='Balanced Accuracy', xlabel='Number of CV Repetitions')
     ax.grid(True)
-plt.show()
+plt.savefig(f"effectsofrepetitions.pdf")
 plt.close()
