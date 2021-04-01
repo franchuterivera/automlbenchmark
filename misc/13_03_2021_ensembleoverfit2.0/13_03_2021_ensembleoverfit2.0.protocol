@@ -1,1 +1,4 @@
 python manager.py --tag seed0 -f autosklearnCOPYALL  -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnCOPYALL/dev/2021.03.13-02.31.10
+
+# For the ensemble dropout
+python manager.py --tag seed0 -f autosklearnCOPYALL  -b master_thesis --partition bosch_cpu-cascadelake --total_fold 5 --cores 1 --memory 8G --runtime 3600 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnCOPYALL/dev/2021.03.26-12.54.07
