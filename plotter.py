@@ -1,24 +1,28 @@
-from scipy.stats import rankdata
-import tqdm
 import argparse
+from functools import partial
 import glob
+import itertools
 import logging
-import typing
+import math
 import os
-
-import pandas as pd
+import typing
 
 import networkx as nx
 
 import numpy as np
 
+import pandas as pd
+
 import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
 import matplotlib.gridspec as gridspec
 
-from scipy.stats import wilcoxon
+from scipy.stats import rankdata
+from scipy.stats import mannwhitneyu, ranksums, wilcoxon
 
 import seaborn as sns
+
+import tqdm
 
 logger = logging.getLogger()
 
@@ -1316,7 +1320,7 @@ def wilcoxon_averaging(df: pd.DataFrame, contains: typing.Optional[str] = None,
 
 
 def generate_ranking_per_fold_per_dataset_bags(df: pd.DataFrame, bootstrap: int = 200
-                                                ) -> pd.DataFrame:
+                                                ) -> typing.Tuple[pd.DataFrame, pd.DataFrame, str]:
     """
     Performs the rank calculation per bootstrap block where a block is a Aseed-fold-dataset pair
 
@@ -1324,7 +1328,7 @@ def generate_ranking_per_fold_per_dataset_bags(df: pd.DataFrame, bootstrap: int 
         dfs (List[pdDataFrame]): A list of dataframes each representing a seed
 
     Returns:
-        pd.DataFrame: with the ranking
+        pd.DataFrame: with the ranking, pd.DataFrame with avg score, latex representation
     """
 
     # Form the desired array with raw scores, an average of everything
@@ -1372,7 +1376,145 @@ def generate_ranking_per_fold_per_dataset_bags(df: pd.DataFrame, bootstrap: int 
             ranking[task] = ranking[task] + wins
 
     ranking = ranking.rank(axis=0, method='average', ascending=False)
-    return ranking, result
+
+    # Build a latex to get significance and best
+    embbeded_frame = build_frame_from_statistics(df, result)
+    embbeded_frame = embbeded_frame.transpose()
+    formatters = {column: partial(apply_format_dict)
+                  for column in embbeded_frame.columns}
+    latex = embbeded_frame.to_latex(formatters=formatters, escape=False)
+    return ranking, result, latex
+
+
+def build_frame_from_statistics(
+    df: pd.DataFrame,
+    result: pd.DataFrame,
+) -> pd.DataFrame:
+    """
+    Inspired on https://github.com/pandas-dev/pandas/issues/38328
+    Latex support is very bad, can only format by value, so this function
+    will replace the cell value with some internal mechanism to format it ourselves
+
+    Args:
+        df (pd.DataFrame):
+            The frame with all the information prior collapsing
+        result (pd.DataFrame):
+            A frame with the collapsed average per fold/seed per dataset
+
+    Returns:
+        The same result frame but with format embedded in cell value
+    """
+    result_copy = result.copy()
+    for task in result.columns:
+        # Assume for this task all tools are not statistically significant
+        statistically_eq = [tool for pair in itertools.combinations(result.index, 2)
+                            for tool in pair if is_statistically_eq(df=df, tools=pair, task=task)]
+
+        maximum = float(result[task].max())
+        for tool in result.index:
+            value = float(result.loc[tool, task])
+            bold = True if math.isclose(maximum, value) else False
+            underline = True if tool in statistically_eq else False
+            result_copy.loc[tool, task] = f"{value:.{8}f};{bold};{underline}"
+    return result_copy
+
+
+def apply_format_dict(
+    x: typing.Union[int, float],
+    num_decimals: int = 4,
+) -> typing.Dict[str, typing.Callable]:
+    """
+    Inspired on https://github.com/pandas-dev/pandas/issues/38328
+    Translates a frame with format value;bold;underline at each cell
+    to a latex format
+    Args:
+        x (typing.Union[int, float]):
+            A value of a cell of a dataframe
+
+    Returns:
+        A string converted output
+
+    """
+    value, bold, underline = x.split(';')
+    value = float(value)
+    bold = eval(bold)
+    underline = eval(underline)
+    if bold and underline:
+        #return f"{{\\bfseries\\underline{{\\num{{{x:.{num_decimals}f}}}}}}}"
+        return r'\textbf{\underline{' + f"{value:.{num_decimals}f}" + '}}'
+    elif bold:
+        #return f"{{\\bfseries\\num{{{x:.{num_decimals}f}}}}}"
+        return r'\textbf{' + f"{value:.{num_decimals}f}" + '}'
+    elif underline:
+        #return f"{{\\bfseries\\num{{{x:.{num_decimals}f}}}}}"
+        return r'\underline{' + f"{value:.{num_decimals}f}" + '}'
+    else:
+        return f"{value:.{num_decimals}f}"
+
+
+def is_statistically_eq(
+    df: pd.DataFrame,
+    tools: typing.Tuple[str, str],
+    task: str,
+    paired=True,
+):
+    """
+    if paired (which should be the case due to folds being dependent)
+    performs a wilcoxon signed rank test:
+    Tests whether the distributions of two paired samples are equal or not.
+    Assumptions
+
+        Observations in each sample are independent and identically distributed (iid).
+        Observations in each sample can be ranked.
+        Observations across each sample are paired.
+    Interpretation
+
+        H0: the distributions of both samples are equal.
+        H1: the distributions of both samples are not equal.
+
+    if not paired:
+    Performs Mann-Whitney U Test, which test that
+    Tests whether the distributions of two independent samples are equal or not.
+
+    Assumptions
+
+        Observations in each sample are independent and identically distributed (iid).
+        Observations in each sample can be ranked.
+    Interpretation
+
+        H0: the distributions of both samples are equal.
+        H1: the distributions of both samples are not equal.
+
+    Args:
+        df (pd.DataFrame):
+            a frame with multiple folds, seeds for a given task
+        task (str):
+            the dataset from which to make the comparisson
+        tools (str, str):
+            a tuple of strings to compare
+    Returns:
+        bool:
+            whether both tools on a given dataset are statistically eq
+    """
+    data1 = df[(df['task'] == task) & (df['tool'] == tools[0])].sort_values(by=['fold'])['test']
+    data2 = df[(df['task'] == task) & (df['tool'] == tools[1])].sort_values(by=['fold'])['test']
+    if paired:
+        stat, p = wilcoxon(data1, data2)
+    else:
+        if len(data1) > 20:
+            stat, p = mannwhitneyu(data1, data2, alternative='two-sided')
+        else:
+            # The Wilcoxon rank-sum test tests the null hypothesis that two sets of measurements
+            # are drawn from the same distribution. The alternative hypothesis is that values
+            # in one sample are more likely to be larger than the values in the other sample.
+            stat, p = ranksums(data1, data2)
+    # print(f"{'Wilcoxon Signed-Rank Test' if paired else 'mannwhitneyu'} stat={stat}, p={p} tools={tools} task={task} {data1}/{data2} same={p>0.05}")
+    if p > 0.05:
+        # Probably the same distribution
+        return True
+    else:
+        # Probably different distributions
+        return False
 
 
 if __name__ == "__main__":
@@ -1432,13 +1574,14 @@ if __name__ == "__main__":
     df.to_csv('debug.csv')
 
     # Average the folds across seed to remove noise
+    latex = None
     if 'block_Aseed_fold_dataset' in args.rank:
         # python plotter.py --csv misc/23_01_2021_defaultmetricisolatedensemble/seed1/ --csv misc/23_01_2021_defaultmetricisolatedensemble/seed2 --csv misc/23_01_2021_defaultmetricisolatedensemble/seed3 --tools None_es50_B100_N1.0 --tools autosklearnBBCScoreEnsemble_es50_B100_N1.0 --tools autosklearnBBCScoreEnsembleAVGMDEV_ES_es50_B100_N1.0 --rank block_Aseed_fold_dataset
         # python plotter.py --csv misc/23_01_2021_defaultmetricisolatedensemble/seed1/ --csv misc/23_01_2021_defaultmetricisolatedensemble/seed2 --csv misc/23_01_2021_defaultmetricisolatedensemble/seed3 --tools None_es50_B100_N1.0 --tools autosklearnBBCEnsembleSelection_es50_B100_N1.0 --tools autosklearnBBCEnsembleSelection_ES_es50_B100_N1.0 --tools autosklearnBBCEnsembleSelectionNoPreSelect_es50_B100_N1.0 --tools autosklearnBBCEnsembleSelectionNoPreSelect_ES_es50_B100_N1.0 --tools autosklearnBBCEnsembleSelectionPreSelectInESRegularizedEnd_es50_B100_N1.0 --tools autosklearnBBCEnsembleSelectionPreSelectInESRegularizedEnd_ES_es50_B100_N1.0 --rank block_Aseed_fold_dataset
         # python plotter.py --csv misc/23_01_2021_defaultmetricisolatedensemble/seed1/ --csv misc/23_01_2021_defaultmetricisolatedensemble/seed2 --csv misc/23_01_2021_defaultmetricisolatedensemble/seed3 --tools None_es50_B100_N1.0  --tools autosklearnBBCScoreEnsembleMAX_es50_B100_N1.0 --tools autosklearnBBCScoreEnsembleMAX_ES_es50_B100_N1.0 --tools autosklearnBBCScoreEnsembleMAXWinner_es50_B100_N1.0 --tools autosklearnBBCScoreEnsembleMAXWinner_ES_es50_B100_N1.0 --tools bagging_es50_B100_N1.0 --rank block_Aseed_fold_dataset
         ranking, rawscores = generate_ranking_per_Aseed_fold_per_dataset(df)
     elif 'bag_fold_dataset' in args.rank:
-        ranking, rawscores = generate_ranking_per_fold_per_dataset_bags(df)
+        ranking, rawscores, latex = generate_ranking_per_fold_per_dataset_bags(df)
     elif 'fold_dataset' in args.rank:
         df = collapse_seed(df)
         ranking, rawscores = generate_ranking_per_fold_per_dataset(df)
@@ -1450,3 +1593,5 @@ if __name__ == "__main__":
     ranking.to_csv(f"{filename}.csv")
     rawscores.to_csv(f"{filename}_rawscores.csv")
     print(f"Check {filename}.csv")
+    if latex is not None:
+        print(latex)
