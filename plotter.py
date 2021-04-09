@@ -1498,16 +1498,23 @@ def is_statistically_eq(
     """
     data1 = df[(df['task'] == task) & (df['tool'] == tools[0])].sort_values(by=['fold'])['test']
     data2 = df[(df['task'] == task) & (df['tool'] == tools[1])].sort_values(by=['fold'])['test']
-    if paired:
-        stat, p = wilcoxon(data1, data2)
-    else:
-        if len(data1) > 20:
-            stat, p = mannwhitneyu(data1, data2, alternative='two-sided')
+    try:
+        if paired:
+            stat, p = wilcoxon(data1, data2)
         else:
-            # The Wilcoxon rank-sum test tests the null hypothesis that two sets of measurements
-            # are drawn from the same distribution. The alternative hypothesis is that values
-            # in one sample are more likely to be larger than the values in the other sample.
-            stat, p = ranksums(data1, data2)
+            if len(data1) > 20:
+                stat, p = mannwhitneyu(data1, data2, alternative='two-sided')
+            else:
+                # The Wilcoxon rank-sum test tests the null hypothesis that two sets of measurements
+                # are drawn from the same distribution. The alternative hypothesis is that values
+                # in one sample are more likely to be larger than the values in the other sample.
+                stat, p = ranksums(data1, data2)
+    except Exception as e:
+        print("Run into {} for data1={} and data2={}".format(
+            e,
+            df[(df['task'] == task) & (df['tool'] == tools[0])].sort_values(by=['fold']),
+            df[(df['task'] == task) & (df['tool'] == tools[1])].sort_values(by=['fold'])
+        ))
     # print(f"{'Wilcoxon Signed-Rank Test' if paired else 'mannwhitneyu'} stat={stat}, p={p} tools={tools} task={task} {data1}/{data2} same={p>0.05}")
     if p > 0.05:
         # Probably the same distribution

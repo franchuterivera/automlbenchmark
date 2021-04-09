@@ -1,4 +1,5 @@
 from abc import abstractmethod
+import glob
 import logging
 import os
 import re
@@ -252,16 +253,20 @@ class ArffDatasplit(FileDatasplit):
 
 class CsvDataset(FileDataset):
 
-    def __init__(self, train_path, test_path, target=None, type=None):
+    def __init__(self, train_path, test_path, target=None, type=None, full_data_path=None):
         # todo: handle auto-split (if test_path is None): requires loading the training set, split, save
-        super().__init__(CsvDatasplit(self, train_path), CsvDatasplit(self, test_path), target=target, type=type)
+        super().__init__(CsvDatasplit(self, train_path, full_data_path=full_data_path),
+                         CsvDatasplit(self, test_path, full_data_path=full_data_path),
+                         target=target, type=type)
         self._dtypes = None
+        self.full_data_path = full_data_path
 
 
 class CsvDatasplit(FileDatasplit):
 
-    def __init__(self, dataset, path):
+    def __init__(self, dataset, path, full_data_path=None):
         super().__init__(dataset, format='csv', path=path)
+        self.full_data_path = full_data_path
 
     def _set_feature_as_target(self, target: Feature):
         super()._set_feature_as_target(target)
@@ -271,7 +276,8 @@ class CsvDatasplit(FileDatasplit):
     @cached
     @profile(logger=log)
     def load_metadata(self):
-        df = read_csv(self.path)
+        # Build the metadata on the full data if possible to be robust against splits
+        df = read_csv(self.path if self.full_data_path is None else self.full_data_path)
         self.dataset._dtypes = dtypes = df.dtypes
         to_feature_type = lambda dtype: ('categorical' if np.issubdtype(dtype, np.object_)
                                          else 'integer' if np.issubdtype(dtype, np.integer)
@@ -293,13 +299,17 @@ class CsvDatasplit(FileDatasplit):
             f.has_missing_values = col.hasnans
             if f.is_categorical():
                 unique_values = col.dropna().unique() if f.has_missing_values else col.unique()
-                f.values = [str(v) for v in sorted(unique_values)]
+                if f.is_target:
+                    f.values = [str(v) for v in sorted(unique_values)]
+                else:
+                    # Assume an extra feature being imputed not available for categorical features
+                    f.values = [str(v) for v in sorted(unique_values)] + ['NOTAVAILABLE']
 
         meta = dict(
             features=features,
             target=target
         )
-        log.debug("Metadata for dataset %s: %s", self.path, meta)
+        log.info("Metadata for dataset %s: %s", self.path, meta)
         return meta
 
     @cached
@@ -309,4 +319,53 @@ class CsvDatasplit(FileDatasplit):
         dtypes = self.dataset._dtypes.to_dict()
         data = read_csv(self.path, as_data_frame=False, dtype=dtypes)
         return data
+
+
+class KaggleFileLoader:
+
+    def __init__(self, cache_dir=None):
+        self._cache_dir = cache_dir if cache_dir else tempfile.mkdtemp(prefix='amlb_cache')
+
+    @profile(logger=log)
+    def load(self, kaggle_path, fold=0, target='target', target_type=None):
+
+        kaggle_path = os.path.expanduser(kaggle_path)
+
+        # Assume target/golden label name is target if None is provided
+        if target is None:
+            target = 'target'
+
+        log.debug("Loading dataset from %s", kaggle_path)
+        paths = self._extract_train_test_paths(kaggle_path)
+        assert fold < len(paths['train']), f"No training dataset available for fold {fold} among dataset files {paths['train']}"
+        # seed = rget().seed(fold)
+        # if len(paths['test']) == 0:
+        #     log.warning("No test file in the dataset, the train set will automatically be split 90%/10% using the given seed.")
+        # else:
+        assert fold < len(paths['test']), f"No test dataset available for fold {fold} among dataset files {paths['test']}"
+
+        train_path = paths['train'][fold]
+        test_path = paths['test'][fold]
+        log.info(f"Using training set {train_path} with test set {test_path}.")
+        full_data_path = os.path.join(os.path.dirname(train_path), 'orig.csv')
+        if not os.path.exists(full_data_path):
+            full_data_path = None
+        return CsvDataset(train_path, test_path, target=target, type=target_type,
+                          # We have to encode categorical column in kaggle datasets,
+                          # else everything breaks and using both train/test data split
+                          # to be robust against unseen categories
+                          full_data_path=full_data_path)
+
+    def _extract_train_test_paths(self, kaggle_path):
+        train_paths = sorted(glob.glob(os.path.join(kaggle_path, '*train*')))
+        test_paths = sorted(glob.glob(os.path.join(kaggle_path, '*test*')))
+        if len(train_paths) == 0 or len(test_paths) == 0 or len(train_paths) != len(test_paths):
+            raise ValueError("I was not able to find the train/test files on {}: train: {}/{} test: {}/{}".format(
+                kaggle_path,
+                train_paths,
+                len(train_paths),
+                test_paths,
+                len(test_paths)
+            ))
+        return Namespace(train=train_paths, test=test_paths)
 

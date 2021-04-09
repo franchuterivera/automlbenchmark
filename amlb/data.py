@@ -58,6 +58,7 @@ class Feature:
 
     @lazy_property
     def label_encoder(self):
+        #print(f"fitting {self} for the label encoder with self.values={self.values}")
         return Encoder('label' if self.values is not None else 'no-op',
                        target=self.is_target,
                        encoded_type=int if self.is_target and not self.is_numerical() else float,

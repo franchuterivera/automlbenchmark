@@ -1519,13 +1519,6 @@ autosklearn_0123:
 ##############################################
 ## Ferbuar 20 2021 -- cleanup ensemblebuilder
 ##############################################
-autosklearn:
-  version: 'dev'
-  project: https://automl.github.io/auto-sklearn/
-  params:
-    _save_artifacts: ['models', 'overfit', 'debug']
-    resampling_strategy: 'cv'
-
 autosklearn_baseline_noxgblgbm:
   version: 'dev'
   project: https://automl.github.io/auto-sklearn/
@@ -1764,3 +1757,451 @@ autosklearnEnsembleIntensification_920_members10_repeats5_level2_strategyInstanc
     min_challengers: 50
     initial_configurations_via_metalearning: 0
     stack_at_most: 20
+
+autosklearnEnsembleIntensification_members10_repeats5_level2_strategyInstancesAny_ensemble_highest_repeat_trusted_NOinitconfigs_BO_minchall9_10Folds:
+  version: 'metaonrepeat'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 10
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 9
+    stack_at_most: 20
+
+autosklearnEnsembleIntensification_members10_repeats5_level2_strategyInstancesAny_ensemble_highest_repeat_trusted_Noinitconfigs_BO_minchall20_10Folds:
+  version: 'metaonrepeat'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 10
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 20
+
+autosklearnEnsembleIntensification_members10_repeats5_level2_strategyInstancesAny_ensemble_highest_repeat_trusted_Noinitconfigs_BO_minchall50_10Folds:
+  version: 'metaonrepeat'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 10
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 50
+    stack_at_most: 20
+
+autosklearnEnsembleIntensification_members10_repeats5_level2_strategyInstancesAny_ensemble_highest_repeat_trusted_NOinitconfigs_BO_minchall9_3Folds:
+  version: 'metaonrepeat'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 3
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 9
+    stack_at_most: 20
+
+autosklearnEnsembleIntensification_members10_repeats5_level2_strategyInstancesAny_ensemble_highest_repeat_trusted_Noinitconfigs_BO_minchall20_3Folds:
+  version: 'metaonrepeat'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 3
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 20
+
+autosklearnEnsembleIntensification_members10_repeats5_level2_strategyInstancesAny_ensemble_highest_repeat_trusted_Noinitconfigs_BO_minchall50_3Folds:
+  version: 'metaonrepeat'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 3
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 50
+    stack_at_most: 20
+
+autosklearn_baseline_noxgblgbm_metaon_3Folds:
+  version: 'dev'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    k_folds: 3
+    # This was added to the file itself
+    # resampling_strategy: 'cv'
+
+autosklearn_baseline_noxgblgbm_metaon_10Folds:
+  version: 'dev'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    k_folds: 10
+    # This was added to the file itself
+    # resampling_strategy: 'cv'
+
+autosklearnEnsembleIntensification_members10_repeats5_level2_strategyInstancesAny_ensemble_highest_repeat_trusted_NOinitconfigs_BO_minchall9_ES:
+  version: 'metaonrepeat'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 5
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 9
+    stack_at_most: 20
+
+  # Instance as self
+autosklearnEnsembleIntensification_members10_repeats5_level2_strategyInstancesSelf_ensemble_highest_repeat_trusted_NOinitconfigs_BO_minchall9_ES:
+  version: 'metaonrepeat'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 5
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_selfasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 9
+    stack_at_most: 20
+
+autosklearnEnsembleIntensification_members10_repeats5_level2_strategyInstancesSelf_ensemble_highest_repeat_trusted_NOinitconfigs_BO_minchall9_3Folds:
+  version: 'metaonrepeat'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 3
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_selfasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 9
+    stack_at_most: 20
+
+# Multifolds
+autosklearnEnsembleIntensification_members10_repeats5_level2_strategyInstancesAny_ensemble_highest_repeat_trusted_NOinitconfigs_BO_minchall9_MultiFolds351053:
+  version: 'metaonrepeat'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    # k_folds: 3
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 9
+    stack_at_most: 20
+
+autosklearnEnsembleIntensification_members10_repeats5_level2_strategyInstancesSelf_ensemble_highest_repeat_trusted_NOinitconfigs_BO_minchall9_MultiFolds351053:
+  version: 'metaonrepeat'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    # k_folds: 3
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_selfasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 9
+    stack_at_most: 20
+
+autosklearnEnsembleIntensification_members10_repeats5_level2_strategyInstancesAny_ensemble_highest_repeat_trusted_NOinitconfigs_BO_minchall9_MultiFolds535353:
+  version: 'metaonrepeat'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [5, 3, 5, 3, 5, 3]
+    repeats: 6
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 9
+    stack_at_most: 20
+
+autosklearnEnsembleIntensification_members10_repeats5_level2_strategyInstancesSelf_ensemble_highest_repeat_trusted_NOinitconfigs_BO_minchall9_MultiFolds535353:
+  version: 'metaonrepeat'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [5, 3, 5, 3, 5, 3]
+    repeats: 6
+    max_stacking_level: 2
+    stacking_strategy: 'instances_selfasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 9
+    stack_at_most: 20
+
+autosklearnEnsembleIntensification_members10_repeats5_level2_strategyInstancesAny_ensemble_highest_repeat_trusted_NOinitconfigs_BO_minchall9_ES_stackbestpermodel:
+  version: 'metaonrepeat'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 5
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 9
+    stack_at_most: 20
+
+autosklearnHyperbandTowering_repeats5_level2_strategyinstancesself_ensemble_highest_repeat_trusted_ES:
+  version: 'towering'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 5
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_selfasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    stack_at_most: 20
+
+autosklearn:
+  version: 'dev'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    resampling_strategy: 'cv'
+
+autosklearnTHRESHOLDOUT:
+  version: 'dev'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    resampling_strategy: 'thresholdout'
+
+autosklearnHOLDOUT:
+  version: 'dev'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit']
+    resampling_strategy: 'holdout'
+
+autosklearnRESHUFFLING:
+  version: 'dev'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    resampling_strategy: 'cv'
+
+##############################################
+# Gain confidence on the March 20 Runs: REBASE
+##############################################
+autosklearnEnsembleIntensification_10incumbents_repeats5_folds5_level2_20diversestacks_stackAny:
+  version: 'metaonrepeat'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 5
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+
+autosklearnEnsembleIntensification_10incumbents_repeats5_folds5_level2_20diversestacks_stackSelf:
+  version: 'metaonrepeat'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 5
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_selfasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+
+autosklearnEnsembleIntensification_10incumbents_repeats5_folds351053_level2_20diversestacks_stackAny:
+  version: 'metaonrepeat'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+
+autosklearnEnsembleIntensification_10incumbents_repeats5_folds351053_level2_20diversestacks_stackSelf:
+  version: 'metaonrepeat'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_selfasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+
+autosklearnEnsembleIntensification_10incumbents_repeats5_folds351053_level2_20diversestacks_stackAny_dynamic:
+  version: 'metaonrepeat'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+
+autosklearnEnsembleIntensification_10incumbents_repeats5_folds5_level2_20diversestacks_stackAny_dynamic:
+  version: 'metaonrepeat'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+
+autosklearnEnsembleIntensification_10incumbents_repeats5_folds10553_level2_20diversestacks_stackAny:
+  version: 'metaonrepeat'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [10, 5, 5, 3, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+
+autosklearnEnsembleIntensification_10incumbents_repeats5_folds5_level2_20diversestacks_stackAny_dynamicParallel:
+  version: 'stable'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+
+autosklearnEnsembleIntensification_10incumbents_repeats5_folds351053351053_level2_20diversestacks_stackAny_dynamicParallel:
+  version: 'stable'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3, 3, 5, 10, 5, 3]
+    repeats: 10
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+
+autosklearnEnsembleIntensification_10incumbents_repeats5_folds351053_level2_20diversestacks_stackAny_dynamicParallelBugFix:
+  version: 'stable'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+
+autosklearnEnsembleIntensification_10incumbents_repeats5_folds510353_level2_20diversestacks_stackAny_dynamicParallelBugFix:
+  version: 'stable'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [5, 10, 3, 5, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+
+autosklearnHyperbandTowering_repeats5_folds5_level2_stackSelf_fix_repetitionsTRUE_ParallelBugFix:
+  version: 'towering'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 5
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_selfasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    stack_at_most: 20
+    fix_repetitions: true
+
+autosklearnHyperbandTowering_repeats5_folds5_level2_stackSelf_fix_repetitionsFalse_ParallelBugFix:
+  version: 'towering'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 5
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_selfasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    stack_at_most: 20
+
+autosklearnHyperbandTowering_repeats5_folds5_level3_stackSelf_fix_repetitionsTRUE_ParallelBugFix:
+  version: 'towering'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 5
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_selfasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    fix_repetitions: true

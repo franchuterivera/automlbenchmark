@@ -361,13 +361,22 @@ class BenchmarkTask:
         if hasattr(self._task_def, 'openml_task_id'):
             self._dataset = Benchmark.data_loader.load(DataSourceType.openml_task, task_id=self._task_def.openml_task_id, fold=self.fold)
             log.debug("Loaded OpenML dataset for task_id %s.", self._task_def.openml_task_id)
+        elif hasattr(self._task_def, 'kaggle_path'):
+            if 'binary' in self._task_def.target_type:
+                target_type = DatasetType.binary
+            elif 'multiclass' in self._task_def.target_type:
+                target_type = DatasetType.multiclass
+            else:
+                target_type = None
+            self._dataset = Benchmark.data_loader.load(DataSourceType.kaggle, kaggle_path=self._task_def.kaggle_path, fold=self.fold, target_type=self._task_def.target_type, target=self._task_def.target)
+            log.debug("Loaded OpenML dataset for kaggle_path is %s.", self._task_def.kaggle_path)
         elif hasattr(self._task_def, 'openml_dataset_id'):
             # TODO
             raise NotImplementedError("OpenML datasets without task_id are not supported yet.")
         elif hasattr(self._task_def, 'dataset'):
             self._dataset = Benchmark.data_loader.load(DataSourceType.file, dataset=self._task_def.dataset, fold=self.fold)
         else:
-            raise ValueError("Tasks should have one property among [openml_task_id, openml_dataset_id, dataset].")
+            raise ValueError("Tasks should have one property among [openml_task_id, openml_dataset_id, dataset, kaggle_path].")
 
     def as_job(self, framework, framework_name):
         def _run():

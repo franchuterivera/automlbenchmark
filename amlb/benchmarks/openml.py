@@ -13,7 +13,7 @@ def is_openml_benchmark(benchmark: str) -> bool:
     """ Check if 'benchmark' is a valid identifier for an openml task or suite. """
     if len(benchmark.split('/')) == 3:
         domain, oml_type, oml_id = benchmark.split('/')
-        supported_types = ['s', 't']
+        supported_types = ['s', 't', 'k']
 
         if oml_id.isdecimal():
             return domain == "openml" and oml_type in supported_types

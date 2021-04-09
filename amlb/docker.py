@@ -114,9 +114,10 @@ class DockerBenchmark(ContainerBenchmark):
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update
+RUN apt-get -y install python3.7 python3.7-venv python3.7-dev python3-pip
+RUN update-alternatives --install /usr/bin/python3 python3 $(which python3.7) 1
 RUN apt-get -y install apt-utils dialog locales
 RUN apt-get -y install curl wget unzip git
-RUN apt-get -y install python3 python3-pip python3-venv
 RUN pip3 install -U pip wheel
 
 # aliases for the python system

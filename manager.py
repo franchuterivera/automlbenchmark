@@ -1,3 +1,5 @@
+import tempfile
+from functools import partial
 import uuid
 import argparse
 from random import randrange
@@ -134,19 +136,33 @@ def create_singularity_image(framework: str) -> None:
     version = valid_frameworks[framework]['version'].replace('-', '_').lower()
 
     run_file = 'generate_sif.sh'
+    # There are two ways to generate a local sif image from a docker image
+    # https://github.com/hpcng/singularity/issues/1537
+    # https://www.nas.nasa.gov/hecc/support/kb/converting-docker-images-to-singularity-for-use-on-pleiades_643.html
+    temp_sif_name = os.path.join(
+        tempfile.gettempdir(),
+        str(uuid.uuid1(clock_seq=os.getpid())),
+    )
     command = f"""
 #!/bin/bash
 #source {ENVIRONMENT_PATH}
 if [[ "$(docker images -q {author}/{framework.lower()}:{version}-stable 2> /dev/null)" == "" ]]; then
     echo "Please prese yes/enter to create the docker image"
     python runbenchmark.py {framework} -m docker -s only
-    docker tag {author}/{framework.lower()}:{version}-{current_branch}  {author}/{framework.lower()}:{version}-stable
-    docker push  {author}/{framework.lower()}:{version}-stable
 fi
-singularity pull frameworks/{framework}/{framework.lower()}_{version}-stable.sif docker://{author}/{framework.lower()}:{version}-stable
+docker save {author}/{framework.lower()}:{version}-{current_branch} -o {temp_sif_name}
+singularity build frameworks/{framework}/{framework.lower()}_{version}-stable.sif docker-archive://{temp_sif_name}
+cd frameworks/{framework}/
+# Compatibility with development images
+ln -sf {framework.lower()}_{version}-stable.sif {framework.lower()}_{version}-dev.sif
+# Compatibility with stable images
+ln -sf {framework.lower()}_{version}-stable.sif {framework.lower()}_{version}_stable.sif
+cd ../..
+rm {temp_sif_name}
     """
     with open(run_file, 'w') as f:
         f.write(command)
+    raise NotImplementedError(sif_file)
     command = subprocess.run([
         f"bash {run_file}",
     ], shell=True, stdout=subprocess.PIPE)
@@ -179,10 +195,9 @@ def validate_framework(framework: str) -> None:
     sif_file = f"frameworks/{framework}/{framework.lower()}_{version.lower()}-stable.sif"
 
     if not os.path.exists(sif_file):
-        logger.warn("Trying to generate the singularity image. Please enter 'y' for yes"
+        logger.warning("Trying to generate the singularity image. Please enter 'y' for yes"
                     "When the benchmark ask you about if you are sure you want to generate"
                     "the image.")
-        raise NotImplementedError(sif_file)
         create_singularity_image(framework)
 
         # Try to create the file
@@ -381,20 +396,16 @@ def create_run_dir_area(run_dir: typing.Optional[str], args: typing.Any
         timestamp,
     )
 
-    #os.makedirs(run_dir)
     remote_makedirs(run_dir)
 
     # make also a run dir for scripts / logs
-    #os.makedirs(os.path.join(run_dir, 'scripts'))
     remote_makedirs(os.path.join(run_dir, 'scripts'))
-    #os.makedirs(os.path.join(run_dir, 'logs'))
     remote_makedirs(os.path.join(run_dir, 'logs'))
     logger.info(f"Creating run directory: {run_dir}")
 
     # Copy over the frameworks dir to this area. We do so, because
     # we want to have a completely isolated and reproducible run.
     # So we copy over the resources to this directory
-    #copyfile('resources/frameworks.yaml', f"{run_dir}/frameworks.yaml")
     remote_put('resources/frameworks.yaml', f"{run_dir}/frameworks.yaml")
 
     # Copy also the benchmarks
@@ -481,13 +492,16 @@ def generate_run_file(
 
     virtual_memory_available = 4469755084 if '8G' in constraint else 34000000000
 
+    query_for_tmp = '${TMPDIR+x}'
     command = f"""#!/bin/bash
-#Setup the run
+# Setup the run
 echo "Running on HOSTNAME=$HOSTNAME with name $SLURM_JOB_NAME"
 export PATH=/usr/local/kislurm/singularity-3.5/bin/:$PATH
 source {ENVIRONMENT_PATH}
 cd {AUTOMLBENCHMARK}
-if [ -z "$SLURM_ARRAY_TASK_ID" ]; then export TMPDIR=/tmp/{framework}_{benchmark}_{constraint}_{task}_{fold}_$SLURM_JOB_ID; else export TMPDIR=/tmp/{framework}_{benchmark}_{constraint}_{task}_{fold}$SLURM_ARRAY_JOB_ID'_'$SLURM_ARRAY_TASK_ID; fi
+# If the temporary directory is set, honor it
+if [ -z {query_for_tmp} ]; then export TMPDIR='/tmp'; else echo "TMPDIR is set to '$TMPDIR'"; fi
+if [ -z "$SLURM_ARRAY_TASK_ID" ]; then export TMPDIR=$TMPDIR/{framework}_{benchmark}_{constraint}_{task}_{fold}_$SLURM_JOB_ID; else export TMPDIR=$TMPDIR/{framework}_{benchmark}_{constraint}_{task}_{fold}$SLURM_ARRAY_JOB_ID'_'$SLURM_ARRAY_TASK_ID; fi
 echo TMPDIR=$TMPDIR
 export XDG_CACHE_HOME=$TMPDIR
 echo XDG_CACHE_HOME=$XDG_CACHE_HOME
@@ -860,6 +874,7 @@ def are_resource_available_to_run(partition: str, min_cpu_free=128, max_total_ru
         partition (str): which partition to launch and check
         min_cpu_free: only launch if cpu free
     """
+    return True
     #result = subprocess.run(
     #    f"sfree",
     #    shell=True,
@@ -910,7 +925,7 @@ def launch_run(
         extra += ' --bosch'
 
     # For array
-    max_hours = 8 if args.runtime <= 14400 else 12
+    max_hours = (args.runtime + 3600) // 3600
     if 'array' in args.run_mode:
         job_list_file = to_array_run(run_files, args.memory, args.cores, run_dir)
         name, ext = os.path.splitext(os.path.basename(job_list_file))
@@ -931,7 +946,7 @@ def launch_run(
                 this_extra = extra + f" -p {args.partition} -t 0{max_hours}:00:00 --mem {args.memory} -c {args.cores} --job-name {job_name} -o {os.path.join(run_dir, 'logs', name + '_'+ timestamp + '.out')}"
                 _launch_sbatch_run(this_extra, task)
             else:
-                logger.warn(f"Skip {task} as there are no more free resources... try again later!")
+                logger.warning(f"Skip {task} as there are no more free resources... try again later!")
             # Wait 2 sec to update running job
             time.sleep(2)
     elif args.run_mode == 'interactive':
@@ -1374,6 +1389,11 @@ def collect_overfit3(
 
                     if 'autosklearn' not in framework.lower() or True:
                         result = jobs[framework][benchmark][task][fold]['results']
+                        if is_number(result):
+                            if not args.multiclass_metric == "['logloss', 'acc']":
+                                result = abs(result)
+                        else:
+                            result = np.nan
                         dataframe.append({
                             'tool': framework if not args.tag_with_constraint else f"{framework}_{constraint}",
                             'task': task,
@@ -1382,7 +1402,7 @@ def collect_overfit3(
                             'train':  np.nan,
                             'val':  np.nan,
                             # assuming balacc in metric
-                            'test':  abs(result) if is_number(result) else 0,
+                            'test':  result,
                             'overfit':  np.nan,
                             'constraint': constraint,
                         })
@@ -2153,7 +2173,7 @@ if __name__ == "__main__":
     # Update the remote version of the benchmakr with the local version
     print(os.getcwd())
     updated_files = subprocess.run(
-        f"rsync --update -avzhP -e \"ssh -p 22 -A {USER}@132.230.166.39 ssh\" {os.getcwd()}/* {USER}@{INTERNAL}:{AUTOMLBENCHMARK}",
+        f"rsync --update -avzhP --exclude '*/venv/*' --exclude '*/lib/*' -e \"ssh -p 22 -A {USER}@132.230.166.39 ssh\" {os.getcwd()}/* {USER}@{INTERNAL}:{AUTOMLBENCHMARK}",
         shell=True,
         stdout=subprocess.PIPE
     ).stdout.decode('utf-8')
