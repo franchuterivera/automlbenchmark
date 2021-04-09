@@ -39,4 +39,4 @@ my_*
 **/*.png
 
 # Ignore sif file
-*.sif
+**/*.sif
