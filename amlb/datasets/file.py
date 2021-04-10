@@ -255,30 +255,41 @@ class CsvDataset(FileDataset):
 
     def __init__(self, train_path, test_path, target=None, type=None, full_data_path=None):
         # todo: handle auto-split (if test_path is None): requires loading the training set, split, save
-        super().__init__(CsvDatasplit(self, train_path, full_data_path=full_data_path),
-                         CsvDatasplit(self, test_path, full_data_path=full_data_path),
+        super().__init__(CsvDatasplit(self, train_path, full_data_path=full_data_path, target_name=target, type=type),
+                         CsvDatasplit(self, test_path, full_data_path=full_data_path, target_name=target, type=type),
                          target=target, type=type)
-        self._dtypes = None
         self.full_data_path = full_data_path
 
+    @property
+    def _dtypes(self):
+        return self._train.get_dtypes()
 
 class CsvDatasplit(FileDatasplit):
 
-    def __init__(self, dataset, path, full_data_path=None):
+    def __init__(self, dataset, path, full_data_path=None, target_name=None, type=None):
         super().__init__(dataset, format='csv', path=path)
         self.full_data_path = full_data_path
+        self.target_name = target_name
+        self.type = type
 
     def _set_feature_as_target(self, target: Feature):
         super()._set_feature_as_target(target)
         if target.is_categorical():
             self.dataset._dtypes[target.index] = np.object_
 
+    def get_dtypes(self):
+        df = read_csv(self.path if self.full_data_path is None else self.full_data_path)
+        if self.target_name is not None and self.type is not None and self.type in ['binary', 'multiclass'] :
+            df[self.target_name] = df[self.target_name].astype(np.object_)
+        return df.dtypes
+
     @cached
     @profile(logger=log)
     def load_metadata(self):
         # Build the metadata on the full data if possible to be robust against splits
         df = read_csv(self.path if self.full_data_path is None else self.full_data_path)
-        self.dataset._dtypes = dtypes = df.dtypes
+        #self.dataset._dtypes = df.dtypes
+        dtypes = df.dtypes
         to_feature_type = lambda dtype: ('categorical' if np.issubdtype(dtype, np.object_)
                                          else 'integer' if np.issubdtype(dtype, np.integer)
                                          else 'real' if np.issubdtype(dtype, np.floating)
@@ -329,7 +340,12 @@ class KaggleFileLoader:
     @profile(logger=log)
     def load(self, kaggle_path, fold=0, target='target', target_type=None):
 
-        kaggle_path = os.path.expanduser(kaggle_path)
+        if os.path.exists(os.path.expanduser(kaggle_path)):
+            kaggle_path = os.path.expanduser(kaggle_path)
+        elif os.path.exists(kaggle_path.replace('~', '/input')):
+            kaggle_path = kaggle_path.replace('~', '/input')
+        else:
+            raise ValueError(f"kaggle_path={kaggle_path} does not exist")
 
         # Assume target/golden label name is target if None is provided
         if target is None:
