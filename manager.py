@@ -1986,7 +1986,7 @@ if __name__ == "__main__":
         action='append',
         help='What benchmark to run',
         required=True,
-        choices=['test', 'small', 'medium', 'large', 'master_thesis'],
+        choices=['test', 'small', 'medium', 'large', 'master_thesis', 'kaggle'],
     )
     parser.add_argument(
         '-t',
@@ -2173,7 +2173,8 @@ if __name__ == "__main__":
     # Update the remote version of the benchmakr with the local version
     print(os.getcwd())
     updated_files = subprocess.run(
-        f"rsync --update -avzhP --exclude '*/venv/*' --exclude '*/lib/*' -e \"ssh -p 22 -A {USER}@132.230.166.39 ssh\" {os.getcwd()}/* {USER}@{INTERNAL}:{AUTOMLBENCHMARK}",
+        f"rsync --update -avzhP --exclude '*/venv/*' --exclude '*/lib/*' --exclude 'results/*' -e \"ssh -p 22 -A {USER}@132.230.166.39 ssh\" {os.getcwd()}/* {USER}@{INTERNAL}:{AUTOMLBENCHMARK}",
+        #f"rsync -avzhP --exclude '*/venv/*' --exclude '*/lib/*' -e \"ssh -p 22 -A {USER}@132.230.166.39 ssh\" {os.getcwd()}/* {USER}@{INTERNAL}:{AUTOMLBENCHMARK}",
         shell=True,
         stdout=subprocess.PIPE
     ).stdout.decode('utf-8')

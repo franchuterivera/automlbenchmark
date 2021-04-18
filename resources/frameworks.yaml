@@ -2205,3 +2205,25 @@ autosklearnHyperbandTowering_repeats5_folds5_level3_stackSelf_fix_repetitionsTRU
     stacking_strategy: 'instances_selfasbase'
     ensemble_folds: 'highest_repeat_trusted'
     fix_repetitions: true
+
+autosklearn_constantlier:
+  version: 'dev'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['models', 'overfit', 'debug']
+    resampling_strategy: 'cv'
+
+autosklearnEnsembleIntensification_10incumbents_repeats5_folds351053_level2_20diversestacks_stackAny_dynamicParallelBugFix_TieBreak:
+  version: 'stable'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+
