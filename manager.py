@@ -60,19 +60,20 @@ AUTOMLBENCHMARK = '/home/riverav/AUTOML_BENCHMARK/automlbenchmark_fork'
 # A memory mapping from SLURM to automlbenchmakr
 MEMORY = {'12G': 12288, '32G': 32768, '8G': 4096}
 
-# Stablish a nested connection to kisba1
+# Establish a nested connection to kis2bat2
 USER = 'riverav'
+INTERNAL = '10.5.166.222'  # kis2bat2
+dest_addr = (INTERNAL, 22)
+EXTERNAL = '132.230.166.39'  # aadlogin
+local_addr = (EXTERNAL, 22)
+
 VM = paramiko.SSHClient()
 # this connection is using the private key of the system
 # if this fails to you, set this up properly
 VM.load_system_host_keys()
 VM.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-VM.connect(hostname='132.230.166.39', username=USER, look_for_keys=False)
+VM.connect(hostname=EXTERNAL, username=USER, look_for_keys=False)
 vmtransport = VM.get_transport()
-INTERNAL = '10.5.166.222'  # kis2bat2
-dest_addr = (INTERNAL, 22)
-EXTERNAL = '132.230.166.39'  # aadlogin
-local_addr = (EXTERNAL, 22)
 vmchannel = vmtransport.open_channel("direct-tcpip", dest_addr, local_addr)
 
 # ssh is effectively the nested global object to talk to
