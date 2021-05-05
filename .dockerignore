@@ -40,3 +40,4 @@ my_*
 
 # Ignore sif file
 *.sif
+**/*.sif
