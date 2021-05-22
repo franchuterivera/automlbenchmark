@@ -51,3 +51,28 @@ for i, dataset_name in enumerate(data['dataset_name'].unique()):
     ax.grid(True)
 plt.savefig(f"effectsofrepetitions.pdf")
 plt.close()
+
+fig = plt.figure(figsize=(18,12))
+fig.subplots_adjust(hspace=0.4, wspace=0.4)
+for col in ['level', 'repeat']:
+    data[col] = data[col].astype(int)
+#fig.suptitle(f"Avg Model Performance of 5-k-fold splits")
+for i, dataset_name in enumerate(data['dataset_name'].unique()):
+    ax = fig.add_subplot(math.ceil(total/3), 3, i+1)
+    level_dict = {
+        0: ['r--'],
+        1: ['b--'],
+        2: ['g--'],
+        3: ['y--'],
+    }
+    for level in data['level'].unique():
+        data[
+            (data['dataset_name']==dataset_name) & (data['level']==level)
+        ].plot(x='repeat', y=['performance'], ax=ax, style=level_dict[level], alpha=0.5, linewidth=1,
+               label=[f"L:{level}"], legend=False, marker='o', markersize=2)
+    ax.set_title(f"OpenMLID={dataset_name}")
+    ax.set(ylabel='Balanced Accuracy', xlabel='Number of CV Repetitions')
+    ax.grid(True)
+handles, labels = ax.get_legend_handles_labels()
+fig.legend(handles, labels, loc='lower center', ncol=10)
+plt.savefig(f"plot_effectsofrepetitions_frankfreedback.pdf")
