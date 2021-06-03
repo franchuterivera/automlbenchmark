@@ -1,0 +1,12 @@
+# with test data
+python manager.py --tag seed0 -f autosklearn_iterativecv -b large --partition bosch_cpu-cascadelake --total_fold 5 --cores 8 --memory 32G --runtime 3600 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.05.30-01.22.13
+# without test data
+python manager.py --tag seed0 -f autosklearn_iterativecv -b large --partition bosch_cpu-cascadelake --total_fold 5 --cores 8 --memory 32G --runtime 3600 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.05.30-13.05.20
+# Move to 3.8
+python manager.py --tag seed0 -f autosklearn_iterativecv -b large --partition bosch_cpu-cascadelake --total_fold 5 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.05.30-21.17.31
+python manager.py --tag seed1 -f autosklearn_iterativecv -b large --partition bosch_cpu-cascadelake --total_fold 5 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.06.01-00.40.45
+python manager.py --tag seed2 -f autosklearn_iterativecv -b large --partition bosch_cpu-cascadelake --total_fold 5 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/dev/2021.06.01-00.42.43
+# ensemble intensification
+python manager.py --tag seed0 -f autosklearnEnsembleIntensification_iterativecv -b large --partition bosch_cpu-cascadelake --total_fold 5 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnEnsembleIntensification/iterative/2021.05.31-02.20.29
+python manager.py --tag seed1 -f autosklearnEnsembleIntensification_iterativecv -b large --partition bosch_cpu-cascadelake --total_fold 5 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnEnsembleIntensification/iterative/2021.06.01-00.52.30
+python manager.py --tag seed2 -f autosklearnEnsembleIntensification_iterativecv -b large --partition bosch_cpu-cascadelake --total_fold 5 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnEnsembleIntensification/iterative/2021.06.01-00.54.32 

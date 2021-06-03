@@ -1,0 +1,6 @@
+,tool,task,model,fold,train,val,test,overfit,constraint
+0,autosklearnEnsembleIntensification_maxintancefix_metaminiboone,MiniBooNE,best_ensemble_model,0,,,0.94463,,3600s8c32G
+1,autosklearnEnsembleIntensification_maxintancefix_metaminiboone,MiniBooNE,best_ensemble_model,1,,,0.945916,,3600s8c32G
+2,autosklearnEnsembleIntensification_maxintancefix_metaminiboone,MiniBooNE,best_ensemble_model,2,,,0.9463590000000001,,3600s8c32G
+3,autosklearnEnsembleIntensification_maxintancefix_metaminiboone,MiniBooNE,best_ensemble_model,3,,,0.9502,,3600s8c32G
+4,autosklearnEnsembleIntensification_maxintancefix_metaminiboone,MiniBooNE,best_ensemble_model,4,,,0.949728,,3600s8c32G
