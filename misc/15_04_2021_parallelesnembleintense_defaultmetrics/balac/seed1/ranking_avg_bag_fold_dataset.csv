@@ -1,0 +1,4 @@
+tool,Albert,Australian,MiniBooNE,adult,cnae-9,connect-4,higgs,kr-vs-kp,segment,vehicle
+AutoGluon,1.0,2.45,1.47,3.0,2.56,3.0,3.0,2.105,2.46,1.91
+autosklearnEnsembleIntensification_maxintancefix_metaminiboone_all,2.02,1.36,1.68,1.25,1.27,1.0,1.07,1.66,1.685,2.35
+autosklearn_metaminiboone_all,2.98,2.19,2.85,1.75,2.17,2.0,1.93,2.235,1.855,1.74
