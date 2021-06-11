@@ -53,7 +53,7 @@ MAPPING = {
 }
 
 
-def parse_data(csv_location: str) -> pd.DataFrame:
+def parse_data(csv_location: str, tools: typing.Optional[typing.List[str]] = None) -> pd.DataFrame:
     """
     Collects the data of a given experiment, annotated in a csv.
     we expect the csv to look something like:
@@ -61,12 +61,14 @@ def parse_data(csv_location: str) -> pd.DataFrame:
     """
     data = []
     for data_file in glob.glob(os.path.join(csv_location, '*overfit.csv')):
-        data.append(
-            pd.read_csv(
-                data_file,
-                index_col=0,
-            )
+        inner_df = pd.read_csv(
+            data_file,
+            index_col=0,
         )
+        if tools is not None and len(tools) > 0:
+            if inner_df['tool'].unique()[0] not in tools:
+                continue
+        data.append(inner_df)
 
     if len(data) == 0:
         logger.error(f"No overfit data to parse on {csv_location}")
@@ -556,7 +558,7 @@ def generate_pairwise_comparisson_matrix(df: pd.DataFrame,
 
     # Just care about the provided tools
     if len(tools) < 1:
-        tools = sorted(df['tools'].unique())
+        tools = sorted(df['tool'].unique())
     df = df[df['tool'].isin(tools)]
 
     pairwise_comparisson_matrix = pd.DataFrame(data=np.zeros((len(tools), len(tools))),
@@ -1104,7 +1106,6 @@ def generate_ranking_per_Aseed_fold_per_dataset(df: pd.DataFrame, bootstrap: int
     ranking = ranking.reset_index()
     ranking['tool'] = ranking['tool'].apply(lambda x: beautify_node_name(x))
     ranking.set_index('tool')
-    print(ranking)
     return ranking, result
 
 
@@ -1319,8 +1320,9 @@ def wilcoxon_averaging(df: pd.DataFrame, contains: typing.Optional[str] = None,
     return df
 
 
-def generate_ranking_per_fold_per_dataset_bags(df: pd.DataFrame, bootstrap: int = 200
-                                                ) -> typing.Tuple[pd.DataFrame, pd.DataFrame, str]:
+def generate_ranking_per_fold_per_dataset_bags(df: pd.DataFrame, bootstrap: int = 200,
+                                               ranking_method='total_wins',
+                                               ) -> typing.Tuple[pd.DataFrame, pd.DataFrame, str]:
     """
     Performs the rank calculation per bootstrap block where a block is a Aseed-fold-dataset pair
 
@@ -1330,6 +1332,8 @@ def generate_ranking_per_fold_per_dataset_bags(df: pd.DataFrame, bootstrap: int 
     Returns:
         pd.DataFrame: with the ranking, pd.DataFrame with avg score, latex representation
     """
+    if ranking_method not in ['total_wins', 'avg_wins']:
+        raise ValueError(ranking_method)
 
     # Form the desired array with raw scores, an average of everything
     result = pd.pivot_table(df, values='test', index=['tool'], columns=['task'], aggfunc=np.mean)
@@ -1342,7 +1346,6 @@ def generate_ranking_per_fold_per_dataset_bags(df: pd.DataFrame, bootstrap: int 
     df.sort_values(by=['tool', 'task', 'fold', 'seed'], inplace=True)
 
     test_score_per_task_fold_tool = pd.pivot_table(df, values='test', index=['task', 'fold', 'tool'], columns='seed')
-    test_score_per_task_fold_tool.to_csv('test_score_per_task_fold_tool.csv')
 
     folds = df['fold'].unique()
 
@@ -1369,13 +1372,20 @@ def generate_ranking_per_fold_per_dataset_bags(df: pd.DataFrame, bootstrap: int 
                 (rankdata(data, axis=0, method='min')-1).sum(axis=1),
                 index=test_score_per_task_fold_tool.loc[index].index
             )
-            # Pretty cool using index: So the index are the tool we are evaluation.
-            # if a whole tool failed, it won't even be there and this tool for this
-            # task won't be incremented. We add the number of times that for this
-            # bootstrap block of fold/seed/task, an experiment was better than other
-            ranking[task] = ranking[task] + wins
+            if ranking_method == 'avg_wins':
+                ranking[task] = ranking[task] + wins.rank(
+                    axis=0, method='average', ascending=False)
+            elif ranking_method == 'total_wins':
+                # Pretty cool using index: So the index are the tool we are evaluation.
+                # if a whole tool failed, it won't even be there and this tool for this
+                # task won't be incremented. We add the number of times that for this
+                # bootstrap block of fold/seed/task, an experiment was better than other
+                ranking[task] = ranking[task] + wins
 
-    ranking = ranking.rank(axis=0, method='average', ascending=False)
+    if ranking_method == 'avg_wins':
+        ranking = ranking / (bootstrap // 2)
+    elif ranking_method == 'total_wins':
+        ranking = ranking.rank(axis=0, method='average', ascending=False)
 
     # Build a latex to get significance and best
     embbeded_frame = build_frame_from_statistics(df, result)
@@ -1546,7 +1556,7 @@ if __name__ == "__main__":
         required=True,
         type=str,
         # Aseed means here parent autosklearn seed
-        choices=['fold_dataset', 'block_Aseed_fold_dataset', 'bag_fold_dataset']
+        choices=['fold_dataset', 'block_Aseed_fold_dataset', 'bag_fold_dataset', 'avg_bag_fold_dataset']
     )
     parser.add_argument(
         '--tools',
@@ -1561,7 +1571,7 @@ if __name__ == "__main__":
     dfs = []
     for i, csv_location in enumerate(args.csv_location):
         logger.info(f"Working on {i}: {csv_location}")
-        df = parse_data(csv_location)
+        df = parse_data(csv_location, tools=args.tools)
 
         if 'seed' not in df.columns:
             df['seed'] = i
@@ -1580,6 +1590,9 @@ if __name__ == "__main__":
         df = df[df['tool'].isin(args.tools)]
     df.to_csv('debug.csv')
 
+
+    #dfp = generate_pairwise_comparisson_matrix(df)
+
     # Average the folds across seed to remove noise
     latex = None
     if 'block_Aseed_fold_dataset' in args.rank:
@@ -1587,8 +1600,12 @@ if __name__ == "__main__":
         # python plotter.py --csv misc/23_01_2021_defaultmetricisolatedensemble/seed1/ --csv misc/23_01_2021_defaultmetricisolatedensemble/seed2 --csv misc/23_01_2021_defaultmetricisolatedensemble/seed3 --tools None_es50_B100_N1.0 --tools autosklearnBBCEnsembleSelection_es50_B100_N1.0 --tools autosklearnBBCEnsembleSelection_ES_es50_B100_N1.0 --tools autosklearnBBCEnsembleSelectionNoPreSelect_es50_B100_N1.0 --tools autosklearnBBCEnsembleSelectionNoPreSelect_ES_es50_B100_N1.0 --tools autosklearnBBCEnsembleSelectionPreSelectInESRegularizedEnd_es50_B100_N1.0 --tools autosklearnBBCEnsembleSelectionPreSelectInESRegularizedEnd_ES_es50_B100_N1.0 --rank block_Aseed_fold_dataset
         # python plotter.py --csv misc/23_01_2021_defaultmetricisolatedensemble/seed1/ --csv misc/23_01_2021_defaultmetricisolatedensemble/seed2 --csv misc/23_01_2021_defaultmetricisolatedensemble/seed3 --tools None_es50_B100_N1.0  --tools autosklearnBBCScoreEnsembleMAX_es50_B100_N1.0 --tools autosklearnBBCScoreEnsembleMAX_ES_es50_B100_N1.0 --tools autosklearnBBCScoreEnsembleMAXWinner_es50_B100_N1.0 --tools autosklearnBBCScoreEnsembleMAXWinner_ES_es50_B100_N1.0 --tools bagging_es50_B100_N1.0 --rank block_Aseed_fold_dataset
         ranking, rawscores = generate_ranking_per_Aseed_fold_per_dataset(df)
+    elif 'avg_bag_fold_dataset' in args.rank:
+        ranking, rawscores, latex = generate_ranking_per_fold_per_dataset_bags(
+            df, ranking_method='avg_wins')
     elif 'bag_fold_dataset' in args.rank:
-        ranking, rawscores, latex = generate_ranking_per_fold_per_dataset_bags(df)
+        ranking, rawscores, latex = generate_ranking_per_fold_per_dataset_bags(
+            df, ranking_method='total_wins')
     elif 'fold_dataset' in args.rank:
         df = collapse_seed(df)
         ranking, rawscores = generate_ranking_per_fold_per_dataset(df)
