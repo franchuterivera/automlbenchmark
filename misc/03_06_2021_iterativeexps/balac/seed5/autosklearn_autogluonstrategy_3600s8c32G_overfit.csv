@@ -1,7 +1,7 @@
 ,tool,task,model,fold,train,val,test,overfit,constraint
 0,autosklearn_autogluonstrategy,cnae-9,best_ensemble_model,0,,,0.9722219999999999,,3600s8c32G
-1,autosklearn_autogluonstrategy,cnae-9,best_ensemble_model,1,,,,,3600s8c32G
-2,autosklearn_autogluonstrategy,cnae-9,best_ensemble_model,2,,,,,3600s8c32G
+1,autosklearn_autogluonstrategy,cnae-9,best_ensemble_model,1,,,0.8888889999999999,,3600s8c32G
+2,autosklearn_autogluonstrategy,cnae-9,best_ensemble_model,2,,,0.9629629999999999,,3600s8c32G
 3,autosklearn_autogluonstrategy,cnae-9,best_ensemble_model,3,,,0.9444440000000001,,3600s8c32G
 4,autosklearn_autogluonstrategy,cnae-9,best_ensemble_model,4,,,0.9629629999999999,,3600s8c32G
 5,autosklearn_autogluonstrategy,higgs,best_ensemble_model,0,,,0.734405,,3600s8c32G
@@ -37,7 +37,7 @@
 35,autosklearn_autogluonstrategy,Australian,best_ensemble_model,0,,,,,3600s8c32G
 36,autosklearn_autogluonstrategy,Australian,best_ensemble_model,1,,,0.8476229999999999,,3600s8c32G
 37,autosklearn_autogluonstrategy,Australian,best_ensemble_model,2,,,0.820034,,3600s8c32G
-38,autosklearn_autogluonstrategy,Australian,best_ensemble_model,3,,,,,3600s8c32G
+38,autosklearn_autogluonstrategy,Australian,best_ensemble_model,3,,,0.8302209999999999,,3600s8c32G
 39,autosklearn_autogluonstrategy,Australian,best_ensemble_model,4,,,,,3600s8c32G
 40,autosklearn_autogluonstrategy,adult,best_ensemble_model,0,,,0.8468110000000001,,3600s8c32G
 41,autosklearn_autogluonstrategy,adult,best_ensemble_model,1,,,0.8395790000000001,,3600s8c32G

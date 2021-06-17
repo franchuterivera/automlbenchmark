@@ -69,7 +69,7 @@ VM.load_system_host_keys()
 VM.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 VM.connect(hostname='132.230.166.39', username=USER, look_for_keys=False)
 vmtransport = VM.get_transport()
-INTERNAL = '10.5.166.221'
+INTERNAL = '10.5.166.222'
 dest_addr = (INTERNAL, 22)  # kisbat
 local_addr = ('132.230.166.39', 22)  # aadlogin
 vmchannel = vmtransport.open_channel("direct-tcpip", dest_addr, local_addr)
@@ -119,7 +119,7 @@ def get_author_from_benchmark() -> typing.Dict[str, typing.Dict]:
     return author
 
 
-def create_singularity_image(framework: str) -> None:
+def create_singularity_image(framework: str, python_version: str) -> None:
     """
     Creates a singularity image via a docker image
 
@@ -146,6 +146,8 @@ def create_singularity_image(framework: str) -> None:
     command = f"""
 #!/bin/bash
 #source {ENVIRONMENT_PATH}
+export PYTHON_VERSION={python_version}
+export DOCKER_BUILDKIT=1
 if [[ "$(docker images -q {author}/{framework.lower()}:{version}-stable 2> /dev/null)" == "" ]]; then
     echo "Please prese yes/enter to create the docker image"
     python runbenchmark.py {framework} -m docker -s only
@@ -174,7 +176,7 @@ rm {temp_sif_name}
     return True
 
 
-def validate_framework(framework: str) -> None:
+def validate_framework(framework: str, python_version: str) -> None:
     """
     Makes sure we can run a given framework. This implies:
         + Checking if the framework is in the frameworks folder
@@ -198,7 +200,7 @@ def validate_framework(framework: str) -> None:
         logger.warning("Trying to generate the singularity image. Please enter 'y' for yes"
                     "When the benchmark ask you about if you are sure you want to generate"
                     "the image.")
-        create_singularity_image(framework)
+        create_singularity_image(framework, python_version)
 
         # Try to create the file
         if not os.path.exists(sif_file):
@@ -472,7 +474,8 @@ def generate_run_file(
     constraint: str,
     task: str,
     fold: int,
-    run_dir: str
+    run_dir: str,
+    resource_reduction: bool,
 ) -> str:
     """Generates a bash script for the sbatch command
 
@@ -492,9 +495,27 @@ def generate_run_file(
 
     virtual_memory_available = 4469755084 if '8G' in constraint else 34000000000
 
+    # Reduce resources
+    # less connections to avoid potential network saturation and connection timeouts
+    resource_reduction_cmd = ""
+    if resource_reduction:
+        resource_reduction_cmd = """
+
+    export DASK_DISTRIBUTED__WORKER__CONNECTIONS__OUTGOING=25;
+    export DASK_DISTRIBUTED__WORKER__CONNECTIONS__INCOMING=5;
+    export DASK_DISTRIBUTED__COMM__SOCKET_BACKLOG=16384;
+
+    # graceful timeout and retry policy
+    export DASK_DISTRIBUTED__SCHEDULER__ALLOWED_FAILURES=20;
+    export DASK_DISTRIBUTED__COMM__TIMEOUTS__CONNECT=20;
+    export DASK_DISTRIBUTED__COMM__RETRY__COUNT=2;
+
+    """
+
     query_for_tmp = '${TMPDIR+x}'
     command = f"""#!/bin/bash
 # Setup the run
+{resource_reduction_cmd}
 echo "Running on HOSTNAME=$HOSTNAME with name $SLURM_JOB_NAME"
 export PATH=/usr/local/kislurm/singularity-3.5/bin/:$PATH
 source {ENVIRONMENT_PATH}
@@ -948,7 +969,10 @@ def launch_run(
             else:
                 logger.warning(f"Skip {task} as there are no more free resources... try again later!")
             # Wait 2 sec to update running job
-            time.sleep(2)
+            if args.resource_reduction:
+                time.sleep(20)
+            else:
+                time.sleep(2)
     elif args.run_mode == 'interactive':
         timestamp = time.strftime("%Y.%m.%d-%H.%M.%S")
         while len(run_files) > 0:
@@ -1080,6 +1104,7 @@ def get_job_status(
                     task=task,
                     fold=fold,
                     run_dir=run_dir,
+                    resource_reduction=args.resource_reduction,
                 )
 
                 # Check if there are results already
@@ -1170,7 +1195,7 @@ def launch(
                                 status = 'Running'
                             else:
                                 status = 'Failed'
-                                if query_yes_no(f"For framework={framework} benchmark={benchmark} constraint={constraint} task={task} fold={fold} obtained: {jobs[framework][benchmark][task][fold]['results']}. Do you want to relaunch this run?") or args.force:
+                                if args.force or query_yes_no(f"For framework={framework} benchmark={benchmark} constraint={constraint} task={task} fold={fold} obtained: {jobs[framework][benchmark][task][fold]['results']}. Do you want to relaunch this run?"):
                                     run_files.append(jobs[framework][benchmark][task][fold]['run_file'])
                                     status = 'Relaunched'
 
@@ -2144,12 +2169,26 @@ if __name__ == "__main__":
         help='generates a models used dataframe'
     )
     parser.add_argument(
+        '--resource_reduction',
+        type=str2bool,
+        nargs='?',
+        const=True,
+        default=False,
+        help='Reduce dask resource contention'
+    )
+    parser.add_argument(
         '--force',
         type=str2bool,
         nargs='?',
         const=True,
         default=False,
         help='Forces to rerun a failed run'
+    )
+    parser.add_argument(
+        '--python_version',
+        type=str,
+        default='3.7',
+        help='what python version for docker'
     )
 
     args = parser.parse_args()
@@ -2168,7 +2207,7 @@ if __name__ == "__main__":
 
     # Get what framework the user wants to run
     if not args.run_dir:
-        validate_framework(args.framework)
+        validate_framework(args.framework, args.python_version)
 
     # Update the remote version of the benchmakr with the local version
     print(os.getcwd())

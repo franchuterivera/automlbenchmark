@@ -16,11 +16,11 @@
 14,autosklearn_memefficient,kr-vs-kp,best_ensemble_model,4,,,1.0,,3600s8c32G
 15,autosklearn_memefficient,vehicle,best_ensemble_model,0,,,-0.276931,,3600s8c32G
 16,autosklearn_memefficient,vehicle,best_ensemble_model,1,,,-0.34267800000000004,,3600s8c32G
-17,autosklearn_memefficient,vehicle,best_ensemble_model,2,,,,,3600s8c32G
+17,autosklearn_memefficient,vehicle,best_ensemble_model,2,,,-0.35054,,3600s8c32G
 18,autosklearn_memefficient,vehicle,best_ensemble_model,3,,,-0.359532,,3600s8c32G
-19,autosklearn_memefficient,vehicle,best_ensemble_model,4,,,,,3600s8c32G
+19,autosklearn_memefficient,vehicle,best_ensemble_model,4,,,-0.292167,,3600s8c32G
 20,autosklearn_memefficient,MiniBooNE,best_ensemble_model,0,,,0.9847670000000001,,3600s8c32G
-21,autosklearn_memefficient,MiniBooNE,best_ensemble_model,1,,,,,3600s8c32G
+21,autosklearn_memefficient,MiniBooNE,best_ensemble_model,1,,,0.98601,,3600s8c32G
 22,autosklearn_memefficient,MiniBooNE,best_ensemble_model,2,,,0.985728,,3600s8c32G
 23,autosklearn_memefficient,MiniBooNE,best_ensemble_model,3,,,0.9864,,3600s8c32G
 24,autosklearn_memefficient,MiniBooNE,best_ensemble_model,4,,,0.9867969999999999,,3600s8c32G

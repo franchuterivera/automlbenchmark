@@ -1,6 +1,9 @@
 import pandas as pd
 import math
 from matplotlib import pyplot as plt
+plt.rcParams["font.family"] = "Times New Roman"
+plt.rcParams["font.size"] = 14
+
 
 #,hue,performance,model,dataset_name,level,repeat,seed,val_score
 #0,test_performance_singlemodelTrue,0.7315020347761746,RandomForestClassifier,53,0,1,94,0.766404681091421
@@ -58,7 +61,7 @@ for col in ['level', 'repeat']:
     data[col] = data[col].astype(int)
 #fig.suptitle(f"Avg Model Performance of 5-k-fold splits")
 for i, dataset_name in enumerate(data['dataset_name'].unique()):
-    ax = fig.add_subplot(math.ceil(total/3), 3, i+1)
+    ax = fig.add_subplot(math.ceil(total/2), 2, i+1)
     level_dict = {
         0: ['r--'],
         1: ['b--'],
@@ -69,10 +72,15 @@ for i, dataset_name in enumerate(data['dataset_name'].unique()):
         data[
             (data['dataset_name']==dataset_name) & (data['level']==level)
         ].plot(x='repeat', y=['performance'], ax=ax, style=level_dict[level], alpha=0.5, linewidth=1,
-               label=[f"L:{level}"], legend=False, marker='o', markersize=2)
+               label=[f"L:{level}"], legend=False, marker='o', markersize=2, fontsize=14)
     ax.set_title(f"OpenMLID={dataset_name}")
     ax.set(ylabel='Balanced Accuracy', xlabel='Number of CV Repetitions')
     ax.grid(True)
+    xint = range(data.loc[data['dataset_name']==dataset_name, 'repeat'].min(), data.loc[data['dataset_name']==dataset_name, 'repeat'].max() + 1)
+    ax.set_xticks(xint)
+
 handles, labels = ax.get_legend_handles_labels()
-fig.legend(handles, labels, loc='lower center', ncol=10)
-plt.savefig(f"plot_effectsofrepetitions_frankfreedback.pdf")
+lgd = fig.legend(handles, labels, loc='lower center', ncol=10)
+plt.savefig(f"subsechowtorepeat.pdf", dpi=1000, bbox_extra_artists=(lgd,), bbox_inches='tight')
+plt.close()
+

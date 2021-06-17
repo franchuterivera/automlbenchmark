@@ -1,5 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+plt.rcParams["font.family"] = "Times New Roman"
+plt.rcParams["font.size"] = 14
+
 
 df_autogluon = pd.read_csv('leaderboard_autogluon.csv')
 df_autosklearn = pd.read_csv('leaderboard_autosklearn.csv')
@@ -30,9 +33,10 @@ ax = pd.DataFrame(df).plot(
     kind='barh',
     title='Overfit of the state of the art AutoML Frameworks',
     grid=True,
+    figsize=(10, 8),
 )
-ax.set_xlabel('Test minus validation Accuracy')
+ax.set_xlabel('Test minus validation Balanced Accuracy')
 ax.grid(True)
-plt.savefig('frameworks_overfit.pdf')
 plt.tight_layout()
+plt.savefig('frameworks_overfit.pdf')
 plt.show()

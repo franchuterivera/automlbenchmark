@@ -2,7 +2,7 @@
 0,autosklearn_autogluonstrategy,cnae-9,best_ensemble_model,0,,,-0.111023,,3600s8c32G
 1,autosklearn_autogluonstrategy,cnae-9,best_ensemble_model,1,,,-0.266967,,3600s8c32G
 2,autosklearn_autogluonstrategy,cnae-9,best_ensemble_model,2,,,-0.12481099999999999,,3600s8c32G
-3,autosklearn_autogluonstrategy,cnae-9,best_ensemble_model,3,,,,,3600s8c32G
+3,autosklearn_autogluonstrategy,cnae-9,best_ensemble_model,3,,,-0.165078,,3600s8c32G
 4,autosklearn_autogluonstrategy,cnae-9,best_ensemble_model,4,,,-0.08634700000000001,,3600s8c32G
 5,autosklearn_autogluonstrategy,higgs,best_ensemble_model,0,,,0.8195,,3600s8c32G
 6,autosklearn_autogluonstrategy,higgs,best_ensemble_model,1,,,0.812415,,3600s8c32G
@@ -14,10 +14,10 @@
 12,autosklearn_autogluonstrategy,kr-vs-kp,best_ensemble_model,2,,,0.999569,,3600s8c32G
 13,autosklearn_autogluonstrategy,kr-vs-kp,best_ensemble_model,3,,,1.0,,3600s8c32G
 14,autosklearn_autogluonstrategy,kr-vs-kp,best_ensemble_model,4,,,1.0,,3600s8c32G
-15,autosklearn_autogluonstrategy,vehicle,best_ensemble_model,0,,,,,3600s8c32G
-16,autosklearn_autogluonstrategy,vehicle,best_ensemble_model,1,,,,,3600s8c32G
+15,autosklearn_autogluonstrategy,vehicle,best_ensemble_model,0,,,-0.3039,,3600s8c32G
+16,autosklearn_autogluonstrategy,vehicle,best_ensemble_model,1,,,-0.334889,,3600s8c32G
 17,autosklearn_autogluonstrategy,vehicle,best_ensemble_model,2,,,,,3600s8c32G
-18,autosklearn_autogluonstrategy,vehicle,best_ensemble_model,3,,,,,3600s8c32G
+18,autosklearn_autogluonstrategy,vehicle,best_ensemble_model,3,,,-0.331984,,3600s8c32G
 19,autosklearn_autogluonstrategy,vehicle,best_ensemble_model,4,,,,,3600s8c32G
 20,autosklearn_autogluonstrategy,MiniBooNE,best_ensemble_model,0,,,0.9844729999999999,,3600s8c32G
 21,autosklearn_autogluonstrategy,MiniBooNE,best_ensemble_model,1,,,0.9856020000000001,,3600s8c32G
@@ -30,8 +30,8 @@
 28,autosklearn_autogluonstrategy,connect-4,best_ensemble_model,3,,,-0.359039,,3600s8c32G
 29,autosklearn_autogluonstrategy,connect-4,best_ensemble_model,4,,,-0.356825,,3600s8c32G
 30,autosklearn_autogluonstrategy,segment,best_ensemble_model,0,,,,,3600s8c32G
-31,autosklearn_autogluonstrategy,segment,best_ensemble_model,1,,,,,3600s8c32G
-32,autosklearn_autogluonstrategy,segment,best_ensemble_model,2,,,,,3600s8c32G
+31,autosklearn_autogluonstrategy,segment,best_ensemble_model,1,,,-0.0496154,,3600s8c32G
+32,autosklearn_autogluonstrategy,segment,best_ensemble_model,2,,,-0.039694400000000005,,3600s8c32G
 33,autosklearn_autogluonstrategy,segment,best_ensemble_model,3,,,-0.0414735,,3600s8c32G
 34,autosklearn_autogluonstrategy,segment,best_ensemble_model,4,,,-0.015848400000000002,,3600s8c32G
 35,autosklearn_autogluonstrategy,Australian,best_ensemble_model,0,,,,,3600s8c32G

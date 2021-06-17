@@ -2,6 +2,8 @@ import pandas as pd
 import math
 from matplotlib import pyplot as plt
 from matplotlib.pyplot import figure
+plt.rcParams["font.family"] = "Times New Roman"
+plt.rcParams["font.size"] = 14
 
 
 # color dictionary
@@ -28,6 +30,8 @@ df = df_mean.reset_index()
 for col in ['level', 'repeat']:
     df[col] = df[col].astype(int)
 
+df = df[df['dataset_name'] != 7592]
+
 #######################################
 #                1
 # First point we want to make, is that
@@ -36,7 +40,7 @@ for col in ['level', 'repeat']:
 # We assume like 6 datasets
 fig = plt.figure(figsize=(18, 12))
 for i, dataset_name in enumerate(df['dataset_name'].unique()):
-    ax = fig.add_subplot(3, 3, i+1)
+    ax = fig.add_subplot(3, 2, i+1)
     ax.set_title(f"Openml_id={dataset_name}")
     ax.set(ylabel='Balanced Accuracy')
     ax.set(xlabel='Level')
@@ -47,7 +51,6 @@ for i, dataset_name in enumerate(df['dataset_name'].unique()):
         xint = range(df['level'].min(), df['level'].max() + 1)
         ax.set_xticks(xint)
 plt.tight_layout()
-plt.legend(loc='lower center',  bbox_to_anchor=(0.43, -0.35), ncol=7)
-plt.savefig(f"plot_not_all_models_see_benefit.pdf")
-plt.show()
+lgd = plt.legend(loc='lower center',  bbox_to_anchor=(0.01, -0.50), ncol=4, fancybox=True)
+plt.savefig(f"subsecnotallmodelsbenefitstack.pdf", dpi=1000, bbox_extra_artists=(lgd,), bbox_inches='tight')
 plt.close()

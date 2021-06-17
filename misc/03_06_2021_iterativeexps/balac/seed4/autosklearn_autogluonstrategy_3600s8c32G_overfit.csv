@@ -1,5 +1,5 @@
 ,tool,task,model,fold,train,val,test,overfit,constraint
-0,autosklearn_autogluonstrategy,cnae-9,best_ensemble_model,0,,,,,3600s8c32G
+0,autosklearn_autogluonstrategy,cnae-9,best_ensemble_model,0,,,0.9537040000000001,,3600s8c32G
 1,autosklearn_autogluonstrategy,cnae-9,best_ensemble_model,1,,,0.8888889999999999,,3600s8c32G
 2,autosklearn_autogluonstrategy,cnae-9,best_ensemble_model,2,,,0.9629629999999999,,3600s8c32G
 3,autosklearn_autogluonstrategy,cnae-9,best_ensemble_model,3,,,0.935185,,3600s8c32G
@@ -17,8 +17,8 @@
 15,autosklearn_autogluonstrategy,vehicle,best_ensemble_model,0,,,0.883117,,3600s8c32G
 16,autosklearn_autogluonstrategy,vehicle,best_ensemble_model,1,,,0.8371209999999999,,3600s8c32G
 17,autosklearn_autogluonstrategy,vehicle,best_ensemble_model,2,,,0.80303,,3600s8c32G
-18,autosklearn_autogluonstrategy,vehicle,best_ensemble_model,3,,,,,3600s8c32G
-19,autosklearn_autogluonstrategy,vehicle,best_ensemble_model,4,,,,,3600s8c32G
+18,autosklearn_autogluonstrategy,vehicle,best_ensemble_model,3,,,0.823593,,3600s8c32G
+19,autosklearn_autogluonstrategy,vehicle,best_ensemble_model,4,,,0.825758,,3600s8c32G
 20,autosklearn_autogluonstrategy,MiniBooNE,best_ensemble_model,0,,,0.9426540000000001,,3600s8c32G
 21,autosklearn_autogluonstrategy,MiniBooNE,best_ensemble_model,1,,,0.941887,,3600s8c32G
 22,autosklearn_autogluonstrategy,MiniBooNE,best_ensemble_model,2,,,0.9453,,3600s8c32G
@@ -35,7 +35,7 @@
 33,autosklearn_autogluonstrategy,segment,best_ensemble_model,3,,,0.9956709999999999,,3600s8c32G
 34,autosklearn_autogluonstrategy,segment,best_ensemble_model,4,,,0.9956709999999999,,3600s8c32G
 35,autosklearn_autogluonstrategy,Australian,best_ensemble_model,0,,,,,3600s8c32G
-36,autosklearn_autogluonstrategy,Australian,best_ensemble_model,1,,,,,3600s8c32G
+36,autosklearn_autogluonstrategy,Australian,best_ensemble_model,1,,,0.8476229999999999,,3600s8c32G
 37,autosklearn_autogluonstrategy,Australian,best_ensemble_model,2,,,,,3600s8c32G
 38,autosklearn_autogluonstrategy,Australian,best_ensemble_model,3,,,,,3600s8c32G
 39,autosklearn_autogluonstrategy,Australian,best_ensemble_model,4,,,,,3600s8c32G

@@ -12,6 +12,8 @@ data = data[data['hue']=='test_performance_singlemodelFalse']
 
 total_tools = len(df['model'].unique())
 
+data['repeat'] = data['repeat'].astype(int)
+
 for dataset_name in data['dataset_name'].unique():
     # Plot configuration
     fig = plt.figure(figsize=(18, 12))
@@ -33,6 +35,8 @@ for dataset_name in data['dataset_name'].unique():
         ax.set_title(f"{model}")
         ax.set(ylabel='Balanced Accuracy')
         ax.grid(True)
+        xint = range(df['repeat'].min(), df['repeat'].max() + 1)
+        ax.set_xticks(xint)
     #plt.show()
     plt.savefig(f"individual_effect_{dataset_name}.pdf")
     plt.close()

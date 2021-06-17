@@ -1,0 +1,6 @@
+tool,Albert,Australian,MiniBooNE,adult,cnae-9,connect-4,higgs,kr-vs-kp,segment,vehicle
+autosklearnEnsembleIntensification_iterative,3.94,2.49,2.81,2.615,2.33,1.88,2.775,3.755,3.17,2.1
+autosklearnEnsembleIntensification_noniterative,1.01,2.23,1.27,2.725,2.73,1.12,2.055,2.865,3.58,2.89
+autosklearnEnsembleIntensification_noniterative_fasttomaxrep,3.375,2.73,3.39,3.15,1.84,3.015,3.125,2.67,3.45,3.1
+autosklearn_autogluonstrategy,4.325,,2.69,3.56,4.765,4.58,3.11,3.05,2.83,4.0
+autosklearn_memefficient,2.35,2.96,4.84,2.95,3.335,4.405,3.935,2.66,1.97,2.91

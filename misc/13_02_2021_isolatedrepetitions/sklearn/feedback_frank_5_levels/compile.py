@@ -3,6 +3,11 @@ import math
 from matplotlib import pyplot as plt
 from matplotlib.pyplot import figure
 
+import matplotlib.pyplot as plt
+plt.rcParams["font.family"] = "Times New Roman"
+plt.rcParams["font.size"] = 14
+
+
 
 # color dictionary
 color = {
@@ -34,9 +39,10 @@ df = df_mean.reset_index()
 # We assume like 6 datasets
 df_part1 = df[(df['repeat'] == 5) & (df['hue'] == 'test_performance_singlemodelFalse')]
 
-fig = plt.figure(figsize=(18, 12))
+#fig = plt.figure(figsize=(18, 12))
+fig = plt.figure(figsize=(10, 8))
 for i, dataset_name in enumerate(df_part1['dataset_name'].unique()):
-    ax = fig.add_subplot(3, 3, i+1)
+    ax = fig.add_subplot(3, 2, i+1)
     ax.set_title(f"Openml_id={dataset_name}")
     ax.set(ylabel='Balanced Accuracy')
     ax.set(xlabel='Level')
@@ -45,8 +51,8 @@ for i, dataset_name in enumerate(df_part1['dataset_name'].unique()):
         this_data = df_part1[(df_part1['model']==model) & (df_part1['dataset_name']==dataset_name)]
         ax.errorbar('level', 'performance_mean', yerr='performance_std',  capsize=3, capthick=3, elinewidth=2, linewidth=1, linestyle='dashed', data=this_data, color=color[i], label=model, alpha=0.5)
 plt.tight_layout()
-plt.legend(loc='lower center',  bbox_to_anchor=(-0.75, -0.35), ncol=7)
-plt.savefig(f"plot_diminishing_returns_stacking.pdf")
+lgd = plt.legend(loc='lower center',  bbox_to_anchor=(-0.12, -0.95), ncol=3)
+plt.savefig(f"subsechowtostack.pdf", dpi=1000, bbox_extra_artists=(lgd,), bbox_inches='tight')
 plt.close()
 
 #######################################
@@ -59,7 +65,7 @@ for level in [0, 1, 2]:
     df_part2 = df[(df['level'] == level) & (df['hue'] == 'test_performance_singlemodelFalse')]
     fig = plt.figure(figsize=(18, 12))
     for i, dataset_name in enumerate(df_part2['dataset_name'].unique()):
-        ax = fig.add_subplot(3, 3, i+1)
+        ax = fig.add_subplot(3, 2, i+1)
         ax.set_title(f"Openml_id={dataset_name} level={level}")
         ax.set(ylabel='Balanced Accuracy')
         ax.set(xlabel='5-fold-repetitions')
