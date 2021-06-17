@@ -1,0 +1,36 @@
+---
+
+- name: bnp-paribas-cardif-claims-management
+  kaggle_path: '~/KAGGLE/bnp-paribas-cardif-claims-management'
+  target: 'target'
+  target_type: 'binary'
+
+- name: santander-customer-transaction-prediction
+  kaggle_path: '~/KAGGLE/santander-customer-transaction-prediction'
+  target: 'target'
+  target_type: 'binary'
+
+- name: santander-customer-satisfaction
+  kaggle_path: '~/KAGGLE/santander-customer-satisfaction'
+  target: 'target'
+  target_type: 'binary'
+
+- name: porto-seguro-safe-driver-prediction
+  kaggle_path: '~/KAGGLE/porto-seguro-safe-driver-prediction'
+  target: 'target'
+  target_type: 'binary'
+
+  # - name: ieee-fraud-detection
+  #   kaggle_path: '~/KAGGLE/ieee-fraud-detection'
+  #   target: 'isFraud'
+  #   target_type: 'binary'
+
+  # - name: walmart-recruiting-trip-type-classification
+  #   kaggle_path: '~/KAGGLE/walmart-recruiting-trip-type-classification'
+  #   target: 'TripType'
+  #   target_type: 'multiclass'
+
+- name: otto-group-product-classification-challenge
+  kaggle_path: '~/KAGGLE/otto-group-product-classification-challenge'
+  target: 'target'
+  target_type: 'multiclass'

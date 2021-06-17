@@ -1,0 +1,4 @@
+mxnet
+matplotlib
+pandas
+numpy
