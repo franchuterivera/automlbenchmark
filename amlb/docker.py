@@ -114,8 +114,8 @@ class DockerBenchmark(ContainerBenchmark):
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update
-RUN apt-get -y install python3.7 python3.7-venv python3.7-dev python3-pip
-RUN update-alternatives --install /usr/bin/python3 python3 $(which python3.7) 1
+RUN apt-get -y install python{python_version} python{python_version}-venv python{python_version}-dev python3-pip
+RUN update-alternatives --install /usr/bin/python3 python3 $(which python{python_version}) 1
 RUN apt-get -y install apt-utils dialog locales
 RUN apt-get -y install curl wget unzip git
 RUN pip3 install -U pip wheel
@@ -164,6 +164,7 @@ CMD ["{framework}", "test"]
                                                           py="$PY")),
             framework=self.framework_name,
             pip_version=rconfig().versions.pip,
+            python_version=os.environ.get('PYTHON_VERSION', '3.7'),
             script=rconfig().script,
             user=rconfig().user_dir,
         )

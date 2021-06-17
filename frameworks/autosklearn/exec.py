@@ -70,14 +70,15 @@ def run(dataset, config):
     # (cores - 1) * ml_memory_limit_mb + ensemble_memory_limit_mb = config.max_mem_size_mb
     total_memory_mb = utils.system_memory_mb().total
     if ml_memory_limit == 'auto':
-        ml_memory_limit = max(min(math.ceil(config.max_mem_size_mb / n_jobs),
-                                  math.ceil(total_memory_mb / n_jobs)),
-                              3072)  # 3072 is autosklearn defaults
-    if ensemble_memory_limit == 'auto':
-        ensemble_memory_limit = max(math.ceil(ml_memory_limit - (total_memory_mb - config.max_mem_size_mb)),
-                                    math.ceil(ml_memory_limit / 3),  # default proportions
-                                    1024)  # 1024 is autosklearn defaults
-    log.info("Using %sMB memory per ML job and %sMB for ensemble job on a total of %s jobs.", ml_memory_limit, ensemble_memory_limit, n_jobs)
+        ml_memory_limit = max(
+            min(
+                config.max_mem_size_mb / n_jobs,
+                math.ceil(total_memory_mb / n_jobs)
+            ),
+            3072  # 3072 is autosklearn default and we use it as a lower bound
+        )
+
+    log.info("Using %sMB memory per ML job and %sMB for ensemble job on a total of %s jobs.", ml_memory_limit, ml_memory_limit, n_jobs)
 
     log.warning("Using meta-learned initialization, which might be bad (leakage).")
     # TODO: do we need to set per_run_time_limit too?
@@ -92,8 +93,7 @@ def run(dataset, config):
 
     auto_sklearn = estimator(time_left_for_this_task=config.max_runtime_seconds,
                              n_jobs=n_jobs,
-                             ml_memory_limit=ml_memory_limit,
-                             ensemble_memory_limit=ensemble_memory_limit,
+                             memory_limit=ml_memory_limit,
                              delete_tmp_folder_after_terminate=False,
                              delete_output_folder_after_terminate=False,
                              seed=config.seed,
@@ -107,7 +107,11 @@ def run(dataset, config):
     predictions = auto_sklearn.predict(X_test)
     probabilities = auto_sklearn.predict_proba(X_test) if is_classification else None
 
-    overfit_frame = generate_overfit_artifacts(auto_sklearn, X_train, y_train, X_test, y_test)
+    try:
+        overfit_frame = generate_overfit_artifacts(auto_sklearn, X_train, y_train, X_test, y_test)
+    except Exception as e:
+        print(e)
+        overfit_frame = None
 
     save_artifacts(auto_sklearn, config, overfit_frame)
 
@@ -182,13 +186,13 @@ def save_artifacts(estimator, config, overfit_frame):
             models_file = os.path.join(output_subdir('models', config), 'models.txt')
             with open(models_file, 'w') as f:
                 f.write(models_repr)
-        if 'overfit' in artifacts:
+        if 'overfit' in artifacts and overfit_frame is not None:
             overfit_file = os.path.join(output_subdir('overfit', config), 'overfit.csv')
             overfit_frame.to_csv(overfit_file)
         if 'debug' in artifacts:
             print('Saving debug artifacts!')
             debug_dir = output_subdir('debug', config)
-            ignore_extensions = ['.npy', '.pcs', '.model', '.ensemble', '.pkl']
+            ignore_extensions = ['.npy', '.pcs', '.model', '.ensemble', '.pkl', '.cv_model']
             tmp_directory = estimator.automl_._backend.temporary_directory
             files_to_copy = []
             for r, d, f in os.walk(tmp_directory):
