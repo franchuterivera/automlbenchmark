@@ -1,0 +1,75 @@
+################################
+# AutoGluon -- balanced Accuracy
+################################
+python manager.py --tag seed0 -f AutoGluon -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-20.35.13 
+python manager.py --tag seed1 -f AutoGluon -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-20.47.53 
+python manager.py --tag seed2 -f AutoGluon -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-21.01.29 
+python manager.py --tag seed3 -f AutoGluon -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-21.12.07
+python manager.py --tag seed4 -f AutoGluon -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-21.22.42
+python manager.py --tag seed5 -f AutoGluon -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-21.33.24
+python manager.py --tag seed6 -f AutoGluon -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-21.43.37
+python manager.py --tag seed7 -f AutoGluon -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-21.54.27
+python manager.py --tag seed8 -f AutoGluon -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-22.05.28
+python manager.py --tag seed9 -f AutoGluon -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-22.16.53
+python manager.py --tag seed0 -f AutoGluon -b medium --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-20.35.13 
+python manager.py --tag seed1 -f AutoGluon -b medium --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-20.47.53 
+python manager.py --tag seed2 -f AutoGluon -b medium --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-21.01.29
+python manager.py --tag seed3 -f AutoGluon -b medium --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-21.12.07 
+python manager.py --tag seed4 -f AutoGluon -b medium --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-21.22.42 
+python manager.py --tag seed5 -f AutoGluon -b medium --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-21.33.24 
+python manager.py --tag seed6 -f AutoGluon -b medium --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-21.43.37 
+python manager.py --tag seed7 -f AutoGluon -b medium --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-21.54.27 
+python manager.py --tag seed8 -f AutoGluon -b medium --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-22.05.28 
+python manager.py --tag seed9 -f AutoGluon -b medium --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-22.16.53 
+python manager.py --tag seed0 -f AutoGluon -b large --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-20.35.13 
+python manager.py --tag seed1 -f AutoGluon -b large --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-20.47.53 
+python manager.py --tag seed2 -f AutoGluon -b large --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-21.01.29
+python manager.py --tag seed3 -f AutoGluon -b large --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-21.12.07 
+python manager.py --tag seed4 -f AutoGluon -b large --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-21.22.42 
+python manager.py --tag seed5 -f AutoGluon -b large --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-21.33.24 
+python manager.py --tag seed6 -f AutoGluon -b large --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-21.43.37 
+python manager.py --tag seed7 -f AutoGluon -b large --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-21.54.27 
+python manager.py --tag seed8 -f AutoGluon -b large --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-22.05.28 
+python manager.py --tag seed9 -f AutoGluon -b large --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/AutoGluon/0.0.12/2021.06.18-22.16.53 
+
+###################################################
+# Auto-sklearn -- original meta --balanced Accuracy
+###################################################
+python manager.py --tag seed0 -f autosklearn_memefficient -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/memefficient/2021.06.22-19.19.17
+python manager.py --tag seed1 -f autosklearn_memefficient -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/memefficient/2021.06.23-11.16.00
+python manager.py --tag seed2 -f autosklearn_memefficient -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/memefficient/2021.06.23-15.51.35
+python manager.py --tag seed3 -f autosklearn_memefficient -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/memefficient/2021.06.23-16.00.20
+python manager.py --tag seed4 -f autosklearn_memefficient -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/memefficient/2021.06.23-16.09.26
+python manager.py --tag seed5 -f autosklearn_memefficient -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/memefficient/2021.06.23-16.18.42
+python manager.py --tag seed6 -f autosklearn_memefficient -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/memefficient/2021.06.23-16.28.00
+python manager.py --tag seed7 -f autosklearn_memefficient -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/memefficient/2021.06.23-16.37.33
+python manager.py --tag seed8 -f autosklearn_memefficient -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/memefficient/2021.06.23-16.47.00
+python manager.py --tag seed9 -f autosklearn_memefficient -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/memefficient/2021.06.23-16.56.39
+#LARGE WITH NO TEST!!!
+
+###############################################
+# Auto-sklearn -- best meta --balanced Accuracy
+###############################################
+python manager.py --tag seed0 -f autosklearn_memefficient_metalearning -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/memefficient_meta/2021.06.20-11.29.15
+python manager.py --tag seed1 -f autosklearn_memefficient_metalearning -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/memefficient_meta/2021.06.22-12.07.56 
+python manager.py --tag seed2 -f autosklearn_memefficient_metalearning -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir  /home/riverav/AUTOML_BENCHMARK/autosklearn/memefficient_meta/2021.06.23-17.06.27
+python manager.py --tag seed3 -f autosklearn_memefficient_metalearning -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/memefficient_meta/2021.06.23-17.16.09
+python manager.py --tag seed4 -f autosklearn_memefficient_metalearning -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/memefficient_meta/2021.06.23-17.25.54 
+python manager.py --tag seed5 -f autosklearn_memefficient_metalearning -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/memefficient_meta/2021.06.23-17.36.08
+python manager.py --tag seed6 -f autosklearn_memefficient_metalearning -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/memefficient_meta/2021.06.23-17.46.09
+python manager.py --tag seed7 -f autosklearn_memefficient_metalearning -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/memefficient_meta/2021.06.23-17.55.55
+python manager.py --tag seed8 -f autosklearn_memefficient_metalearning -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/memefficient_meta/2021.06.23-18.06.01
+python manager.py --tag seed9 -f autosklearn_memefficient_metalearning -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/memefficient_meta/2021.06.23-18.16.39 
+#large
+python manager.py --tag seed0 -f autosklearn_memefficient_metalearning_large -b large  --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_mode single --fold 0
+#LARGE WITH NO TEST!!!
+
+##################################################
+## Hyperband towering
+##################################################
+# not memory efficient
+python manager.py --tag seed0 -f autosklearnHyperbandTowering_metalearning -b small --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHyperbandTowering/towering_meta/2021.06.22-18.07.00
+# with memory efficient fix
+python manager.py --tag seed0 -f autosklearnHyperbandTowering_metalearning_memefficient -b large --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir --run_mode single --fold 0
+# for large
+python manager.py --tag seed0 -f autosklearnHyperbandTowering_metalearning_memefficient_notestloss -b large  --partition bosch_cpu-cascadelake --total_fold 10 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearnHyperbandTowering/towering_meta/2021.06.24-10.14.42

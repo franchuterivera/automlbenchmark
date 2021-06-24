@@ -237,7 +237,6 @@ def plot_slope(
                     """
 
         if kind == 'interval':
-            print(f"nt={nt} df[cols[i]]={df[cols[i]]}")
             labelsL = df.groupby(pd.cut(df[cols[i]], nt))['__label__'].agg(
                 ', '.join).dropna()
             labelsR = df.groupby(pd.cut(df[cols[i + 1]], nt))['__label__'].agg(
@@ -267,7 +266,6 @@ def plot_slope(
             #yMark_R.sort(ascending=False)
             yMark_L.sort_values(ascending=False)
             yMark_R.sort_values(ascending=False)
-            #print yMark_L
 
             labelsL = df.groupby(yPos_L[cols[i]].values)['__label__'].agg(
                 ', '.join)
@@ -335,7 +333,6 @@ def plot_slope(
 
             if i == 0:
                 ax.set_yticks(yPos_L.values)
-                print(f"labelsL_str={labelsL_str} {type(labelsL_str)} font={font} {type(font)}")
                 ax.set_yticklabels(labelsL_str, fontproperties=font)
             elif marker:
                 ax.set_yticks(yPos_L.values)
@@ -1309,10 +1306,8 @@ def wilcoxon_averaging(df: pd.DataFrame, contains: typing.Optional[str] = None,
     for tool in df['tool'].unique():
         for task in df['task'].unique():
             df_test.at[tool, task] = df[(df['tool']==tool) & (df['task']==task)]['test_avg'].values.item(0)
-            print(f"df_test={df_test} with tool={tool} and task={task} and {df[(df['tool']==tool) & (df['task']==task)]}")
             df_EQ.at[tool, task] = df[(df['tool']==tool) & (df['task']==task)]['is_best'].values.item(0)
             df_best.at[tool, task] = df[(df['tool']==tool) & (df['task']==task)]['task_best'].values.item(0)
-            print(f"df_best={df_best} ")
     df_test.to_csv('wilcoxon_test.csv')
     df_best.to_csv('wilcoxon_best.csv')
     df_EQ.to_csv('wilcoxon_EQ.csv')

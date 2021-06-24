@@ -994,7 +994,7 @@ def _launch_sbatch_run(options: str, script: str) -> int:
     """
     Launches a subprocess with sbatch command
     """
-    command = "sbatch {} {}".format(
+    command = "sbatch --hold {} {}".format(
         options,
         script
     )
