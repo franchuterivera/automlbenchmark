@@ -180,8 +180,8 @@ def generate_autogluon_dataset(X_train, y_train, X_test, y_test, task):
     X_train[task[LABEL_COLUMN]] = y_train
 
     # we don't have y_test :( so mimic with y_train
-    X_test[task[LABEL_COLUMN]] = y_train[:X_test.shape[0]]
-    X_test[task[LABEL_COLUMN]].fillna(value=0, inplace=True)
+    X_test[task[LABEL_COLUMN]] = pd.Series(data=pd.Series(y_train).sample(n=X_test.shape[0], replace=True).tolist(),
+                                           index=X_test.index)
     # keep as object everything that is not numerical
     columns=[(col, ('object' if not is_numeric_dtype(X_train[col]) else 'int' if ('int' in str(X_train[col].dtype).lower()) else 'float')) for col in X_train.columns]
     return dataset(
@@ -199,8 +199,8 @@ enc = namedtuple('enc', ['X_enc', 'y_enc'])
 def generate_autosklearn_dataset(X_train, y_train, X_test, y_test, task):
     predictors_type = ['Numerical' if is_numeric_dtype(X_train[col]) else 'Categorical' for col in X_train.columns]
 
-    y_test = np.zeros((X_test.shape[0], y_train.shape[1]) if len(y_train.shape) > 1 else (X_test.shape[0]))
-    y_test[:X_test.shape[0]] = y_train[:X_test.shape[0]]
+    y_test = pd.Series(data=pd.Series(y_train).sample(n=X_test.shape[0], replace=True).tolist(),
+                                           index=X_test.index)
 
     # we don't have y_test :( so mimic with y_train
     return dataset(
@@ -208,7 +208,7 @@ def generate_autosklearn_dataset(X_train, y_train, X_test, y_test, task):
         target=None,
         problem_type=None,
         train=enc(X_enc=X_train.to_numpy(), y_enc=y_train.to_numpy()),
-        test=enc(X_enc=X_test.to_numpy(), y_enc=y_test),
+        test=enc(X_enc=X_test.to_numpy(), y_enc=y_test.to_numpy()),
         predictors_type=predictors_type,
     )
 
@@ -359,6 +359,11 @@ if __name__ == "__main__":
     y_pred = fit_and_predict_on_test(task=task, args=args)
     with open(f"{args.framework}.{args.task}.{args.seed}.{args.runtime}.{args.memory}.{args.cores}.predictions.pkl", 'wb') as f:
         pickle.dump(y_pred, f, protocol=pickle.HIGHEST_PROTOCOL)
+    csv_path = f"{args.framework}.{args.task}.{args.seed}.{args.runtime}.{args.memory}.{args.cores}.predictions.csv"
+    if hasattr(y_pred, 'to_csv'):
+        y_pred.to_csv(csv_path)
+    else:
+        np.savetxt(csv_path, y_pred, delimiter=",")
 
     # Push to kaggle
     # TODO
