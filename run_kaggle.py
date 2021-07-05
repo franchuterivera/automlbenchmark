@@ -1,3 +1,4 @@
+import os
 import argparse
 import pathlib
 import pickle
@@ -22,8 +23,8 @@ from autogluonbenchmarking.autogluon_utils.kaggle_tools.kaggle_utils import fetc
 
 from frameworks.AutoGluon_020.exec import run as autogluon_run
 from frameworks.autosklearn_memefficient_metalearning.exec import run as autosklearn_run
-from frameworks.autosklearnEnsembleIntensification_noniterative_parallel.exec import run as autosklearn_ensembleintensification_run
-from frameworks.autosklearn_autogluonstrategy.exec import run as autosklearn_autogluonstrategy_run
+from frameworks.autosklearnEnsembleIntensification_metaon.exec import run as autosklearn_ensembleintensification_run
+from frameworks.autosklearnEnsembleIntensification_metaon.exec import run as autosklearn_autogluonstrategy_run
 
 import numpy as np
 
@@ -64,7 +65,10 @@ def fetch_kaggle_dataset(args):
         return task
 
     # Fetch the file as done here autogluon_utils/kaggle_tools/kaggle_utils.py
-    files = fetch_kaggle_files(competition=task[NAME], outdir=task['output_dir'])
+    files = [str(task['train_path']).replace('.preprocessed', ''),
+             str(task['test_path']).replace('.preprocessed', '')]
+    if not os.path.exists(files[0]):
+        files = fetch_kaggle_files(competition=task[NAME], outdir=task['output_dir'])
     print('Retrieved files:')
     pprint.pprint(files)
     fetch_processor = task.get(FETCH_PROCESSOR)
@@ -73,6 +77,8 @@ def fetch_kaggle_dataset(args):
     df_train, df_test = task[PRE_PROCESSOR].preprocess(
         file_to_location={
             'train.csv': task['output_dir'].joinpath(task[NAME], 'train.csv'),
+            'train.csv.zip': str(task['output_dir'].joinpath(task[NAME], 'train.csv')),
+            'test.csv.zip': str(task['output_dir'].joinpath(task[NAME], 'test.csv')),
             'train_identity.csv': task['output_dir'].joinpath(task[NAME], 'train_identity.csv'),
             'train_transaction.csv': task['output_dir'].joinpath(task[NAME], 'train_transaction.csv'),
             'test_identity.csv': task['output_dir'].joinpath(task[NAME], 'test_identity.csv'),
@@ -133,7 +139,7 @@ def framework2params(framework):
             'fast_track_performance_criteria': 'common_instances',
             'stack_based_on_log_loss': False,
             'stack_tiebreak_w_log_loss': False,
-            'resampling_strategy': 'partial-iterative-intensifier-cv',
+            'resampling_strategy': 'intensifier-cv',
             'test_loss_in_autosklearn': False,
             'only_intensify_members_repetitions': True,
             'test_loss_in_autosklearn': False,
@@ -143,7 +149,7 @@ def framework2params(framework):
 
 
 def str2mem(memory):
-    return {'12G': 12288, '32G': 32768, '8G': 4096}[memory]
+    return {'12G': 12288, '32G': 32768, '8G': 4096, '180G': 180000}[memory]
 
 
 metric_map = {
@@ -155,6 +161,19 @@ metric_map = {
 
 
 def translate_task_2_automlbenchmark(task, args):
+    framework_params = framework2params(args.framework)
+    if (
+        args.iterative
+        and 'resampling_strategy' in framework_params
+        and 'cv' == framework_params['resampling_strategy']
+    ):
+        framework_params['resampling_strategy'] = 'cv-iterative-fit'
+    elif (
+        args.iterative
+        and 'resampling_strategy' in framework_params
+        and 'intensifier' in framework_params['resampling_strategy']
+    ):
+        framework_params['resampling_strategy'] = 'partial-iterative-intensifier-cv'
     return config(
         metric=metric_map[task[EVAL_METRIC]],
         framework_params=framework2params(args.framework),
@@ -221,6 +240,32 @@ def fit_and_predict_on_test(task, args):
 
     # Make sure we have proper dtypes
     df_train = df_train.convert_dtypes()
+
+    # Force common types to prevent errors in numpy
+    for col in df_train.columns:
+        if 'int' in str(df_train[col].dtype).lower():
+            if df_train[col].isnull().values.any():
+                # Nan value in column cannot be int
+                # If left in Int64 autogluon preprocessing cannot
+                # handle this
+                if df_train[col].nunique() < df_train[col].shape[0]//3 and 'iee' not in task[NAME]:
+                    # ieee errors with tensor problem
+                    df_train[col] = df_train[col].astype('category')
+                else:
+                    df_train[col] = df_train[col].astype('float')
+            else:
+                df_train[col] = df_train[col].astype('int')
+        elif 'float' in str(df_train[col].dtype).lower():
+            df_train[col] = df_train[col].astype('float')
+
+    if args.category_forced:
+        for col in df_train.columns:
+            if 'float' in str(df_train[col].dtype).lower():
+                continue
+            else:
+                if df_train[col].nunique() < df_train[col].shape[0]//3:
+                    df_train[col] = df_train[col].astype('category')
+
     # is_classification==True
     df_train[task[LABEL_COLUMN]] = df_train[task[LABEL_COLUMN]].astype('category')
     for col in df_train.columns:
@@ -230,7 +275,8 @@ def fit_and_predict_on_test(task, args):
             df_test[col] = df_test[col].astype(df_train[col].dtype)
         except Exception as e:
             print(f"Error on col={col}: {str(e)}")
-    print(df_train.dtypes)
+    with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
+        print(df_train.dtypes)
 
     if args.subsample:
         df_train = df_train.sample(n=3000)
@@ -245,6 +291,10 @@ def fit_and_predict_on_test(task, args):
 
     X_test, y_test, _ = processData(data=df_test, label_column=ag_predictor._learner.label,
                                     ag_predictor=ag_predictor)
+
+    with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
+        print(f"X_train={X_train.head()}")
+        print(f"X_test={X_test.head()}")
 
     # Get a config file for the automlbenchmark
     config = translate_task_2_automlbenchmark(task, args)
@@ -271,7 +321,7 @@ def fit_and_predict_on_test(task, args):
 
     print(f"result={result}")
 
-    return ag_predictor._learner.label_cleaner.inverse_transform(pd.Series(result['predictions']))
+    return ag_predictor._learner.label_cleaner.inverse_transform(pd.Series(result['predictions'])), result['probabilities']
 
 
 def str2bool(v):
@@ -306,10 +356,13 @@ if __name__ == "__main__":
         '--task',
         required=True,
         choices=['porto-seguro-safe-driver-prediction',
+                 'dummy',
+                 'dummyvehicle',
                  'santander-customer-satisfaction',
                  'santander-customer-transaction-prediction',
                  'ieee-fraud-detection',
                  'otto-group-product-classification-challenge',
+                 'walmart-recruiting-trip-type-classification',
                  'bnp-paribas-cardif-claims-management',
                  'microsoft-malware-prediction'],
         help='What specific task to run'
@@ -338,7 +391,7 @@ if __name__ == "__main__":
         '-m',
         '--memory',
         default='32G',
-        choices=['12G', '32G', '8G'],
+        choices=['12G', '32G', '8G', '180G'],
         help='the ammount of memory to allocate to a job'
     )
     parser.add_argument(
@@ -349,21 +402,45 @@ if __name__ == "__main__":
         default=False,
         help='To test on my computer!'
     )
+    parser.add_argument(
+        '--iterative',
+        type=str2bool,
+        nargs='?',
+        const=True,
+        default=False,
+        help='enable iterative fitting!'
+    )
+    parser.add_argument(
+        '--category_forced',
+        type=str2bool,
+        nargs='?',
+        const=True,
+        default=False,
+        help='enable iterative fitting!'
+    )
 
     args = parser.parse_args()
 
     # Get the data
     task = fetch_kaggle_dataset(args)
 
-    # Fit and predict with the desired model
-    y_pred = fit_and_predict_on_test(task=task, args=args)
-    with open(f"{args.framework}.{args.task}.{args.seed}.{args.runtime}.{args.memory}.{args.cores}.predictions.pkl", 'wb') as f:
-        pickle.dump(y_pred, f, protocol=pickle.HIGHEST_PROTOCOL)
-    csv_path = f"{args.framework}.{args.task}.{args.seed}.{args.runtime}.{args.memory}.{args.cores}.predictions.csv"
-    if hasattr(y_pred, 'to_csv'):
-        y_pred.to_csv(csv_path)
-    else:
-        np.savetxt(csv_path, y_pred, delimiter=",")
+    # Only run if needed!
+    pred_csv_path = f"{args.framework}.{args.task}.{args.seed}.{args.runtime}.{args.memory}.{args.cores}.iterative{args.iterative}.category_forced{args.category_forced}.predictions.csv"
+    proba_csv_path = f"{args.framework}.{args.task}.{args.seed}.{args.runtime}.{args.memory}.{args.cores}.iterative{args.iterative}.category_forced{args.category_forced}.probabilities.csv"
+    if os.path.exists(pred_csv_path) and os.path.exists(proba_csv_path):
+        exit(0)
 
-    # Push to kaggle
-    # TODO
+    # Fit and predict with the desired model
+    y_pred, y_proba = fit_and_predict_on_test(task=task, args=args)
+    with open(f"{args.framework}.{args.task}.{args.seed}.{args.runtime}.{args.memory}.{args.cores}.iterative{args.iterative}.category_forced{args.category_forced}.predictions.pkl", 'wb') as f:
+        pickle.dump(y_pred, f, protocol=pickle.HIGHEST_PROTOCOL)
+    with open(f"{args.framework}.{args.task}.{args.seed}.{args.runtime}.{args.memory}.{args.cores}.iterative{args.iterative}.category_forced{args.category_forced}.probabilities.pkl", 'wb') as f:
+        pickle.dump(y_proba, f, protocol=pickle.HIGHEST_PROTOCOL)
+    if hasattr(y_pred, 'to_csv'):
+        y_pred.to_csv(pred_csv_path)
+    else:
+        np.savetxt(pred_csv_path, y_pred, delimiter=",")
+    if hasattr(y_proba, 'to_csv'):
+        y_proba.to_csv(proba_csv_path)
+    else:
+        pd.DataFrame(y_proba).to_csv(proba_csv_path)

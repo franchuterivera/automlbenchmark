@@ -38,7 +38,7 @@ df = df[df['dataset_name'] != 7592]
 # stacking many levels has diminishing returns
 #######################################
 # We assume like 6 datasets
-fig = plt.figure(figsize=(18, 12))
+fig = plt.figure(figsize=(10, 8))
 for i, dataset_name in enumerate(df['dataset_name'].unique()):
     ax = fig.add_subplot(3, 2, i+1)
     ax.set_title(f"Openml_id={dataset_name}")
@@ -51,6 +51,6 @@ for i, dataset_name in enumerate(df['dataset_name'].unique()):
         xint = range(df['level'].min(), df['level'].max() + 1)
         ax.set_xticks(xint)
 plt.tight_layout()
-lgd = plt.legend(loc='lower center',  bbox_to_anchor=(0.01, -0.50), ncol=4, fancybox=True)
+lgd = plt.legend(loc='lower center',  bbox_to_anchor=(-0.22, -0.9), ncol=3, fancybox=True)
 plt.savefig(f"subsecnotallmodelsbenefitstack.pdf", dpi=1000, bbox_extra_artists=(lgd,), bbox_inches='tight')
 plt.close()

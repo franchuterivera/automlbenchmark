@@ -55,8 +55,8 @@ for i, dataset_name in enumerate(data['dataset_name'].unique()):
 plt.savefig(f"effectsofrepetitions.pdf")
 plt.close()
 
-fig = plt.figure(figsize=(18,12))
-fig.subplots_adjust(hspace=0.4, wspace=0.4)
+fig = plt.figure(figsize=(10,8))
+fig.subplots_adjust(hspace=0.5, wspace=0.4)
 for col in ['level', 'repeat']:
     data[col] = data[col].astype(int)
 #fig.suptitle(f"Avg Model Performance of 5-k-fold splits")
@@ -75,12 +75,16 @@ for i, dataset_name in enumerate(data['dataset_name'].unique()):
                label=[f"L:{level}"], legend=False, marker='o', markersize=2, fontsize=14)
     ax.set_title(f"OpenMLID={dataset_name}")
     ax.set(ylabel='Balanced Accuracy', xlabel='Number of CV Repetitions')
+    if i < 4:
+        x_axis = ax.axes.get_xaxis()
+        x_label = x_axis.get_label()
+        x_label.set_visible(False)
     ax.grid(True)
-    xint = range(data.loc[data['dataset_name']==dataset_name, 'repeat'].min(), data.loc[data['dataset_name']==dataset_name, 'repeat'].max() + 1)
+    xint = range(data.loc[data['dataset_name']==dataset_name, 'repeat'].min(), data.loc[data['dataset_name']==dataset_name, 'repeat'].max() + 1, 3)
     ax.set_xticks(xint)
 
 handles, labels = ax.get_legend_handles_labels()
-lgd = fig.legend(handles, labels, loc='lower center', ncol=10)
+lgd = fig.legend(handles, labels, loc='lower center', ncol=10, bbox_to_anchor=(0.5, -0.05))
 plt.savefig(f"subsechowtorepeat.pdf", dpi=1000, bbox_extra_artists=(lgd,), bbox_inches='tight')
 plt.close()
 
