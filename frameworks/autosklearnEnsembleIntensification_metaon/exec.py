@@ -202,6 +202,9 @@ def run(dataset, config):
     only_intensify_members_repetitions = False
     if 'only_intensify_members_repetitions' in training_params:
         only_intensify_members_repetitions = training_params.pop('only_intensify_members_repetitions')
+    stack_bestperfamily = True
+    if 'stack_bestperfamily' in training_params:
+        stack_bestperfamily = training_params.pop('stack_bestperfamily')
 
     resampling_strategy = 'intensifier-cv'
     if 'resampling_strategy' in training_params:
@@ -234,6 +237,7 @@ def run(dataset, config):
                                                             'fast_track_performance_criteria': fast_track_performance_criteria,
                                                             'train_all_repeat_together': train_all_repeat_together,
                                                             'enable_median_rule_prunning': enable_median_rule_prunning,
+                                                            'stack_bestperfamily': stack_bestperfamily,
                                                             'only_intensify_members_repetitions': only_intensify_members_repetitions,
                                                             'repeats': repeats},
                              get_smac_object_callback=get_smac_object_callback(

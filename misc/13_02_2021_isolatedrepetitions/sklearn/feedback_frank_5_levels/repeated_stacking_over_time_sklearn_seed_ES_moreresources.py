@@ -31,6 +31,7 @@ import random
 from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
 
+# Mimic ensemble selection from AutoSklearn
 class EnsembleSelection:
     def __init__(
         self,
@@ -231,7 +232,6 @@ def fit_and_return_ensemble_predictions(
     val_score_repeatedTRUE = None
     test_score_repeatedTRUE = None
 
-
     print(f"From X_train={[(a, np.shape(b)) for a, b in zip(model_list, X_train)]} val_score_repeatedTRUE={val_score_repeatedTRUE} val_score_repeatedFALSE={val_score_repeatedFALSE} test_score_repeatedTRUE={test_score_repeatedTRUE} test_score_repeatedFALSE={test_score_repeatedFALSE}")
 
     return val_score_repeatedTRUE, val_score_repeatedFALSE, test_score_repeatedTRUE, test_score_repeatedFALSE
@@ -283,8 +283,6 @@ def fit_and_return_avg_predictions(
     val_score = balanced_accuracy_score(y_train, np.mean([a for a in oof_predictions], axis=0).argmax(1))
 
     # Convert to an average array
-    #oof_predictions = np.concatenate([a for a in oof_predictions], axis=1)
-    #test_predictions = np.concatenate(          [np.mean(test_predictions[args.n_splits*i:args.n_splits*(i+1)], axis=0) for i in range(0, repeat)], axis=1)
     test_predictions = [np.mean(test_predictions[args.n_splits*i:args.n_splits*(i+1)], axis=0) for i in range(0, repeat)]
     print(f"From X_train={X_train.shape} val_pred={np.mean(oof_predictions, axis=0).shape} and test_pred={np.mean(test_predictions, axis=0).shape} with val_score={val_score} test_score={this_test_history[-1]}")
 
@@ -302,6 +300,7 @@ def save_frame(args, repeated_frame, history_frame):
     path = os.path.join(os.getenv('HOME'), f"df_repeated_stacking_sklearn_feedback_frank_history_{args.openml_id}_{args.seed}.csv")
     pd.DataFrame(history_frame).to_csv(path)
     print(f"{time.ctime()}: saved {path}")
+
 
 parser = argparse.ArgumentParser(description='Manages the run of the benchmark')
 parser.add_argument(
@@ -381,13 +380,7 @@ HPO = {
     },
     'DecisionTreeClassifier': {'random_state': args.seed},
     'LinearDiscriminantAnalysis': {},
-    #'XGBClassifier': {'learning_rate': 0.1, 'booster': 'gbtree'},
     'GradientBoostingClassifier': {},
-    #'LGBMClassifier': {
-    #    'boosting_type': 'gbdt',
-    #    'learning_rate': 0.03,
-    #    'two_round': True,
-    #},
     'MLPClassifier': {},
 }
 model_func = {
@@ -395,9 +388,7 @@ model_func = {
     'RandomForestClassifier': RandomForestClassifier,
     'DecisionTreeClassifier': DecisionTreeClassifier,
     'LinearDiscriminantAnalysis': LinearDiscriminantAnalysis,
-    #'XGBClassifier': XGBClassifier,
     'GradientBoostingClassifier': GradientBoostingClassifier,
-    #'LGBMClassifier': LGBMClassifier,
     'MLPClassifier': MLPClassifier,
 }
 
@@ -448,13 +439,11 @@ for repeat in [1, 2, 5, 10, 20]:
                         if level > 0:
                             if not single_model:
                                 past_oof_prediction_aux = np.concatenate([
-                                    #oof_predictions_avg_repeat[model_name_aux][level-1]
                                     np.mean([a for a in oof_predictions_avg_repeat[model_name_aux][level-1]], axis=0)
                                     for model_name_aux in oof_predictions_avg_repeat.keys()], axis=1)
                                 features_train = np.concatenate([
                                     features_train,  past_oof_prediction_aux], axis=1)
                                 past_test_prediction_aux = np.concatenate([
-                                    #test_predictions_avg_repeat[model_name_aux][level-1]
                                     np.mean(test_predictions_avg_repeat[model_name_aux][level-1], axis=0)
                                     for model_name_aux in test_predictions_avg_repeat.keys()], axis=1)
                                 features_test = np.concatenate([
@@ -462,12 +451,10 @@ for repeat in [1, 2, 5, 10, 20]:
                             else:
                                 features_train = np.concatenate([
                                     features_train,
-                                    #oof_predictions_avg_repeat[model_name][level-1]],
                                     np.mean([a for a in oof_predictions_avg_repeat[model_name][level-1]], axis=0)],
                                                                 axis=1)
                                 features_test = np.concatenate([
                                     features_test,
-                                    #test_predictions_avg_repeat[model_name][level-1]],
                                     np.mean(test_predictions_avg_repeat[model_name][level-1], axis=0)],
                                                                axis=1)
 
@@ -480,16 +467,6 @@ for repeat in [1, 2, 5, 10, 20]:
                             model_name=model_name,
                             repeat=repeat,
                         )
-                    #train_score = balanced_accuracy_score(y_train,
-                    #                                      model.predict_proba(features_train).argmax(1))
-                    #df.append({
-                    #    'hue': f"train_performance_singlemodel{single_model}",
-                    #    'performance': train_score,
-                    #    'model': model_name,
-                    #    'dataset_name': args.openml_id,
-                    #    'level': level,
-                    #})
-
 
                     if model_name == 'EnsembleSelection':
                         for repeated_ensemble in [False, True]:

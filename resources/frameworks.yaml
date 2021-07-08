@@ -2996,6 +2996,7 @@ autosklearnEnsembleIntensification_metaon:
     enable_median_rule_prunning: true
     train_all_repeat_together: false
     fast_track_performance_criteria: 'common_instances'
+    resampling_strategy: 'intensifier-cv'
     stack_based_on_log_loss: false
     stack_tiebreak_w_log_loss: true
 
@@ -3119,4 +3120,564 @@ autosklearn_autogluonstrategy_meta_large:
     stack_based_on_log_loss: false
     stack_tiebreak_w_log_loss: false
     resampling_strategy: 'intensifier-cv'
+    test_loss_in_autosklearn: false
+
+##########
+# Ablation
+##########
+autosklearnEnsembleIntensification_metaon_3folds:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 3
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: true
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+
+autosklearnEnsembleIntensification_metaon_5folds:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 5
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: true
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+
+autosklearnEnsembleIntensification_metaon_10folds:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 10
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: true
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+
+autosklearnEnsembleIntensification_metaon_noheuristic:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: true
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+    enable_heuristic: false
+
+autosklearnEnsembleIntensification_metaon_nostacking:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 1
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: true
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+
+autosklearnEnsembleIntensification_metaon_3level:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 3
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: true
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+
+autosklearnEnsembleIntensification_metaon_1incumbent:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 1
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: true
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+
+autosklearnEnsembleIntensification_metaon_5incumbent:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 5
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: true
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+
+autosklearnEnsembleIntensification_metaon_20incumbent:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 20
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: true
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+
+autosklearnEnsembleIntensification_metaon_nomedianprune:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: false
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+
+autosklearnEnsembleIntensification_metaon_notiebreaklog:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: true
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+    stack_tiebreak_w_log_loss: false
+
+autosklearnEnsembleIntensification_metaon_nobestperfamily:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: true
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+    stack_bestperfamily: false
+
+autosklearnEnsembleIntensification_metaon_ensembleany:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'any'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: true
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+
+##########
+# Ablation: for large datasets // test_loss_in_autosklearn==False
+# During test calculation, the whole test dataset is copied
+# which causes a lot of memory issues. I removed this from autosklearn
+# and from the ensemble intensification/towering.
+##########
+autosklearnEnsembleIntensification_metaon_3folds_large:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 3
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: true
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+    stack_tiebreak_w_log_loss: false
+    test_loss_in_autosklearn: false
+
+autosklearnEnsembleIntensification_metaon_5folds_large:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 5
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: true
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+    stack_tiebreak_w_log_loss: false
+    test_loss_in_autosklearn: false
+
+autosklearnEnsembleIntensification_metaon_10folds_large:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: 10
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: true
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+    stack_tiebreak_w_log_loss: false
+    test_loss_in_autosklearn: false
+
+autosklearnEnsembleIntensification_metaon_noheuristic_large:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: true
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+    enable_heuristic: false
+    stack_tiebreak_w_log_loss: false
+    test_loss_in_autosklearn: false
+
+autosklearnEnsembleIntensification_metaon_nostacking_large:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 1
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: true
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+    stack_tiebreak_w_log_loss: false
+    test_loss_in_autosklearn: false
+
+autosklearnEnsembleIntensification_metaon_3level_large:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 3
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: true
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+    stack_tiebreak_w_log_loss: false
+    test_loss_in_autosklearn: false
+
+autosklearnEnsembleIntensification_metaon_1incumbent_large:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 1
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: true
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+    stack_tiebreak_w_log_loss: false
+    test_loss_in_autosklearn: false
+
+autosklearnEnsembleIntensification_metaon_5incumbent_large:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 5
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: true
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+    stack_tiebreak_w_log_loss: false
+    test_loss_in_autosklearn: false
+
+autosklearnEnsembleIntensification_metaon_20incumbent_large:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 20
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: true
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+    stack_tiebreak_w_log_loss: false
+    test_loss_in_autosklearn: false
+
+autosklearnEnsembleIntensification_metaon_nomedianprune_large:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: false
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+    stack_tiebreak_w_log_loss: false
+    test_loss_in_autosklearn: false
+
+autosklearnEnsembleIntensification_metaon_wtiebreaklog_large:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: true
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+    stack_tiebreak_w_log_loss: true
+    test_loss_in_autosklearn: false
+
+autosklearnEnsembleIntensification_metaon_nobestperfamily_large:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'highest_repeat_trusted'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: true
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+    stack_bestperfamily: false
+    stack_tiebreak_w_log_loss: false
+    test_loss_in_autosklearn: false
+
+autosklearnEnsembleIntensification_metaon_ensembleany_large:
+  version: 'iterability'
+  project: https://automl.github.io/auto-sklearn/
+  params:
+    _save_artifacts: ['overfit', 'debug']
+    k_folds: [3, 5, 10, 5, 3]
+    repeats: 5
+    max_stacking_level: 2
+    stacking_strategy: 'instances_anyasbase'
+    ensemble_folds: 'any'
+    max_ensemble_members: 10
+    min_challengers: 10
+    stack_at_most: 20
+    min_prune_members: 10
+    fidelities_as_individual_models: true
+    enable_median_rule_prunning: true
+    train_all_repeat_together: false
+    fast_track_performance_criteria: 'common_instances'
+    stack_based_on_log_loss: false
+    stack_tiebreak_w_log_loss: false
     test_loss_in_autosklearn: false

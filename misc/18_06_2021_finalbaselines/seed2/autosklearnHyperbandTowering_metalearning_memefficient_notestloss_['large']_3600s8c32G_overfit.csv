@@ -25,7 +25,7 @@
 23,autosklearnHyperbandTowering_metalearning_memefficient_notestloss,Covertype,best_ensemble_model,3,,,0.571637,,3600s8c32G
 24,autosklearnHyperbandTowering_metalearning_memefficient_notestloss,Covertype,best_ensemble_model,4,,,0.5753739999999999,,3600s8c32G
 25,autosklearnHyperbandTowering_metalearning_memefficient_notestloss,Covertype,best_ensemble_model,5,,,0.57396,,3600s8c32G
-26,autosklearnHyperbandTowering_metalearning_memefficient_notestloss,Covertype,best_ensemble_model,6,,,,,3600s8c32G
+26,autosklearnHyperbandTowering_metalearning_memefficient_notestloss,Covertype,best_ensemble_model,6,,,0.5676479999999999,,3600s8c32G
 27,autosklearnHyperbandTowering_metalearning_memefficient_notestloss,Covertype,best_ensemble_model,7,,,0.961583,,3600s8c32G
 28,autosklearnHyperbandTowering_metalearning_memefficient_notestloss,Covertype,best_ensemble_model,8,,,0.581871,,3600s8c32G
 29,autosklearnHyperbandTowering_metalearning_memefficient_notestloss,Covertype,best_ensemble_model,9,,,0.956626,,3600s8c32G

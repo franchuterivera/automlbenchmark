@@ -19,6 +19,7 @@ for iterative in [True, False]:
                        'ieee-fraud-detection',
                        'otto-group-product-classification-challenge',
                        'bnp-paribas-cardif-claims-management',
+                       'walmart-recruiting-trip-type-classification',
                        'microsoft-malware-prediction']:
             name = f"final_run_{framework}_{iterative}_{kaggle}.sh"
             scripts.append(name)
@@ -47,4 +48,4 @@ for iterative in [True, False]:
 
 with open('launch.csv', 'w') as launch:
     for item in scripts:
-        launch.write(f"sbatch --bosch -p bosch_cpu-cascadelake -t 06:00:00 --mem 180G -c 4 --job-name {item.replace('.sh', '')} -o /home/riverav/AUTOML_BENCHMARK/automlbenchmark_fork/{item.replace('.sh', '')} /home/riverav/AUTOML_BENCHMARK/automlbenchmark_fork/misc/25_06_2021_run_kaggle/{item}\n")
+        launch.write(f"sbatch --bosch -p bosch_cpu-cascadelake -t 08:00:00 --mem 180G -c 4 --job-name {item.replace('.sh', '')} -o /home/riverav/AUTOML_BENCHMARK/automlbenchmark_fork/{item.replace('.sh', '')} /home/riverav/AUTOML_BENCHMARK/automlbenchmark_fork/misc/25_06_2021_run_kaggle/{item}\n")

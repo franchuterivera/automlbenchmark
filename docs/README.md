@@ -1,362 +1,129 @@
-# OpenML AutoML Benchmark
+# Combatting overfitting in Auto-sklearnand other AutoML systems
 
-The OpenML AutoML Benchmark provides a framework for evaluating and comparing open-source AutoML systems.  The system is *extensible* because you can [add your own](https://github.com/openml/automlbenchmark/blob/master/docs/extending.md) AutoML frameworks and datasets. For a thorough explanation of the benchmark, and evaluation of results, you can read our [paper](https://openml.github.io/automlbenchmark/paper.html) which was accepted at the [2019 ICML AutoML Workshop](https://sites.google.com/view/automl2019icml/).
+This repository list the steps to reproduce the results from the thesis titled: "Combatting overfitting in Auto-sklearnand other AutoML systems".
 
-_**NOTE:**_ _This benchmarking framework currently features binary and multiclass classification; extending to regression is a work in progress.  Please file an issue with any concerns/questions._
-
-  * [Installation](#installation)
-     * [Pre-requisites](#pre-requisites)
-     * [Setup](#setup)
-  * [Quickstart](#quickstart)
-  * [Running benchmarks](#running-benchmarks)
-     * [In Docker image](#in-docker-image)
-     * [In local environment](#in-local-environment)
-     * [On AWS](#on-aws)
-     * [Output](#output)
-  * [Advanced configuration](#advanced-configuration)
-  * [Issues](#issues)
-  * [Frequently Asked Questions](#frequently-asked-questions)
-      
-Automatic Machine Learning (AutoML) systems automatically build machine learning pipelines or neural architectures in a data-driven, objective, and automatic way. They automate a lot of drudge work in designing machine learning systems, so that better systems can be developed, faster. However, AutoML research is also slowed down by two factors:
-
-* We currently lack standardized, easily-accessible benchmarking suites of tasks (datasets) that are curated to reflect important problem domains, practical to use, and sufficiently challenging to support a rigorous analysis of performance results. 
-
-* Subtle differences in the problem definition, such as the design of the hyperparameter search space or the way time budgets are defined, can drastically alter a task’s difficulty. This issue makes it difficult to reproduce published research and compare results from different papers.
-
-This toolkit aims to address these problems by setting up standardized environments for in-depth experimentation with a wide range of AutoML systems.
-
-Documentation: <https://openml.github.io/automlbenchmark/>
-
-### Features:
-* Curated suites of [benchmarking datasets](https://openml.github.io/automlbenchmark/benchmark_datasets.html) from [OpenML](https://www.openml.org/s/218/data).
-* Includes code to benchmark a number of [popular AutoML systems](https://openml.github.io/automlbenchmark/automl_overview.html)
-* [New AutoML systems can be added](./HOWTO.md#add-an-automl-framework)
-* Experiments can be run in Docker or Singularity containers
-* Execute experiments locally or on AWS (see below)
-
-### Roadmap: 
-* Add a regression benchmark to the framework.
-* More benchmark datasets (especially bigger datasets).
-* Automatic sharing of benchmarking results on OpenML.
+The main repository is a modified version of the [AutoMLBenchmark](https://github.com/openml/automlbenchmark). We structure this document based on the thesis chapter and sections, mainly to highlight how the tables/plots were created, when possible. At the end we provide more details on relevant topics like directory structure and complementary software.
 
 
-## Installation
-### Pre-requisites
-To run the benchmarks, you will need:
-* Python 3.6+.
-* PIP3: ensure you have a recent version. If necessary, upgrade your pip using `pip3 install --upgrade pip`.
-* The Python libraries listed in [requirements.txt](../requirements.txt): it is strongly recommended to first create a [Python virtual environment](https://docs.python.org/3/library/venv.html#venv-def) (cf. also [Pyenv](https://github.com/pyenv/pyenv): quick install using `curl https://pyenv.run | bash` or `brew install pyenv`) and work in it if you don't want to mess up your global Python environment.
-* [Docker](https://docs.docker.com/install/), if you plan to run the benchmarks in a container.
+## Setup and environment used
+I employed conda in my laptop, and stored the environment used via: `conda env export > environment.yml`.
 
-### Setup
-Clone the repo:
-```bash
-git clone https://github.com/openml/automlbenchmark.git --branch stable --depth 1
-cd automlbenchmark
+This environment was originally created by:
+1- Downloading and installing [Anaconda](https://docs.anaconda.com/anaconda/install/index.html).
+2- Creating a python environment for at least 3.8 version `conda create --name automlbenchmarkpy38 python=3.*`.
+3- Installing the automlbenchmark requirements `pip install -r requirements.txt`.
+4- Installing the autogluon utils requirements `pip install -r autogluonbenchmarking/autogluon_utils/requirements.txt`
+
+For all the experiments I used a cluster managed by SLURM (many commands listed below will highlight this). Our hardware consisted of an Intel(R) Xeon(R) Gold 6242 CPU cluster running at 2.80GHz, on a 64-bit architecture. For more details, please check the thesis available [here](TODO).
+
+In the cluster, one also must have an environment. This environment was created as follows:
 ```
-Optional: create a Python3 virtual environment.
-
-- _**NOTE**: we don't recommend to create your virtual environment with `virtualenv` library here as the application may create additional virtual environments for some frameworks to run in isolation._
-_Those virtual environments are created internally using `python -m venv` and we encountered issues with `pip` when `venv` is used on top of a `virtualenv` environment._
-_Therefore, we rather suggest one of the method below:_ 
-
-using venv on Linux/macOS:
-```bash
 python3 -m venv ./venv
 source venv/bin/activate
-# remember to call `deactivate` once you're done using the application
-```
-using venv on Windows:
-```bash
-python3 -m venv ./venv
-venv\Scripts\activate
-# remember to call `venv\Scripts\deactivate` once you're done using the application
-```
+# Install automlbenchmark requirements
+git clone https://github.com/openml/automlbenchmark.git
+pip install -r automlbenchmark/requirements.txt
 
-or using pyenv:
-```bash
-pyenv install {python_version: 3.7.4}
-pyenv virtualenv ve-automl
-pyenv local ve-automl
-```
-Then pip install the dependencies:
-
-```bash
-pip3 install -r requirements.txt
+# In my case, the environment is located in
+/home/riverav/work/venv/bin/activate
 ```
 
-- _**NOTE**: in case of issues when installing Python requirements, you may want to try the following:_
-    - _on some platforms, we need to ensure that requirements are installed sequentially:_ `xargs -L 1 pip install < requirements.txt`.
-    - _enforce the `pip3` version above in your virtualenv:_ `pip3 install --upgrade pip==19.3.1`.
+## Reproducing figures/tables 
 
+### Approach
 
-## Quickstart
-To run a benchmark call the `runbenchmark.py` script with at least the following arguments:
+For the Approach chapter, we wanted to do an isolated study of cross validation and stacking using scikit learn. All the results regarding this part of the thesis are available in the folder [13_02_2021_isolatedrepetitions](misc/13_02_2021_isolatedrepetitions/) and used as [this](misc/13_02_2021_isolatedrepetitions/sklearn/feedback_frank_5_levels/repeated_stacking_over_time_sklearn_seed_ES_moreresources.py) main script. 
 
-1. The AutoML framework that should be evaluated, see [frameworks.yaml](../resources/frameworks.yaml) for supported frameworks. If you want to add a framework see [HOWTO](./HOWTO.md#add-an-automl-framework).
-2. The benchmark suite to run should be one implemented in [benchmarks folder](../resources/benchmarks), or an OpenML study or task (formatted as `openml/s/X` or `openml/t/Y` respectively).
-3. (Optional) The constraints applied to the benchmark as defined by default in [constraints.yaml](../resources/constraints.yaml). Default constraint is `test` (1 single fold for 10 min).
-4. (Optional) If the benchmark should be run `local` (default, tested on Linux and macOS only), in a `docker` container or on `aws` using multiple ec2 instances.
+We ran the script using 5 different seeds per dataset and collected the results in a csv format, every time under the name of `all_data.csv`. Each of the below subsections will highlight the path to the relevant data file as well as the plotting command used. We exemplify how the command was run in the cluster:
 
-Examples:
-```bash
-python3 runbenchmark.py 
-python3 runbenchmark.py constantpredictor
-python3 runbenchmark.py tpot test
-python3 runbenchmark.py autosklearn openml/t/59 -m docker
-python3 runbenchmark.py h2oautoml validation 1h4c -m aws
+```
+sbatch  --bosch -p bosch_cpu-cascadelake -t 96:00:00 --mem 12G -c 1 --job-name RepeatedStackingSklearnfold10101 -o /home/riverav/AUTOML_BENCHMARK/repeats_local_jobs/sklearn_feedback_from_frank_folds/10101.log /home/riverav/AUTOML_BENCHMARK/repeats_local_jobs/sklearn_feedback_from_frank_folds/10101.sh
 ```
 
-For the complete list of supported arguments, run:
-```bash
-python3 runbenchmark.py --help
+Where the actual shell command is:
+```
+#!/bin/bash
+source /home/riverav/work/venv/bin/activate
+cd /home/riverav/AUTOML_BENCHMARK/automlbenchmark_fork/misc/13_02_2021_isolatedrepetitions/sklearn/feedback_frank_folds
+python repeated_stacking_over_time_sklearn_seed_ES_folds.py --openml_id 10101
 ```
 
-```text
-usage: runbenchmark.py [-h] [-m {local,docker,aws}]
-                       [-t [task_id [task_id ...]]]
-                       [-f [fold_num [fold_num ...]]] [-i input_dir]
-                       [-o output_dir] [-u user_dir] [-p parallel_jobs]
-                       [-s {auto,skip,force,only}] [-k [true|false]]
-                       framework [benchmark] [constraint]
+Notice that we gave plenty of time and memory for our jobs in this section. Every subsection points to a `launch.sh` used to make a run, as well as the plotting command used.
 
-positional arguments:
-  framework             The framework to evaluate as defined by default in
-                        resources/frameworks.yaml.
-  benchmark             The benchmark type to run as defined by default in resources/benchmarks/{benchmark}.yaml, 
-                        a path to a benchmark description file, or an openml suite or task. 
-                        OpenML references should be formatted as 'openml/s/X'  and 'openml/t/Y', 
-                        for studies and tasks respectively. Defaults to `test`.
-  constraint            The constraint definition to use as defined by default in
-                        resources/constraints.yaml. Defaults to `test`.
+#### Over-fit of AutoML frameworks
+We extracted the [leaderboard](https://github.com/openml/automlbenchmark/blob/9e5b66d11a804b19595d602f3f3e7e54e544e201/frameworks/AutoGluon/exec.py#L87) from AutoGluon by using the command `leaderboard = predictor.leaderboard(**leaderboard_kwargs)` and stored it in [misc/07_03_2021_test_train_frameworks/leaderboard_autogluon.csv](misc/07_03_2021_test_train_frameworks/leaderboard_autogluon.csv). Similarly, we took the runhistory from Auto-Sklearn available in the `<tmp>/smac3/run_<seed>/runhistory.json` of every baseline run and stored in a modified format here [misc/07_03_2021_test_train_frameworks/leaderboard_autosklearn.csv](misc/07_03_2021_test_train_frameworks/leaderboard_autosklearn.csv). Afterwards we generated the plot as follows:
+```
+cd misc/07_03_2021_test_train_frameworks
+python compile.py
+```
+#### Diminishing returns of stacking
+The data available for this experiment is compiled in [misc/13_02_2021_isolatedrepetitions/sklearn/feedback_frank_5_levels/all_data.csv](misc/13_02_2021_isolatedrepetitions/sklearn/feedback_frank_5_levels/all_data.csv). To make the plot from this data:
+```
+cd misc/13_02_2021_isolatedrepetitions/sklearn/feedback_frank_5_levels/
+python compile.py
+```
+#### Impact of the number of repetitions
+The data available for this experiment is compiled in [misc/13_02_2021_isolatedrepetitions/sklearn/5_folds/all_data.csv](misc/13_02_2021_isolatedrepetitions/sklearn/5_folds/all_data.csv). To make the plot from this data:
+```
+cd misc/13_02_2021_isolatedrepetitions/sklearn/5_folds/
+python compile_plot.py
+```
+#### Impact of the number of folds
+The data available for this experiment is compiled in [misc/13_02_2021_isolatedrepetitions/sklearn/feedback_frank_folds/all_data.csv](misc/13_02_2021_isolatedrepetitions/sklearn/feedback_frank_folds/all_data.csv). To make the plot from this data:
+```
+cd misc/13_02_2021_isolatedrepetitions/sklearn/feedback_frank_folds
+python compile_plot.py
+```
+#### Not all configurations benefit from stacking
+The data available for this experiment is compiled in [misc/13_02_2021_isolatedrepetitions/sklearn/rfonly/all_data.csv](misc/13_02_2021_isolatedrepetitions/sklearn/rfonly/all_data.csv). To make the plot from this data:
+```
+cd misc/13_02_2021_isolatedrepetitions/sklearn/rfonly
+python compile_plot.py
+```
+### Experiments
+We use singularity as the SLURM cluster does not support docker. To interact with the cluster we use the script [manager.py](manager.py) which creates a singularity image for a given framework, run it, and collects the results from the cluster. We will exemplify the workflow we follow using autosklearn.
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -m {local,docker,aws}, --mode {local,docker,aws}
-                        The mode that specifies how/where the benchmark tasks
-                        will be running. Defaults to local.
-  -t [task_id [task_id ...]], --task [task_id [task_id ...]]
-                        The specific task name (as defined in the benchmark
-                        file) to run. When an OpenML reference is used as benchmark, 
-                        the dataset name should be used instead. If not provided, 
-                        then all tasks from the benchmark will be run.
-  -f [fold_num [fold_num ...]], --fold [fold_num [fold_num ...]]
-                        If task is provided, the specific fold(s) to run. If
-                        fold is not provided, then all folds from the task
-                        definition will be run.
-  -i input_dir, --indir input_dir
-                        Folder where datasets are loaded by default. Defaults
-                        to `input_dir` as defined in resources/config.yaml
-  -o output_dir, --outdir output_dir
-                        Folder where all the outputs should be written.
-                        Defaults to `output_dir` as defined in
-                        resources/config.yaml
-  -u user_dir, --userdir user_dir
-                        Folder where all the customizations are stored.
-                        Defaults to `user_dir` as defined in
-                        resources/config.yaml
-  -p parallel_jobs, --parallel parallel_jobs
-                        The number of jobs (i.e. tasks or folds) that can run
-                        in parallel. Defaults to 1. Currently supported only
-                        in docker and aws mode.
-  -s {auto,skip,force,only}, --setup {auto,skip,force,only}
-                        Framework/platform setup mode. Defaults to auto.
-                        •auto: setup is executed only if strictly necessary.
-                        •skip: setup is skipped. •force: setup is always
-                        executed before the benchmark. •only: only setup is
-                        executed (no benchmark).
-  -k [true|false], --keep-scores [true|false]
-                        Set to true [default] to save/add scores in output
-                        directory.
+The framework is defined in [resources/frameworks.yaml](resources/frameworks.yaml), where the params keyword is of special importance as it customizes the frameworks. 
+
+To create a singularity image for autosklearn and run the first fold of the small benchmark we ran:
+
+```
+python manager.py --tag seed0 -f autosklearn_memefficient -b small --partition bosch_cpu-cascadelake --total_fold 0 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_mode single
 ```
 
-The script will produce output that records task metadata and the result.
-The result is the score on the test set, where the score is a specific model performance metric (e.g. "AUC") defined by the benchmark.
-```text
-   task  framework  fold    result   mode   version                  utc       acc       auc   logloss
-0  iris  H2OAutoML     0  1.000000  local  3.22.0.5  2019-01-21T15:19:07  1.000000       NaN  0.023511
-1  iris  H2OAutoML     1  1.000000  local  3.22.0.5  2019-01-21T15:20:12  1.000000       NaN  0.091685
-2   kc2  H2OAutoML     0  0.811321  local  3.22.0.5  2019-01-21T15:21:11  0.811321  0.859307       NaN
-3   kc2  H2OAutoML     1  0.886792  local  3.22.0.5  2019-01-21T15:22:12  0.886792  0.888528       NaN
+This generates the sif image `frameworks/autosklearn_memefficient_metalearning/autosklearn_memefficient_metalearning_large_memefficient_meta_stable.sif` and start runs in the cluster that last around 1 hour. The script tells you where the runs are being exercised, for examples `/home/riverav/AUTOML_BENCHMARK/autosklearn/memefficient/2021.06.22-19.19.17`. Then we can collect the results as follows:
+
+```
+python manager.py --tag seed0 -f autosklearn_memefficient -b small --partition bosch_cpu-cascadelake --total_fold 0 --cores 8 --memory 32G --runtime 3600 --python_version 3.8 --run_dir /home/riverav/AUTOML_BENCHMARK/autosklearn/memefficient/2021.06.22-19.19.17 --collect_overfit true
 ```
 
-## Running benchmarks
-The `automlbenchmark` app currently allows running benchmarks in various environments:
-* in a docker container (running locally or on multiple AWS instances).
-* completely locally, if the framework is supported on the local system.
-* on AWS, possibly distributing the tasks to multiple EC2 instances, each of them running the benchmark either locally or in a docker container.
+If you are familiar with the automlbenchmark, you can check an intermediate file called `generate_sif.sh` which is the script responsible of generating the image.
 
-### In Docker image
-The [Docker] image is automatically built before running the benchmark if it doesn't already exist locally or in a public repository (by default in <https://hub.docker.com/orgs/automlbenchmark/repositories>).
-Especially, without docker image, the application will need to download and install all the dependencies when building the image, so this may take some time.
+The next subsections provide the path to where the results are located as well as the protocol file used to achieve these results.
 
-The generated image is usually named `automlbenchmark/{framework}:{tag}`, but this is customizable per framework: cf. `resources/frameworks.yaml` and [HOWTO](HOWTO.md#framework-definition) for details.
+Our best method is defined within [frameworks/autosklearnEnsembleIntensification_metaon/](frameworks/autosklearnEnsembleIntensification_metaon/). The [setup.sh](frameworks/autosklearnEnsembleIntensification_metaon/setup.sh) indicates how to create an environment to make autosklearn with ensemble intensification work. The main repository for our approach is `https://github.com/franchuterivera/auto-sklearn/tree/cvavgintensifier_individual_rebase3_towering_largedatasets_singlerepo`, as can be seen in the aforementioned `setup.sh`.
 
-For example, this will build a Docker image for the `RandomForest` framework and then immediately start a container to run the `validation` benchmark, using all folds, allocating 1h and 4 cores for each task:
-```bash
-python3 runbenchmark.py RandomForest validation 1h4c -m docker
-```
+#### AutoMLBenchmark and ablation results
+All the results for the automlbenchmark comparison were created using the protocol [misc/18_06_2021_finalbaselines/18_06_2021_finalbaselines.protocol](misc/18_06_2021_finalbaselines/18_06_2021_finalbaselines.protocol). The results are grouped by seed in `misc/18_06_2021_finalbaselines/seed<>`.
 
-If the corresponding image already exists locally and you want it to be rebuilt before running the benchmark, then the setup needs to be forced:
-```bash
-python3 runbenchmark.py {framework} {benchmark} {constraint} -m docker -s force
-```
+#### Kaggle
 
-The image can also be built without running any benchmark:
-```bash
-python3 runbenchmark.py {framework} -m docker -s only
-```
+AutoGluon provided a mechanism to repeat their results [here](https://github.com/Innixma/autogluon-benchmarking). Nevertheless, the API of the framework has changed making it no longer usable for the newer versions of AutoGluon. Apart from that, it assumes one has access to AWS.
 
-In rare cases, mainly for development, you may want to specify the docker image:
-```bash
-python3 runbenchmark.py {framework} {benchmark} {constraint} -m docker -Xdocker.image={image}
-```
+I cloned the repository and made updates as needed. The new repository is locally available under [autogluonbenchmarking/](autogluonbenchmarking/). My objective was to use the new API available in the AutoMLBenchmark under [frameworks/AutoGluon_020/exec.py](frameworks/AutoGluon_020/exec.py) with stacking enabled. Same for Auto-sklearn. To this end, I created a wrapper script under the name of [run_kaggle.py](run_kaggle.py) which fundamentally:
 
-### In local environment
-If docker allows portability, it is still possible to run the benchmarks locally without container on some environments (currently Linux, and macOS for most frameworks).
+* Interacts with kaggle using the autogluon_utils package. This means data downloading and AutoGluon's preprocessing.
+* Then it the autogluon-benchmarking task is translated to a Dataset (pandas for AutoGluon, numpy/feat_type for AutoSklearn) and a config file that states the run metric, the cores, memory, etc.
+* The `run()` method of the `exec.py` of each framework returns a result object with probabilities and predicitons.
+* The probabilities go through the post-processing from AutoGluon and then a submission is made.
 
-A minimal example would be to run the test benchmarks with a random forest:
-```bash
-python3 runbenchmark.py RandomForest test
-```
+To obtain a sumision file I used [misc/25_06_2021_run_kaggle/launch.submission.csv](misc/25_06_2021_run_kaggle/launch.submission.csv) in the cluster. This creates a csv file which can be then used with `python run_kaggle --submission` on your laptop (The meta cluster does not have internet connection!), or manually uploaded to the repository.
 
-The majority of frameworks though require a `setup` step before being able to run a benchmark. Please note that this step may take some time depending on the framework.
-This setup is executed by default on first run of the framework, but in this case, it is not guaranteed that the benchmark run following immediately will manage to complete successfully (for most frameworks though, it does).
+The good thing about this approach is the singularity image corresponding to the automlbenchmark can be reused for this task.
+#### Auto-sklearnperformance with and without the final ensemble
+All the results for the automlbenchmark comparison were created using the protocol [misc/23_01_2021_defaultmetricisolatedensemble/23_01_2021_defaultmetricisolatedensemble.seed1.ES.protocol](misc/23_01_2021_defaultmetricisolatedensemble/23_01_2021_defaultmetricisolatedensemble.seed1.ES.protocol). The results are grouped by seed in `misc/(23_01_2021_defaultmetricisolatedensemble/seed<>`.
 
-In case of error, just run the benchmark one more time.
+## Custom Code and justification
 
-If it still fails, you may need to rerun the setup step manually:
-```bash
-python3 runbenchmark.py {framework} -s only
-```
-You can then run the benchmarks as many times as you wish.
-
-When testing a framework or a new dataset, you may want to run only a single task and a specific fold, for example:
-```bash
-python3 runbenchmark.py TPOT validation -t bioresponse -f 0
-```
-
-### On AWS
-To run a benchmark on AWS you additionally need to have a configured AWS account.
-The application is using the [boto3] Python package to exchange files through S3 and create EC2 instances.
-
- If this is your first time setting up your AWS account on the machine that will run the `automlbenchmark` app, you can use the [AWS CLI](http://aws.amazon.com/cli/) tool and run:
- ```bash
- aws configure
- ```
-You will need your AWS Access Key ID, AWS Secret Access Key, and pick a default [EC2 region](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions).
-
-- _**NOTE:** Currently the AMI is only configured for the following regions so you'll have to set your default region as one of these_:
-  - us-east-1
-  - us-west-1
-  - eu-west-1
-  - eu-central-1
-  
-On first use, it is recommended to simply copy the `config.yaml` from [examples/aws] to your user `~/.config/automlbenchmark` folder (or merge it if you already have a `config.yaml` in this user folder) and follow the instructions in that file.
-
-To run a test to see if the benchmark framework is working on AWS, do the following:
-```bash
-python3 runbenchmark.py constantpredictor test -m aws
-```
-This will create and start an EC2 instance for each benchmark job and run the 4 jobs (2 OpenML tasks * 2 folds) from the `test` benchmark sequentially, each job running for 1mn in this case (excluding setup time for the EC2 instances).
-
-For longer benchmarks, you'll probably want to run multiple jobs in parallel and distribute the work to several EC2 instances, for example:
-```bash
-python3 runbenchmark.py AUTOWEKA validation 1h4c -m aws -p 4
-```
-will keep 4 EC2 instances running, monitor them in a dedicated thread, and finally collect all outputs from s3.
-
-- _**NOTE**: each EC2 instance is provided with a time limit at startup to ensure that in any case, the instance is stopped even if there is an issue when running the benchmark task. In this case the instance is stopped, not terminated, and we can therefore inspect the machine manually (ideally after resetting its UserData field to avoid re-triggering the benchmark on the next startup)._
-
-The console output is still showing the instances starting, outputs the progress and then the results for each dataset/fold combination:
-```text
-Running `H2OAutoML_nightly` on `validation` benchmarks in `aws` mode
-Loading frameworks definitions from ['/Users/me/repos/automlbenchmark/resources/frameworks.yaml'].
-Loading benchmark definitions from /Users/me/repos/automlbenchmark/resources/benchmarks/validationt.yaml.
-Uploading `/Users/me/repos/automlbenchmark/resources/benchmarks/validation.yaml` to `ec2/input/validation.yaml` on s3 bucket automl-benchmark.
-...
-Starting new EC2 instance with params: H2OAutoML_nightly /s3bucket/input/validation.yaml -t micro-mass -f 0
-Started EC2 instance i-0cd081efc97c3bf6f 
-[2019-01-22T11:51:32] checking job aws_validation_micro-mass_0_H2OAutoML_nightly on instance i-0cd081efc97c3bf6f: pending 
-Starting new EC2 instance with params: H2OAutoML_nightly /s3bucket/input/validation.yaml -t micro-mass -f 1
-Started EC2 instance i-0251c1655e286897c 
-...
-[2019-01-22T12:00:32] checking job aws_validation_micro-mass_1_H2OAutoML_nightly on instance i-0251c1655e286897c: running
-[2019-01-22T12:00:33] checking job aws_validation_micro-mass_0_H2OAutoML_nightly on instance i-0cd081efc97c3bf6f: running
-[2019-01-22T12:00:48] checking job aws_validation_micro-mass_1_H2OAutoML_nightly on instance i-0251c1655e286897c: running
-[2019-01-22T12:00:48] checking job aws_validation_micro-mass_0_H2OAutoML_nightly on instance i-0cd081efc97c3bf6f: running
-...
-[  731.511738] cloud-init[1521]: Predictions saved to /s3bucket/output/predictions/h2oautoml_nightly_micro-mass_0.csv
-[  731.512132] cloud-init[1521]: H2O session _sid_96e7 closed.
-[  731.512506] cloud-init[1521]: Loading predictions from /s3bucket/output/predictions/h2oautoml_nightly_micro-mass_0.csv
-[  731.512890] cloud-init[1521]: Metric scores: {'framework': 'H2OAutoML_nightly', 'version': 'nightly', 'task': 'micro-mass', 'fold': 0, 'mode': 'local', 'utc': '2019-01-22T12:00:02', 'logloss': 0.6498889633819804, 'acc': 0.8793103448275862, 'result': 0.6498889633819804}
-[  731.513275] cloud-init[1521]: Job local_micro-mass_0_H2OAutoML_nightly executed in 608.534 seconds
-[  731.513662] cloud-init[1521]: All jobs executed in 608.534 seconds
-[  731.514089] cloud-init[1521]: Scores saved to /s3bucket/output/scores/H2OAutoML_nightly_task_micro-mass.csv
-[  731.514542] cloud-init[1521]: Loaded scores from /s3bucket/output/scores/results.csv
-[  731.515006] cloud-init[1521]: Scores saved to /s3bucket/output/scores/results.csv
-[  731.515357] cloud-init[1521]: Summing up scores for current run:
-[  731.515782] cloud-init[1521]:          task          framework    ...         acc   logloss
-[  731.516228] cloud-init[1521]: 0  micro-mass  H2OAutoML_nightly    ...     0.87931  0.649889
-[  731.516671] cloud-init[1521]: [1 rows x 9 columns]
-...
-EC2 instance i-0cd081efc97c3bf6f is stopped
-Job aws_validation_micro-mass_0_H2OAutoML_nightly executed in 819.305 seconds
-[2019-01-22T12:01:34] checking job aws_validation_micro-mass_1_H2OAutoML_nightly on instance i-0251c1655e286897c: running
-[2019-01-22T12:01:49] checking job aws_validation_micro-mass_1_H2OAutoML_nightly on instance i-0251c1655e286897c: running
-EC2 instance i-0251c1655e286897c is stopping
-Job aws_validation_micro-mass_1_H2OAutoML_nightly executed in 818.463 seconds
-...
-Terminating EC2 instances i-0251c1655e286897c
-Terminated EC2 instances i-0251c1655e286897c with response {'TerminatingInstances': [{'CurrentState': {'Code': 32, 'Name': 'shutting-down'}, 'InstanceId': 'i-0251c1655e286897c', 'PreviousState': {'Code': 64, 'Name': 'stopping'}}], 'ResponseMetadata': {'RequestId': 'd09eeb0c-7a58-4cde-8f8b-2308a371a801', 'HTTPStatusCode': 200, 'HTTPHeaders': {'content-type': 'text/xml;charset=UTF-8', 'transfer-encoding': 'chunked', 'vary': 'Accept-Encoding', 'date': 'Tue, 22 Jan 2019 12:01:53 GMT', 'server': 'AmazonEC2'}, 'RetryAttempts': 0}}
-Instance i-0251c1655e286897c state: shutting-down
-All jobs executed in 2376.891 seconds
-Deleting uploaded resources `['ec2/input/validation.yaml', 'ec2/input/config.yaml', 'ec2/input/frameworks.yaml']` from s3 bucket automl-benchmark.
-```
-
-### Output
-By default, a benchmark run creates the following subdirectories and files in the output directory (by default a subdirectory of `./results` with unique name identifying the benchmark run):
-* `scores`: this subdirectory contains
-    * `results.csv`: a global scoreboard, keeping scores from all benchmark runs. 
-       For safety reasons, this file is automatically backed up to `scores/backup/results_{currentdate}.csv` by the application before any modification. 
-    * individual score files keeping scores for each framework+benchmark combination (not backed up). 
-* `predictions`, this subdirectory contains the last predictions in a standardized format made by each framework-dataset combination.
-  Those last predictions are systematically backed up with current data to `predictions/backup` subdirectory before a new prediction is written.
-* `logs`: this subdirectory contains logs produced by the `automlbenchmark` app, including when it's been run in Docker container or on AWS.
-
-
-## Advanced configuration
-If you need to create your own benchmark, add a framework, create a plugin for a proprietary framework, or simply want to use some advanced options (e.g. run some frameworks with non-default parameters), see the [HOWTO].
-
-## Issues
-If you face any issue, please first have a look at the [Troubleshooting guide] and check the [existing issues](https://github.com/openml/automlbenchmark/issues).
-Any new issue should also be reported there.
-
-
-[HOWTO]: ./HOWTO.md
-[Troubleshooting guide]: ./HOWTO.md#troubleshooting-guide
-[examples/aws]: ../examples/aws/config.yaml
-
-[Docker]: https://docs.docker.com/
-[boto3]: https://boto3.readthedocs.io/
-
-
-## Frequently Asked Questions
-
-**When will results be updated, also for the new/updated frameworks?**
-
-We don't perform a benchmark evaluation for each new package or update.
-Due to budget constraints, we can only do a limited number of evaluations.
-The next full evaluation will be performed before the end of the year 2020.
-We hope to find funding to guarantee regular evaluations.
-
----
-**(When) will you add framework X?**
-
-We are currently not focused on integrating additional AutoML systems.
-However, we process any pull requests that add frameworks and will assist with the integration.
-The best way to make sure framework X gets included is to start with the integration yourself or encourage the package authors to do so (for technical details see [HOWTO]).
-
-It is also possible to open a Github issue indicating the framework you would like added.
-Please use a clear title (e.g. "Add framework: X") and provide some relevant information (e.g. a link to the documentation).
-This helps us keep track of which frameworks people are interested in seeing included.
+### AutoGluon with memory overwrite
+For AutoGluon, I had to create a fork of the official repository [here](https://github.com/franchuterivera/autogluon/tree/psutil_0.2.0) as the frameworks relies on psutil to asses the available virtual memory. SLURM does not control this, and autogluon ended up assuming that the run has 180G rather than 32G and kept crashing. I overwrote any call to psutil virtual memory check to return a fixed memory limit of 32G when needed, via an environment variable.

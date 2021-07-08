@@ -8,7 +8,7 @@
 6,autosklearn_autogluonstrategy_meta,Australian,best_ensemble_model,6,,,0.8565370000000001,,3600s8c32G
 7,autosklearn_autogluonstrategy_meta,Australian,best_ensemble_model,7,,,,,3600s8c32G
 8,autosklearn_autogluonstrategy_meta,Australian,best_ensemble_model,8,,,0.857692,,3600s8c32G
-9,autosklearn_autogluonstrategy_meta,Australian,best_ensemble_model,9,,,,,3600s8c32G
+9,autosklearn_autogluonstrategy_meta,Australian,best_ensemble_model,9,,,0.826923,,3600s8c32G
 10,autosklearn_autogluonstrategy_meta,blood-transfusion,best_ensemble_model,0,,,,,3600s8c32G
 11,autosklearn_autogluonstrategy_meta,blood-transfusion,best_ensemble_model,1,,,,,3600s8c32G
 12,autosklearn_autogluonstrategy_meta,blood-transfusion,best_ensemble_model,2,,,,,3600s8c32G
@@ -20,7 +20,7 @@
 18,autosklearn_autogluonstrategy_meta,blood-transfusion,best_ensemble_model,8,,,0.656347,,3600s8c32G
 19,autosklearn_autogluonstrategy_meta,blood-transfusion,best_ensemble_model,9,,,,,3600s8c32G
 20,autosklearn_autogluonstrategy_meta,car,best_ensemble_model,0,,,,,3600s8c32G
-21,autosklearn_autogluonstrategy_meta,car,best_ensemble_model,1,,,,,3600s8c32G
+21,autosklearn_autogluonstrategy_meta,car,best_ensemble_model,1,,,1.0,,3600s8c32G
 22,autosklearn_autogluonstrategy_meta,car,best_ensemble_model,2,,,,,3600s8c32G
 23,autosklearn_autogluonstrategy_meta,car,best_ensemble_model,3,,,,,3600s8c32G
 24,autosklearn_autogluonstrategy_meta,car,best_ensemble_model,4,,,1.0,,3600s8c32G
@@ -52,7 +52,7 @@
 50,autosklearn_autogluonstrategy_meta,credit-g,best_ensemble_model,0,,,,,3600s8c32G
 51,autosklearn_autogluonstrategy_meta,credit-g,best_ensemble_model,1,,,0.6190479999999999,,3600s8c32G
 52,autosklearn_autogluonstrategy_meta,credit-g,best_ensemble_model,2,,,,,3600s8c32G
-53,autosklearn_autogluonstrategy_meta,credit-g,best_ensemble_model,3,,,,,3600s8c32G
+53,autosklearn_autogluonstrategy_meta,credit-g,best_ensemble_model,3,,,0.683333,,3600s8c32G
 54,autosklearn_autogluonstrategy_meta,credit-g,best_ensemble_model,4,,,,,3600s8c32G
 55,autosklearn_autogluonstrategy_meta,credit-g,best_ensemble_model,5,,,,,3600s8c32G
 56,autosklearn_autogluonstrategy_meta,credit-g,best_ensemble_model,6,,,0.65,,3600s8c32G
@@ -137,7 +137,7 @@
 135,autosklearn_autogluonstrategy_meta,segment,best_ensemble_model,5,,,0.9740260000000001,,3600s8c32G
 136,autosklearn_autogluonstrategy_meta,segment,best_ensemble_model,6,,,0.9913420000000001,,3600s8c32G
 137,autosklearn_autogluonstrategy_meta,segment,best_ensemble_model,7,,,0.961039,,3600s8c32G
-138,autosklearn_autogluonstrategy_meta,segment,best_ensemble_model,8,,,,,3600s8c32G
+138,autosklearn_autogluonstrategy_meta,segment,best_ensemble_model,8,,,0.9913420000000001,,3600s8c32G
 139,autosklearn_autogluonstrategy_meta,segment,best_ensemble_model,9,,,0.9870129999999999,,3600s8c32G
 140,autosklearn_autogluonstrategy_meta,sylvine,best_ensemble_model,0,,,0.9297479999999999,,3600s8c32G
 141,autosklearn_autogluonstrategy_meta,sylvine,best_ensemble_model,1,,,0.94535,,3600s8c32G
@@ -151,11 +151,11 @@
 149,autosklearn_autogluonstrategy_meta,sylvine,best_ensemble_model,9,,,0.949219,,3600s8c32G
 150,autosklearn_autogluonstrategy_meta,vehicle,best_ensemble_model,0,,,,,3600s8c32G
 151,autosklearn_autogluonstrategy_meta,vehicle,best_ensemble_model,1,,,,,3600s8c32G
-152,autosklearn_autogluonstrategy_meta,vehicle,best_ensemble_model,2,,,,,3600s8c32G
+152,autosklearn_autogluonstrategy_meta,vehicle,best_ensemble_model,2,,,0.860931,,3600s8c32G
 153,autosklearn_autogluonstrategy_meta,vehicle,best_ensemble_model,3,,,,,3600s8c32G
 154,autosklearn_autogluonstrategy_meta,vehicle,best_ensemble_model,4,,,,,3600s8c32G
-155,autosklearn_autogluonstrategy_meta,vehicle,best_ensemble_model,5,,,,,3600s8c32G
+155,autosklearn_autogluonstrategy_meta,vehicle,best_ensemble_model,5,,,0.8712120000000001,,3600s8c32G
 156,autosklearn_autogluonstrategy_meta,vehicle,best_ensemble_model,6,,,0.895933,,3600s8c32G
 157,autosklearn_autogluonstrategy_meta,vehicle,best_ensemble_model,7,,,,,3600s8c32G
-158,autosklearn_autogluonstrategy_meta,vehicle,best_ensemble_model,8,,,,,3600s8c32G
+158,autosklearn_autogluonstrategy_meta,vehicle,best_ensemble_model,8,,,0.881494,,3600s8c32G
 159,autosklearn_autogluonstrategy_meta,vehicle,best_ensemble_model,9,,,0.807738,,3600s8c32G

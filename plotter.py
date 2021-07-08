@@ -65,6 +65,10 @@ def parse_data(csv_location: str, tools: typing.Optional[typing.List[str]] = Non
             data_file,
             index_col=0,
         )
+        # Rename large datasets
+        inner_df['tool'] = inner_df['tool'].replace(to_replace=r'_largexp$', value='', regex=True)
+        inner_df['tool'] = inner_df['tool'].replace(to_replace=r'_large$', value='', regex=True)
+        inner_df['tool'] = inner_df['tool'].replace(to_replace=r'_notest$', value='', regex=True)
         if tools is not None and len(tools) > 0:
             if inner_df['tool'].unique()[0] not in tools:
                 continue
@@ -1341,6 +1345,7 @@ def generate_ranking_per_fold_per_dataset_bags(df: pd.DataFrame, bootstrap: int 
     df.sort_values(by=['tool', 'task', 'fold', 'seed'], inplace=True)
 
     test_score_per_task_fold_tool = pd.pivot_table(df, values='test', index=['task', 'fold', 'tool'], columns='seed')
+    test_score_per_task_fold_tool.to_csv('test_score_per_task_fold_tool.csv')
 
     folds = df['fold'].unique()
 
@@ -1357,7 +1362,11 @@ def generate_ranking_per_fold_per_dataset_bags(df: pd.DataFrame, bootstrap: int 
             index = (task, fold)  # would yield a table with tool as row and repetitions as col
 
             # Get the values per tool(rows) and columns(10 seed repetitions)
-            data = test_score_per_task_fold_tool.loc[index].to_numpy()
+            try:
+                data = test_score_per_task_fold_tool.loc[index].to_numpy()
+            except Exception as e:
+                print(f"Problem at {index} with {str(e)} \n {test_score_per_task_fold_tool}")
+                raise e
             data[np.isnan(data)] = 0
             # Do sampling with replacement to get tool as rows again, but different
             # permutations of the 10 seeds
@@ -1382,6 +1391,8 @@ def generate_ranking_per_fold_per_dataset_bags(df: pd.DataFrame, bootstrap: int 
     elif ranking_method == 'total_wins':
         ranking = ranking.rank(axis=0, method='average', ascending=False)
 
+    result.to_csv('result.csv')
+    ranking.to_csv('ranking.csv')
     # Build a latex to get significance and best
     embbeded_frame = build_frame_from_statistics(df, result)
     embbeded_frame = embbeded_frame.transpose()
@@ -1584,6 +1595,8 @@ if __name__ == "__main__":
         # Only keep the desired tools
         df = df[df['tool'].isin(args.tools)]
     df.to_csv('debug.csv')
+
+    df = df[df['task'] != 'KDDCup09_appetency']
 
 
     #dfp = generate_pairwise_comparisson_matrix(df)

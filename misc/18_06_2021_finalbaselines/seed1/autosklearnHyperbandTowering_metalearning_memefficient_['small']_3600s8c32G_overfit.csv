@@ -122,9 +122,9 @@
 120,autosklearnHyperbandTowering_metalearning_memefficient,phoneme,best_ensemble_model,0,,,0.9015110000000001,,3600s8c32G
 121,autosklearnHyperbandTowering_metalearning_memefficient,phoneme,best_ensemble_model,1,,,0.9203790000000001,,3600s8c32G
 122,autosklearnHyperbandTowering_metalearning_memefficient,phoneme,best_ensemble_model,2,,,0.877136,,3600s8c32G
-123,autosklearnHyperbandTowering_metalearning_memefficient,phoneme,best_ensemble_model,3,,,,,3600s8c32G
+123,autosklearnHyperbandTowering_metalearning_memefficient,phoneme,best_ensemble_model,3,,,0.87321,,3600s8c32G
 124,autosklearnHyperbandTowering_metalearning_memefficient,phoneme,best_ensemble_model,4,,,0.88031,,3600s8c32G
-125,autosklearnHyperbandTowering_metalearning_memefficient,phoneme,best_ensemble_model,5,,,,,3600s8c32G
+125,autosklearnHyperbandTowering_metalearning_memefficient,phoneme,best_ensemble_model,5,,,0.918716,,3600s8c32G
 126,autosklearnHyperbandTowering_metalearning_memefficient,phoneme,best_ensemble_model,6,,,0.919047,,3600s8c32G
 127,autosklearnHyperbandTowering_metalearning_memefficient,phoneme,best_ensemble_model,7,,,0.8978729999999999,,3600s8c32G
 128,autosklearnHyperbandTowering_metalearning_memefficient,phoneme,best_ensemble_model,8,,,0.879141,,3600s8c32G
@@ -137,7 +137,7 @@
 135,autosklearnHyperbandTowering_metalearning_memefficient,segment,best_ensemble_model,5,,,0.9696969999999999,,3600s8c32G
 136,autosklearnHyperbandTowering_metalearning_memefficient,segment,best_ensemble_model,6,,,0.9913420000000001,,3600s8c32G
 137,autosklearnHyperbandTowering_metalearning_memefficient,segment,best_ensemble_model,7,,,0.961039,,3600s8c32G
-138,autosklearnHyperbandTowering_metalearning_memefficient,segment,best_ensemble_model,8,,,,,3600s8c32G
+138,autosklearnHyperbandTowering_metalearning_memefficient,segment,best_ensemble_model,8,,,0.9956709999999999,,3600s8c32G
 139,autosklearnHyperbandTowering_metalearning_memefficient,segment,best_ensemble_model,9,,,0.982684,,3600s8c32G
 140,autosklearnHyperbandTowering_metalearning_memefficient,sylvine,best_ensemble_model,0,,,0.9590069999999999,,3600s8c32G
 141,autosklearnHyperbandTowering_metalearning_memefficient,sylvine,best_ensemble_model,1,,,0.9668120000000001,,3600s8c32G

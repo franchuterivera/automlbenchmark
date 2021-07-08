@@ -969,10 +969,10 @@ def launch_run(
             else:
                 logger.warning(f"Skip {task} as there are no more free resources... try again later!")
             # Wait 2 sec to update running job
-            if args.resource_reduction:
-                time.sleep(20)
-            else:
-                time.sleep(2)
+            #if args.resource_reduction:
+            #    time.sleep(20)
+            #else:
+            #    time.sleep(2)
     elif args.run_mode == 'interactive':
         timestamp = time.strftime("%Y.%m.%d-%H.%M.%S")
         while len(run_files) > 0:
@@ -982,10 +982,10 @@ def launch_run(
                 this_extra = extra + f" -p {args.partition} -t 0{max_hours}:00:00 --mem {args.memory} -c {args.cores} --job-name {name} -o {os.path.join(run_dir, 'logs', name + '_'+ timestamp + '.out')}"
                 _launch_sbatch_run(this_extra, task)
                 # Wait 2 sec for the benchmark to be empty
-                time.sleep(2)
+                #time.sleep(2)
             else:
                 print(".", end="", flush=True)
-                time.sleep(60)
+                #time.sleep(60)
     else:
         raise ValueError(f"Unsupported run_mode {args.run_mode}")
 
@@ -2076,7 +2076,7 @@ if __name__ == "__main__":
     parser.add_argument(
         '--folds',
         type=int,
-        choices=list(range(5)),
+        choices=list(range(10)),
         action='append',
         required=False,
         default=[],
@@ -2276,7 +2276,7 @@ if __name__ == "__main__":
             run_dir=run_dir
         )
         constraint = f"{args.runtime}s{args.cores}c{args.memory}"
-        filename = f"{args.framework}_overfit.csv" if args.tag_with_constraint is None else f"{args.framework}_{constraint}_overfit.csv"
+        filename = f"{args.framework}_{args.benchmarks}_overfit.csv" if args.tag_with_constraint is None else f"{args.framework}_{args.benchmarks}_{constraint}_overfit.csv"
         logger.info(f"Please check {filename}")
         overfit.to_csv(filename)
 

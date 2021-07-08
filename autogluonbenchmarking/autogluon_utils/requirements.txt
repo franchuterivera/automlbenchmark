@@ -1,0 +1,12 @@
+sagemaker
+kaggle
+fire
+s3fs
+pyarrow
+pandas
+numpy
+pyyaml
+retry
+autogluon
+mxnet
+pytz

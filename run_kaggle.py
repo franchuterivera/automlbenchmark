@@ -4,9 +4,13 @@ import pathlib
 import pickle
 import pprint
 import tempfile
+import typing
 from collections import namedtuple
 
-from autogluonbenchmarking.autogluon_utils.benchmarking.baselines.process_data import processData
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import log_loss, roc_auc_score, balanced_accuracy_score
+
+from autogluonbenchmarking.autogluon_utils.benchmarking.baselines.process_data import processData, autogluon_class_order
 from autogluonbenchmarking.autogluon_utils.configs.kaggle.constants import (
     EVAL_METRIC,
     FETCH_PROCESSOR,
@@ -15,7 +19,9 @@ from autogluonbenchmarking.autogluon_utils.configs.kaggle.constants import (
     NAME,
     PRE_PROCESSOR,
     PROBLEM_TYPE,
+    POST_PROCESSOR,
 )
+from autogluonbenchmarking.autogluon_utils.kaggle_tools.kaggle_utils import submit_kaggle_competition, load_leaderboard
 from autogluonbenchmarking.autogluon_utils.configs.kaggle.kaggle_competitions import (
     KAGGLE_COMPETITIONS
 )
@@ -30,6 +36,14 @@ import numpy as np
 
 import pandas as pd
 from pandas.api.types import is_numeric_dtype
+
+
+# from autogluonbenchmarking.autogluon_utils.benchmarking.kaggle.evaluate_results import apply_post_processing
+def apply_post_processing(y_predproba: np.array, class_order: typing.List[str], test_data, competition_meta) -> pd.DataFrame:
+    print('Applying predictions post-processing to generate submission...')
+    post_processor = competition_meta[POST_PROCESSOR]
+    submission = post_processor.postprocess(class_order, test_data, y_predproba, competition_meta)
+    return submission
 
 
 def get_task_setup(task_name):
@@ -120,7 +134,7 @@ def framework2params(framework):
             'stack_based_on_log_loss': False,
             'stack_tiebreak_w_log_loss': True,
             'resampling_strategy': 'intensifier-cv',
-            'test_loss_in_autosklearn': False,
+            #'test_loss_in_autosklearn': False,
         }
     elif framework == 'AutoSklearnAutoGluonStrategy':
         return {
@@ -140,16 +154,15 @@ def framework2params(framework):
             'stack_based_on_log_loss': False,
             'stack_tiebreak_w_log_loss': False,
             'resampling_strategy': 'intensifier-cv',
-            'test_loss_in_autosklearn': False,
             'only_intensify_members_repetitions': True,
-            'test_loss_in_autosklearn': False,
+            #'test_loss_in_autosklearn': False,
         }
     else:
         raise NotImplementedError
 
 
 def str2mem(memory):
-    return {'12G': 12288, '32G': 32768, '8G': 4096, '180G': 180000}[memory]
+    return {'12G': 12288, '32G': 32768, '8G': 8192, '180G': 180000}[memory]
 
 
 metric_map = {
@@ -176,7 +189,7 @@ def translate_task_2_automlbenchmark(task, args):
         framework_params['resampling_strategy'] = 'partial-iterative-intensifier-cv'
     return config(
         metric=metric_map[task[EVAL_METRIC]],
-        framework_params=framework2params(args.framework),
+        framework_params=framework_params,
         type='classification',
         max_runtime_seconds=args.runtime,
         output_predictions_file=f"{args.framework}.{args.task}.{args.seed}.{args.runtime}.csv",
@@ -199,8 +212,13 @@ def generate_autogluon_dataset(X_train, y_train, X_test, y_test, task):
     X_train[task[LABEL_COLUMN]] = y_train
 
     # we don't have y_test :( so mimic with y_train
-    X_test[task[LABEL_COLUMN]] = pd.Series(data=pd.Series(y_train).sample(n=X_test.shape[0], replace=True).tolist(),
-                                           index=X_test.index)
+    if y_test is None:
+        X_test[task[LABEL_COLUMN]] = pd.Series(
+            data=pd.Series(y_train).sample(n=X_test.shape[0], replace=True).tolist(),
+            index=X_test.index)
+    else:
+        X_test[task[LABEL_COLUMN]] = y_test
+
     # keep as object everything that is not numerical
     columns=[(col, ('object' if not is_numeric_dtype(X_train[col]) else 'int' if ('int' in str(X_train[col].dtype).lower()) else 'float')) for col in X_train.columns]
     return dataset(
@@ -218,8 +236,11 @@ enc = namedtuple('enc', ['X_enc', 'y_enc'])
 def generate_autosklearn_dataset(X_train, y_train, X_test, y_test, task):
     predictors_type = ['Numerical' if is_numeric_dtype(X_train[col]) else 'Categorical' for col in X_train.columns]
 
-    y_test = pd.Series(data=pd.Series(y_train).sample(n=X_test.shape[0], replace=True).tolist(),
-                                           index=X_test.index)
+    if y_test is None:
+        y_test = pd.Series(data=pd.Series(y_train).sample(n=X_test.shape[0], replace=True).tolist(),
+                           index=X_test.index)
+    else:
+        y_test = y_test
 
     # we don't have y_test :( so mimic with y_train
     return dataset(
@@ -289,12 +310,20 @@ def fit_and_predict_on_test(task, args):
         problem_type=task[PROBLEM_TYPE], eval_metric=task[EVAL_METRIC]
     )
 
-    X_test, y_test, _ = processData(data=df_test, label_column=ag_predictor._learner.label,
-                                    ag_predictor=ag_predictor)
+    if args.half_for_test:
+        X_train, X_test, y_train, y_test = train_test_split(
+            X_train, y_train, test_size=0.5, random_state=42)
+        df_test = X_test
+    else:
+        X_test, y_test, _ = processData(
+            data=df_test, label_column=ag_predictor._learner.label,
+            ag_predictor=ag_predictor)
+        # No y_test in kaggle!
+        y_test = None
 
-    with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
-        print(f"X_train={X_train.head()}")
-        print(f"X_test={X_test.head()}")
+    #with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
+    #    print(f"X_train={X_train.head()}")
+    #    print(f"X_test={X_test.head()}")
 
     # Get a config file for the automlbenchmark
     config = translate_task_2_automlbenchmark(task, args)
@@ -321,7 +350,35 @@ def fit_and_predict_on_test(task, args):
 
     print(f"result={result}")
 
-    return ag_predictor._learner.label_cleaner.inverse_transform(pd.Series(result['predictions'])), result['probabilities']
+    predictions = ag_predictor._learner.label_cleaner.inverse_transform(pd.Series(result['predictions']))
+    if 'labels' in result:
+        # Then autogluon provides clean predictions
+        class_order = result['labels']
+        y_preds = result['probabilities']
+    else:
+        # This is likely the case of autosklearn
+        y_preds = ag_predictor._learner.label_cleaner.inverse_transform_proba(result['probabilities'])
+        class_order = autogluon_class_order(ag_predictor)
+
+    submission = apply_post_processing(y_preds, class_order, df_test, task)
+
+    if args.half_for_test:
+        try:
+            # Save GT if things go south
+            pred_csv_path = f"{args.framework}.{args.task}.{args.seed}.{args.runtime}.{args.memory}.{args.cores}.iterative{args.iterative}.category_forced{args.category_forced}.GT.csv"
+            pd.DataFrame(y_test).to_csv(pred_csv_path)
+            print(f"balanced_accuracy_score={balanced_accuracy_score(y_test, result['predictions'])}")
+            if task[EVAL_METRIC] == 'roc_auc':
+                score = roc_auc_score(y_test, y_preds)
+            elif task[EVAL_METRIC] == 'log_loss':
+                score = roc_auc_score(y_test, y_preds)
+            else:
+                raise NotImplementedError(task[EVAL_METRIC])
+            print(f"Produced score={score}")
+        except Exception as e:
+            print(str(e))
+
+    return submission
 
 
 def str2bool(v):
@@ -418,6 +475,22 @@ if __name__ == "__main__":
         default=False,
         help='enable iterative fitting!'
     )
+    parser.add_argument(
+        '--half_for_test',
+        type=str2bool,
+        nargs='?',
+        const=True,
+        default=False,
+        help='Uses half of the dataset for testing'
+    )
+    parser.add_argument(
+        '--submission',
+        type=str2bool,
+        nargs='?',
+        const=True,
+        default=False,
+        help='Uses half of the dataset for testing'
+    )
 
     args = parser.parse_args()
 
@@ -425,22 +498,17 @@ if __name__ == "__main__":
     task = fetch_kaggle_dataset(args)
 
     # Only run if needed!
-    pred_csv_path = f"{args.framework}.{args.task}.{args.seed}.{args.runtime}.{args.memory}.{args.cores}.iterative{args.iterative}.category_forced{args.category_forced}.predictions.csv"
-    proba_csv_path = f"{args.framework}.{args.task}.{args.seed}.{args.runtime}.{args.memory}.{args.cores}.iterative{args.iterative}.category_forced{args.category_forced}.probabilities.csv"
-    if os.path.exists(pred_csv_path) and os.path.exists(proba_csv_path):
-        exit(0)
+    pred_csv_path = f"{args.framework}.{args.task}.{args.seed}.{args.runtime}.{args.memory}.{args.cores}.iterative{args.iterative}.category_forced{args.category_forced}.submission.csv"
+    if not os.path.exists(pred_csv_path):
+        # Fit and predict with the desired model
+        y_pred = fit_and_predict_on_test(task=task, args=args)
+        with open(pred_csv_path.replace('.csv', '.pkl'), 'wb') as f:
+            pickle.dump(y_pred, f, protocol=pickle.HIGHEST_PROTOCOL)
+        if hasattr(y_pred, 'to_csv'):
+            y_pred.to_csv(pred_csv_path, index=False)
+        else:
+            np.savetxt(pred_csv_path, y_pred, delimiter=",")
 
-    # Fit and predict with the desired model
-    y_pred, y_proba = fit_and_predict_on_test(task=task, args=args)
-    with open(f"{args.framework}.{args.task}.{args.seed}.{args.runtime}.{args.memory}.{args.cores}.iterative{args.iterative}.category_forced{args.category_forced}.predictions.pkl", 'wb') as f:
-        pickle.dump(y_pred, f, protocol=pickle.HIGHEST_PROTOCOL)
-    with open(f"{args.framework}.{args.task}.{args.seed}.{args.runtime}.{args.memory}.{args.cores}.iterative{args.iterative}.category_forced{args.category_forced}.probabilities.pkl", 'wb') as f:
-        pickle.dump(y_proba, f, protocol=pickle.HIGHEST_PROTOCOL)
-    if hasattr(y_pred, 'to_csv'):
-        y_pred.to_csv(pred_csv_path)
-    else:
-        np.savetxt(pred_csv_path, y_pred, delimiter=",")
-    if hasattr(y_proba, 'to_csv'):
-        y_proba.to_csv(proba_csv_path)
-    else:
-        pd.DataFrame(y_proba).to_csv(proba_csv_path)
+    if args.submission:
+        submission_result = submit_kaggle_competition(task[NAME], pred_csv_path)
+        print(submission_result)
